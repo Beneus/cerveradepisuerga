@@ -1,0 +1,238 @@
+body {
+  font-family: 'Fira Sans', sans-serif;
+  font-size: 16px;
+  background: #448040;
+  color: #404040;
+  background-attachment: fixed;
+  background-image: url(../fondos/inicio.jpg);
+  background-repeat: no-repeat;
+  background-position: left top;
+  margin: 0;
+  padding: 0; }
+
+h1 {
+  font-size: 1.5em; }
+
+h2 {
+  font-size: 1.3em; }
+
+h3 {
+  font-size: 1.3em; }
+
+h4 {
+  font-size: 1.3em; }
+
+h2.EventoTitulo {
+  margin: 0 1.5rem 0 0; }
+
+a {
+  color: #006600;
+  text-decoration: none; }
+  a:hover {
+    text-decoration: underline; }
+
+img {
+  max-width: 100%;
+  vertical-align: middle; }
+
+.wrapper {
+  max-width: 100%;
+  margin: auto; }
+
+/* We tell all items to be 100% width, via flex-basis */
+.grid {
+  /* display: flex; */
+  flex-flow: row;
+  flex-wrap: wrap; }
+
+.grid-cell {
+  flex: 1; }
+
+header {
+  margin: .5em;
+  order: 1;
+  background: #448040;
+  padding: 1em;
+  border-radius: 3px;
+  background-attachment: fixed;
+  background-image: url(../images/montanapalentinahorizontal.png);
+  background-repeat: no-repeat;
+  background-position: right top; }
+
+footer {
+  order: 4;
+  background: #1E5444;
+  margin: 0 .5em .5em .5em;
+  padding: 1em;
+  border-radius: 3px;
+  justify-content: space-around; }
+  footer .footer {
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    font-size: smaller; }
+    footer .footer .copyright {
+      padding: 0 .8em 0 0;
+      text-align: center; }
+      footer .footer .copyright a {
+        font-size: x-small;
+        color: #fff; }
+
+.container {
+  flex: 2 0px; }
+  .container .aside1 {
+    flex: 1;
+    order: 1;
+    background: #1E5444;
+    margin: 0 0 .5em .5em;
+    padding: 1em;
+    border-radius: 3px; }
+  .container .main {
+    flex: 2;
+    order: 2;
+    background: #EDF1E4;
+    margin: .5em;
+    border-radius: 3px; }
+    .container .main .content {
+      padding: 1em; }
+      .container .main .content .MigasdePan {
+        font-size: 0.8em;
+        padding: 20px 0; }
+        .container .main .content .MigasdePan a {
+          text-decoration: none;
+          color: #448040; }
+      .container .main .content .DatosTitulo {
+        color: #FFFFFF;
+        background-color: #448040;
+        width: 100px;
+        padding-right: 5px;
+        padding-left: 5px; }
+      .container .main .content .DatosValor {
+        padding-left: 10px;
+        color: #000000; }
+        .container .main .content .DatosValor a {
+          text-decoration: none;
+          color: #448040; }
+        .container .main .content .DatosValor a:hover {
+          text-decoration: underline; }
+      .container .main .content ul {
+        margin: 0px;
+        padding: 0px;
+        list-style-type: none; }
+        .container .main .content ul li {
+          padding: 0 0 3px 0;
+          margin: 0 0 3px 0;
+          list-style-type: none; }
+      .container .main .content .linkVerde {
+        color: #006600;
+        text-decoration: none; }
+      .container .main .content .linkVerde:hover {
+        text-decoration: underline; }
+      .container .main .content .museo {
+        border: 1px solid #000;
+        margin-bottom: 1em;
+        padding: 1em; }
+      .container .main .content .paginator {
+        display: flex;
+        justify-content: space-around; }
+        .container .main .content .paginator div {
+          flex-direction: row; }
+  .container .aside2 {
+    flex: 1 1 0%;
+    order: 3;
+    color: #fff;
+    background: #448040;
+    margin: 0 .5em .5em .5em;
+    padding: 1em;
+    border-radius: 3px; }
+
+.sponsor {
+  display: flex;
+  flex-direction: row;
+  /* make main axis horizontal (default setting) */
+  justify-content: center;
+  /* center items horizontally, in this case */
+  /*align-items: center;      center items vertically, in this case */
+  align-content: center;
+  /* for multi-line flex container */
+  height: auto;
+  padding: 10px;
+  flex-wrap: wrap;
+  background-color: #fff; }
+
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden; }
+
+.video-container iframe,
+.video-container object,
+.video-container embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; }
+
+@media all and (max-width: 1024px) {
+  body {
+    background-image: none; }
+  .wrapper {
+    max-width: 100%;
+    margin: auto; }
+  header {
+    padding: 0;
+    background-image: url(../images/montanapalentinamobile.png); }
+  #logo {
+    max-width: 64px;
+    max-height: 64px; } }
+
+@media all and (max-width: 768px) {
+  header {
+    padding: 0;
+    background-image: url(../images/montanapalentinamobile.png); }
+  footer .footer {
+    justify-content: space-around;
+    flex-flow: column; }
+    footer .footer .copyright {
+      text-align: center; }
+      footer .footer .copyright a {
+        font-size: small; }
+  #logo {
+    max-width: 64px;
+    max-height: 64px; }
+  .container {
+    display: flex;
+    flex-flow: column;
+    flex-wrap: wrap; }
+    .container .main {
+      margin: 0 .5em .5em .5em; } }
+
+@media all and (max-width: 480px) {
+  .Dia {
+    margin: 0 0 .5em 0;
+    padding: .1em;
+    border: none;
+    border-bottom: 1px solid #000; }
+  .container .main .content .museo {
+    border: none;
+    border-bottom: 1px solid #000;
+    margin-bottom: 1em;
+    padding: 0; }
+  .container .main .content .paginator {
+    display: flex;
+    justify-content: space-around; }
+    .container .main .content .paginator div {
+      flex-direction: column; } }
+
+#opciones ul{
+  padding: 1em;
+}
+#opciones ul{
+  list-style: none;
+  /* padding: 0; */
+  margin: 0;
+}

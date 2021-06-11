@@ -1,0 +1,153 @@
+.body {
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: #333333;
+}
+.tdcontenido {
+	background-color: #252525;
+}
+.linkcliente {
+	font-size: 14px;
+	text-decoration: none;
+	font-style: normal;
+	color: #E36E06;
+	line-height:15px;
+	text-align: left;
+}
+.linkcliente:hover {
+	text-decoration:underline;
+}
+.linkeditcliente {
+	font-size: 14px;
+	text-decoration: none;
+	font-style: normal;
+	color: #FFFFFF;
+	line-height:20px;
+	text-align: left;
+	background-color: #E36E06;
+}
+.linkeditcuenta {
+	font-size: 12px;
+	text-decoration: none;
+	font-style: normal;
+	color: #FFFFFF;
+	line-height:15px;
+	text-align: left;
+	background-color: #E36E06;
+}
+.linkedit {
+	font-size: 9px;
+	text-decoration: none;
+	font-style: normal;
+	color: #8F8F8F;
+	text-align: left;
+}
+.linkedit2 {
+	font-size: 9px;
+	text-decoration: none;
+	font-style: normal;
+	color: #E36E06;
+	text-align: left;
+}
+.linkeditconfirmar {
+	font-size: 9px;
+	text-decoration: none;
+	font-style: normal;
+	color: #8F8F8F;
+	text-align: left;
+	background-color: #1F1F1F;
+}
+.guion {
+	font-size: 15px;
+	text-decoration: none;
+	font-style: normal;
+	color: #5e644a;
+	line-height:15px;
+	text-align: left;
+}
+
+.fecha {
+	font-size: 12px;
+	text-decoration: none;
+	font-style: normal;
+	color: #ede9e0;
+	line-height:15px;
+	text-align: left;
+}
+.titulo {
+	font-size: 22px;
+	text-decoration: none;
+	font-style: normal;
+	color: #A59163;
+	line-height:15px;
+	text-align: left;
+}
+.proyecto {
+	font-size: 10px;
+	text-decoration: none;
+	font-style: normal;
+	color: #BDAE8C;
+	line-height:15px;
+	text-align: left;
+}
+.descargar {
+	font-size: 12px;
+	text-decoration: none;
+	font-style: normal;
+	color: #E36E06;
+	line-height:15px;
+	text-align: left;
+}
+.contenido {
+	font-size: 12px;
+	text-decoration: none;
+	font-style: normal;
+	color: #BDAE8C;
+	line-height:15px;
+	text-align: left;
+}
+
+.fechaedit {
+	font-size: 12px;
+	text-decoration: none;
+	font-style: normal;
+	color: #333333;
+	line-height:15px;
+	text-align: left;
+	background-color: #ede9e0;
+}
+.tituloedit {
+	font-size: 22px;
+	text-decoration: none;
+	font-style: normal;
+	color: #333333;
+	line-height:15px;
+	text-align: left;
+	background-color: #A59163;
+}
+.proyectoedit {
+	font-size: 10px;
+	text-decoration: none;
+	font-style: normal;
+	color: #333333;
+	line-height:25px;
+	text-align: left;
+	background-color: #BDAE8C;
+}
+.descargaredit {
+	font-size: 12px;
+	text-decoration: none;
+	font-style: normal;
+	color: #333333;
+	line-height:15px;
+	text-align: left;
+	background-color: #E36E06;
+}
+.contenidoedit {
+	font-size: 12px;
+	text-decoration: none;
+	font-style: normal;
+	color: #333333;
+	line-height:15px;
+	text-align: left;
+	background-color: #BDAE8C;
+}

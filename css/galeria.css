@@ -1,0 +1,36 @@
+.fotogaleria {
+  padding: 0; }
+
+.foto {
+  text-align: center;
+  position: relative;
+  padding: 0;
+  background-color: #448040; }
+
+.fototitulo {
+  padding: 5px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0; }
+  .fototitulo span {
+    color: #fff;
+    background: rgba(68, 128, 64, 0.7);
+    padding: 2px; }
+
+.fotopie {
+  padding: 5px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0; }
+  .fotopie span {
+    font-size: smaller;
+    font-style: italic;
+    color: #fff;
+    background: rgba(68, 128, 64, 0.7);
+    padding: 2px; }
+
+@media all and (min-width: 1024px) {
+  .fotogaleria {
+    padding: 0; } }

@@ -1,0 +1,266 @@
+@charset "utf-8";
+/* CSS Document */
+.ClaseAno {
+	width: 189px;
+	height: auto;
+	clear: left;
+	float: left;
+	padding: 2px;
+	font-family: Arial, Helvetica, sans-serif;
+	border: 1px solid #1E5444;
+	margin: 0px;
+}
+.ClaseAno .filaAno {
+	height: auto;
+	width: 189px;
+	clear: left;
+	float: left;
+	margin: 0px;
+	padding: 5px;
+	text-align: center;
+	background-color: #1E5444;
+}
+.ClaseAno .ClaseMes {	width: 189px;	height: 218px;	float: left;	position: relative;	margin: 0px;	padding: 1px;}
+
+.ClaseAno .ClaseMes .fila0 {
+	float: left;
+	width: 187px;
+	height: 23px;
+	text-align: center;
+	background-color: #CC9933;
+	margin: 1px;
+	position: relative;
+	padding-top: 2px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	font-size: 0.7em;
+	font-weight: bold;
+	color: #FFF;
+}
+
+.ClaseAno .ClaseMes .fila0:hover {	background-color: #009999;}
+.ClaseAno .ClaseMes .fila0 a {	font-weight: bold;	color: #006633;	text-decoration: none;}
+.ClaseAno .ClaseMes .fila0 a:hover {
+	font-weight: bold;
+	color: #FFCC00;
+	text-decoration: none;
+}
+.ClaseAno .ClaseMes .filaSemana {	float: left;	width: 189px;	height: 27px;	text-align: center;	background-color: #FFFFFF;	margin: 0px;	padding: 0px;}
+.ClaseAno .ClaseMes .filaSemana a {	font-weight: bold;	color: #FFFFFF;	text-decoration: none;}
+.ClaseAno .ClaseMes .filaSemana a:hover {
+	font-weight: bold;
+	color: #FFCC00;
+	text-decoration: none;
+}
+.ClaseAno .ClaseMes .filaSemana .CeldaFila0 {	float: left;	height: 22px;	width: 23px;	text-align: center;	margin: 1px;	background-color: #99CCCC;	padding: 0px;	border: 1px solid #CCCCCC;}
+.ClaseAno .ClaseMes .filaSemana .CeldaFila0 a {	font-weight: bold;	color: #FFFFFF;	text-decoration: none;}
+.ClaseAno .ClaseMes .filaSemana .CeldaFila0 a:hover {
+	font-weight: bold;
+	color: #FFCC00;
+	text-decoration: none;
+}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendario {	float: left;	height: 22px;	width: 23px;	background-color: #FFFFFF;	margin: 1px;	padding: 0px;	border: 1px solid #CCCCCC;}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendario:hover {	background-color: #009999;	font-weight: bold;	color: #FFFFFF;}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendario a {	font-weight: bold;	color: #FFFFFF;	text-decoration: none;}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendario a:hover  {
+	font-weight: bold;
+	color: #FFCC00;
+	text-decoration: none;
+}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioHoy {	float: left;	height: 22px;	width: 23px;	background-color: #FF0000;	color: #FFFFFF;	margin: 1px;	padding: 0px;	font-weight: bold;	border: 1px solid #CCCCCC;}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioHoy:hover {	background-color: #009999;	font-weight: bold;	color: #FFFFFF;}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioHoy a {	font-weight: bold;	color: #FFFFFF;	text-decoration: none;}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioHoy a:hover  {
+	font-weight: bold;
+	color: #FFCC00;
+	text-decoration: none;
+}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioEvento {	float: left;	height: 22px;	width: 23px;	text-align: center;	margin: 1px;	background-color: #006633;	padding: 0px;	font-weight: bold;	color: #FFFFFF;	border: 1px solid #CCCCCC;}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioEvento:hover {	background-color: #009999;	font-weight: bold;	color: #FFFFFF;}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioEvento a {	font-weight: bold;	color: #FFFFFF;	text-decoration: none;}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioEvento a:hover  {
+	font-weight: bold;
+	color: #FFCC00;
+	text-decoration: none;
+}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioFiestaOficial {	float: left;	height: 22px;	width: 23px;	margin: 1px;	background-color: #00CCCC;	padding: 0px;	border: 1px solid #CCCCCC;}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioFiestaOficial:hover {	background-color: #009999;	font-weight: bold;	color: #FFFFFF;}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioFiestaOficial a {	font-weight: bold;	text-decoration: none;	color: #FFFFFF;}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioFiestaOficial a:hover  {
+	font-weight: bold;
+	color: #FFCC00;
+	text-decoration: none;
+}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioFindeSemana {	float: left;	height: 22px;	width: 23px;	margin: 1px;	background-color: #0099CC;	padding: 0px;	border: 1px solid #CCCCCC;}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioFindeSemana:hover {	background-color: #009999;	font-weight: bold;	color: #FFFFFF;}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioFindeSemana a {	font-weight: bold;	text-decoration: none;	color: #FFFFFF;}
+.ClaseAno .ClaseMes .filaSemana .CeldaCalendarioFindeSemana a :hover  {
+	font-weight: bold;
+	color: #FFCC00;
+	text-decoration: none;
+}
+.ClaseAno .ClaseMes .filaSemana .CeldaFila0 .DiasSemana {	font-weight: bold;	color: #244323;	margin: 0px;	padding: 0px;}
+body {
+	margin: 0px;
+	padding: 0px;
+	background-image: color: #fff;
+    background-color: #448040;
+    border-radius: 3px;
+    padding-left: 15px;url(../fondos/calendario.jpg);
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+
+.DiasMes {
+	margin: 0px;
+	padding: 0px;
+	width: 580px;
+	position: relative;
+}
+.DiasMes .Dia {
+	float: left;
+	width: 580px;
+	margin: 0px;
+	padding: 0px;
+}
+.DiasMes .Dia .DiaNombre {
+	background-image: url(../images/agenda-dia-out.gif);
+	background-repeat: no-repeat;
+	padding-top: 10px;
+	padding-right: 50px;
+	padding-bottom: 20px;
+	padding-left: 10px;
+	margin: 0px;
+	position: relative;
+	cursor: pointer;
+	font-weight: bold;
+	color: #333333;
+	font-size: 120%;
+}
+.DiasMes .Dia .DiaNombre span {
+	padding: 1px;
+	border: 1px solid #666666;
+	background-color: #FFFFFF;
+}
+.EventosLista {
+	margin: 0px;
+	padding: 0px;
+}
+.EventosLista .Evento {
+	float: left;
+	margin: 0px;
+	width: 565px;
+	padding-top: 5px;
+	padding-right: 5px;
+	padding-bottom: 20px;
+	padding-left: 10px;
+	background-image: url(../images/agenda-evento-out.gif);
+	background-repeat: no-repeat;
+	cursor: pointer;
+	position: relative;
+}
+.EventosLista .Evento .EventoTitulo {
+	margin-right: 100px;
+	float: left;
+	font-size: 100%;
+	font-weight: bold;
+	color: #000000;
+}
+.imprimir {
+	text-align: right;
+	padding-right: 10px;
+	font-size: 70%;
+	color: #666666;
+}
+
+.EventosLista .EventoContenido {
+	background-color:#FFFFFF;
+	margin: 0px;
+	padding: 10px;
+	float: left;
+	width: 558px;
+	border-right-width: 1px;
+	border-left-width: 1px;
+	border-right-style: solid;
+	border-left-style: solid;
+	border-right-color: #EEEEEE;
+	border-left-color: #EEEEEE;
+}
+.EventosLista .EventoContenido .EventoDetalle {
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #1E5444;
+	padding-right: 5px;
+	padding-left: 10px;
+	margin-right: 10px;
+	width: 60px;
+	background-image: url(../images/Evento-detalle-fonfo.gif);
+}
+.EventosLista .Evento .EventoHora {
+	color: #1E5444;
+	font-size: 95%;
+	position: absolute;
+	right: 10px;
+	top: 5px;
+	font-weight: bold;
+	background-color: #FFFFFF;
+	border: 1px solid #666666;
+	padding: 1px;
+}
+.EventoFin {
+	float: left;
+	width: 578px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-right-color: #eeeeee;
+	border-bottom-color: #eeeeee;
+	border-left-color: #eeeeee;
+	background-color: #FFFFFF;
+}
+.TablaAnual caption {
+	background-image: url(../images/agenda-dia-out.gif);
+	background-repeat: no-repeat;
+}
+.ClaseMes caption a{
+	
+}
+.collapse_buttons {
+	width: 570px;
+	padding: 5px;
+	font-weight: bold;
+	text-decoration: none;
+	font-size: 90%;
+}
+#cuerpo #centro #contenido .texto .minitexto {
+	font-size: 70%;
+	padding-left: 10px;
+	text-decoration:none;
+}
+.mostrar_todo{
+	text-decoration:none;
+	color: #1E5444;
+	font-weight: bold;
+}
+.cerrar_todo{
+	text-decoration:none;
+	color: #1E5444;
+	font-weight: bold;
+}
+.mostrar_todo:hover{
+	text-decoration:none;
+	color: #FFFFFF;
+	font-weight: bold;
+	background-color: #1E5444;
+}
+.cerrar_todo:hover{
+	text-decoration:none;
+	color: #FFFFFF;
+	font-weight: bold;
+	background-color: #1E5444;
+}

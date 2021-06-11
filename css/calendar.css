@@ -1,0 +1,201 @@
+div.year {
+  padding: .6rem; }
+  div.yeardiv.main {
+    background-color: #448040; }
+
+.selectors {
+  display: flex;
+  flex-direction: row;
+  max-width: 100%;
+  padding: .5rem;
+  justify-content: space-around; }
+
+.selectano {
+  flex-direction: column;
+  justify-content: center; }
+
+.year {
+  background-color: #448040; }
+
+.term {
+  display: flex;
+  flex-direction: row;
+  max-width: 100%;
+  justify-content: space-around; }
+
+.month {
+  justify-content: space-between; }
+
+.week.month-name {
+  color: #fff; }
+  .week.month-name a {
+    color: #fff; }
+
+.week {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  max-width: 100%; }
+
+.first {
+  justify-content: flex-end; }
+
+.last {
+  justify-content: flex-start; }
+
+div.first > div.day:last-child(1), div.first > div.day:last-child(2) {
+  background-color: #51d3c4; }
+
+div.week > div.day:nth-child(6), div.week > div.day:nth-child(7) {
+  background-color: #51d3c4; }
+
+.blank {
+  visibility: hidden; }
+
+.day.CeldaCalendarioEvento {
+  background-color: #006633 !important;
+  color: #FFFFFF; }
+  .day.CeldaCalendarioEvento a {
+    color: #FFFFFF; }
+
+.CeldaCalendarioHoy {
+  background-color: #FF0000 !important;
+  color: #000; }
+
+.day {
+  padding: .8rem;
+  min-width: 1.1rem;
+  text-align: center;
+  background-color: #a3e4dc;
+  margin: 1px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  color: #000; }
+
+.week-end {
+  background-color: #51d3c4; }
+
+.day-name {
+  background-color: #188073;
+  color: #fff;
+  padding: .8rem;
+  min-width: 1.1rem;
+  text-align: center;
+  margin: 1px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
+
+.month-name {
+  justify-content: center;
+  background-color: #188073;
+  color: #a3e4dc;
+  padding: .4rem;
+  margin: 3px 1px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
+
+.Evento {
+  position: relative; }
+  .Evento .EventoHora {
+    position: absolute;
+    top: 0px;
+    right: 0px; }
+
+.EventoDetalle {
+  font-weight: bold;
+  color: #FFFFFF;
+  background-color: #1E5444;
+  padding-right: 5px;
+  padding-left: 10px;
+  margin-right: 10px;
+  width: 60px; }
+
+.EventoContenido a {
+  color: #448040; }
+
+.EventoContenido a:hover {
+  text-decoration: underline; }
+
+.Dia {
+  margin: 0 .5em .5em .5em;
+  padding: 1em;
+  border: 1px solid #000;
+  border-radius: 3px; }
+
+select#ANO,
+select#IDNUCLEOURBANO,
+select#IDTIPOEVENTO,
+select#Pagina1,
+select#Pagina2,
+select.txt_inputs_buscador,
+select#CLASIFICACION,
+select#MOSTRAR,
+select#TIPOTRAMO,
+select#TIPOPESCA {
+  -webkit-appearance: button;
+  -webkit-border-radius: 2px;
+  -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  -webkit-padding-end: 20px;
+  -webkit-padding-start: 2px;
+  -webkit-user-select: none;
+  
+  background-position: 97% center;
+  background-repeat: no-repeat;
+  border: 1px solid #AAA;
+  color: #555;
+  margin: 3px;
+  overflow: hidden;
+  padding: 5px 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%; }
+
+select#ANO,
+select#IDNUCLEOURBANO,
+select#IDTIPOEVENTO,
+select#ESCUDOSPAGINACION,
+select#Pagina1,
+select#Pagina2,
+select#CLASIFICACION,
+select#MOSTRAR,
+select#TIPOTRAMO,
+select#TIPOPESCA {
+  color: #fff;
+  
+  background-color: #448040;
+  border-radius: 3px;
+  padding-left: 15px; }
+
+@media all and (max-width: 1024px) {
+  .term {
+    display: flex;
+    flex-direction: column; }
+  .month {
+    margin: .4rem;
+    max-width: 100%; }
+  .day {
+    min-width: 13%;
+    padding: 1rem 0 1rem 0;
+    text-align: center;
+    border-radius: 3px; }
+  .day-name {
+    min-width: 13%;
+    padding: 1rem 0 1rem 0;
+    text-align: center;
+    border-radius: 3px; } }
+
+@media all and (max-width: 480px) {
+  .term {
+    display: flex;
+    flex-direction: column; }
+  .month {
+    margin: .4rem; }
+  .day {
+    min-width: 12%;
+    padding: .4rem 0 .4rem 0;
+    text-align: center; }
+  .day-name {
+    min-width: 12%;
+    padding: .4rem 0 .4rem 0;
+    text-align: center; }
+  .selectors {
+    flex-direction: column; }
+  select#ANO, select#IDNUCLEOURBANO, select#IDTIPOEVENTO, select#ESCUDOSPAGINACION, select.txt_inputs_buscador {
+    margin: 5 0; } }
