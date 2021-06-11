@@ -3,6 +3,7 @@ define(__NAMESPACE__ ,'citcervera');
 
 function __autoload($class_name)
 {
+	//echo $class_name;
 	$class_name = str_replace('\\','/', '../code\\' . $class_name);
 	//echo $class_name;
 	if(file_exists($class_name . '.php'))

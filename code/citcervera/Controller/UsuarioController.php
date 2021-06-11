@@ -20,18 +20,16 @@ class UsuarioController {
 
     public function processRequest()
     {
-        echo $this->_userId;
-
         switch ($this->_requestMethod) {
             case 'GET':
                 if ($this->_userId) {
-                    $this->_response = $this->_usuarioManager->Get($this->_userId);
+                    $this->_response = $this->get($this->_userId);
                 } else {
                     $this->_response = $this->getAllUsers();
                 };
-                header($this->_response['status_code_header']);
-                if ($this->_response['body']) {
-                    echo $this->_response['body'];
+                
+                if ($this->_response['status_code_header'] === 'HTTP/1.1 200 OK') {
+                    echo json_encode($this->_response);
                 }
                 break;
                 case 'POST':
@@ -67,6 +65,14 @@ class UsuarioController {
             echo $response['body'];
         }
         */
+    }
+
+    private function get($id)
+    {
+        $result = $this->_usuarioManager->Get($id);
+        $response['status_code_header'] = 'HTTP/1.1 200 OK';
+        $response['body'] = json_encode($result);
+        return $response;
     }
 
     private function getAllUsers()
