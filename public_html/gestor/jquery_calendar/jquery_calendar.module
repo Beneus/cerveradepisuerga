@@ -1,0 +1,307 @@
+<?php
+// $Id: jquery_calendar.module,v 1.1 2007/10/14 05:12:59 redbox2000drupalorg Exp $
+
+/**
+ * @file
+ * The 'jquery_calendar' module is a Drupal module wrapper for the 'Calendar' 
+ * jQuery plug-in by Marc Grabanski.
+ * 
+ * @see 
+ * http://marcgrabanski.com/code/jquery-calendar/ for more information.
+ * 
+ * @example 
+ * For examples on how to use this plug-in please refer to http://marcgrabanski.com/code/jquery-calendar/
+ * 
+ * 
+ * ------------------------
+ * Drupal Module Wrapper
+ * ------------------------
+ * 
+ * This wrapper module supports all settings and attributes of the original 
+ * jQuery plug-in. The module will create unique init scripts for each calendar 
+ * object.
+ * 
+ * @copyright  (c) 2007 Martin Lanser
+ * @author     Martin Lanser (redbox2000@optonline.net
+ * @license    Released under GNU/GPL License [ http://www.gnu.org/copyleft/gpl.html ]
+ */
+
+
+/** ============================================================================
+ *                              C O N S T A N T S
+ *  ============================================================================
+ */
+
+// Define thingamajig name and other constants
+define('JQRY_CALENDAR',              'Calendar');
+define('JQRY_CALENDAR_AUTO',         TRUE);
+
+define('JQRY_CALENDAR_PLACE_HOLDER', '<object name>');
+define('JQRY_CALENDAR_DEFAULT',      'jqryDate');
+define('JQRY_CALENDAR_CLASS',        'jqryDate');
+
+
+
+/** ============================================================================
+ *                           H O O K S   &  F O R M S
+ *  ============================================================================
+ */
+
+/**
+ * Implementation of hook_menu in which we declare the settings hook.
+ */
+function jquery_calendar_menu($may_cache) {
+  
+  $items = array();
+  
+  if ($may_cache) {
+    $items[] = array(
+      'path' => 'admin/settings/jquery_calendar',
+      'title' => t('jQuery Calendar Settings'),
+      'description' => t("Configure the '%PLUG' jQuery plug-in", array('%PLUG' => JQRY_CALENDAR)),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => 'jquery_calendar_settings_form',
+      'access' => user_access('administer site configuration'),
+      'type' => MENU_NORMAL_ITEM,
+      );
+  }
+  elseif (JQRY_CALENDAR_AUTO) {
+    // Call our magic initialization function.
+    jquery_calendar_init();
+  }
+  
+  return $items;
+}
+
+function jquery_calendar_settings_form() {
+  
+  $form = array();
+  
+  $form['jquery_calendar_js'] = array(
+    '#type' => 'textarea',
+    '#title' => t("Javascript to initialize the '%PLUG' jQuery plug-in", array('%PLUG' => JQRY_CALENDAR)),
+    '#description' => t('This script will be included on every Drupal page.'),
+    '#default_value' => _jquery_calendar_get_js(NULL, FALSE),
+    );
+  
+  $form['jquery_calendar_dateformat'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Date format'),
+    '#description' => t("Date format used by the '%PLUG' jQuery plug-in", array('%PLUG' => JQRY_CALENDAR)),
+    '#default_value' => variable_get('jquery_calendar_dateformat', 'MDY/'),
+    );
+
+  $form['jquery_calendar_phpformat'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Date format (PHP)'),
+    '#description' => t("Date format used by the PHP 'date()'. This must be compatible with the format used by the '%PLUG' jQuery plug-in", array('%PLUG' => JQRY_CALENDAR)),
+    '#default_value' => variable_get('jquery_calendar_phpformat', 'm/d/Y'),
+    );
+
+  $form['jquery_calendar_compressed'] = array(
+    '#type' => 'checkbox',
+    '#title' => t("Load compressed Javascript code"),
+    '#default_value' => variable_get('jquery_calendar_compressed', 1),
+    '#description' => t("Define whether to load compressed version of Javascript code."),
+    '#disabled' => FALSE,
+  );
+
+  return system_settings_form($form);
+}
+
+
+
+/** ============================================================================
+ *                     T E S T   F u n c t i o n s   &  F o r m s
+ *  ============================================================================
+ */
+
+/**
+ * Implementation of hook_block().
+ * 
+ * This block is designed for demo purposes only.
+ */
+function jquery_calendar_block($op = 'list', $delta = 0) {
+  
+  switch ($op) {
+    case 'list':
+      $block[0]['info'] = t('jQuery Calendar Test Block');
+      return $block;
+      break;
+      
+    case 'view':
+      $block['subject'] = t('jQuery Calendar Test Block');
+      $block['content'] = drupal_get_form('jquery_calendar_test_form');
+      return $block;
+      break;
+  }
+}
+
+/**
+ * This test form shows how 'jquery_calendar_formitem()' is used
+ *
+ * @return
+ *    forms array
+ */
+function jquery_calendar_test_form() {
+  
+  $form = array();
+
+  $format = variable_get('jquery_calendar_phpformat', 'm/d/Y');
+  $date = (isset($_SESSION['jquery_calendar_test'])) ? date($format, $_SESSION['jquery_calendar_test']) : date($format);
+  unset($_SESSION['jquery_calendar_test']);
+
+  $attrib = array(
+    '#type' => 'textfield',
+    '#default_value' => $date,
+    '#field_prefix' => t('select date'),
+    '#required' => 1,
+    '#jqrycal' => array(
+      'autoPopUp' => 'both',
+      'buttonImageOnly' => 'true',
+      'buttonImage' => base_path() . drupal_get_path('module', 'jquery_calendar') .'/images/calendar.gif',
+      'yearRange' => '-5:+5',
+  ));
+  $form['date'] = jquery_calendar_formitem('date', $attrib);
+
+  $form['date_submit'] = array(
+    '#type' => 'submit',
+    '#default_value' => t('Save Date')
+  );
+	
+  return $form;
+}
+
+/**
+ * This is the 'submit()' for the test form.
+ */
+function jquery_calendar_test_form_submit($form, $form_values) {
+  
+  drupal_set_message(t("You've saved this date: %DATE", array('%DATE' => $form_values['date'])));
+  
+  $_SESSION['jquery_calendar_test'] = strtotime($form_values['date']);
+}
+
+
+
+/** ============================================================================
+ *                           L O C A L   H E L P E R S
+ *  ============================================================================
+ */
+
+/**
+ * Load required Javascript file, set defaults, etc.
+ */
+function jquery_calendar_init() {
+  
+  static $loaded = FALSE;
+  
+  if ($loaded) return;
+
+  // We add these strings here in case there is a localized set of strings for this module
+  $js_defaults = "clearText: '".   t('Clear')    ."', "
+               . "closeText: '".   t('Close')    ."', "
+               . "prevText: '".    t('‹ Prev') ."', "
+               . "nextText: '".    t('Next ›') ."', "
+               . "currentText: '". t('Today')    ."', "
+               . "dateFormat: '".  variable_get('jquery_calendar_dateformat', 'MDY/') ."', "
+               . "speed: 'fast'";
+  $js_defaults = "\n"
+               . "// Initialize jQuery Calendar\n"
+               . "$(document).ready(function(){ \n"
+               . "popUpCal.setDefaults({". $js_defaults ."}); \n"
+               . "});\n";               
+
+  $module_dir = drupal_get_path('module', 'jquery_calendar');
+  $js_version = (variable_get('jquery_calendar_compressed', 1)) ? 'jquery_calendar.pack.js' : 'jquery_calendar.js';
+  
+  drupal_add_css($module_dir .'/jquery_calendar.css');
+  drupal_add_js($module_dir .'/'. $js_version);
+  drupal_add_js($js_defaults, 'inline');
+  
+  $loaded = TRUE;
+}
+
+/**
+ * This Javascript snippet should be all you need to initialle the jquery.cookie plug-in.
+ * 
+ * @param
+ *    $attrib -- ARRAY structure with all custom jQuery Calendar options to be 
+ *               used for a given object
+ * 
+ * @param
+ *    $force -- if TRUE, then any stored default version will be disregarded
+ */
+function _jquery_calendar_get_js($attrib = array(), $force = TRUE) {
+
+  $settings = '';
+  
+  // Convert attribute array to string
+  if (is_array($attrib) && count($attrib)) {
+    foreach ($attrib as $key => $val) {
+      $settings .= ", $key: '$val'";
+    }
+    $settings = trim($settings, ', ');
+  }
+    
+  // Create gneral initialization script for calendar object
+  $default = "\n$(document).ready(function() {"
+           . "$(\"#edit-". JQRY_CALENDAR_PLACE_HOLDER ."\").calendar(";
+  if ($settings) $default .= "{". $settings ."}";
+  $default .= ");});\n";
+
+  return ($force) ? $default : variable_get('jquery_calendar_js', $default);
+}
+
+/**
+ * This function creates the actual form object that can be used in a Drupal 
+ * form. The attributes array takes both the form item attributes and the 
+ * pop-up calendar attributes.
+ *
+ * @param
+ *    $obj -- name of form item. Will be used by script to identify CSS ID
+ * 
+ * @param 
+ *    $attrib -- array with form item and pop-up calendar attributes.
+ * 
+ * @return
+ *    form item array 
+ */
+function jquery_calendar_formitem($obj = '', $attrib = array()) {
+  
+  if (empty($obj)) $obj = JQRY_CALENDAR_DEFAULT;
+  
+  // Initialize form item array
+  $form_item = array();
+  
+  // Prep the form attributes array
+  if (!is_array($attrib) || empty($attrib)) {
+    $attrib = array(
+      '#type' => 'textfield',
+      '#size' => 10,
+      '#maxlength' => 10,
+      '#attributes' => array('class' => JQRY_CALENDAR_CLASS),
+    );
+  }
+  else {
+    // Make sure '#type' is set to 'textfield'
+    $attrib['#type'] = 'textfield';
+    
+    // Check for field lengths
+    if (!isset($attrib['#size']))      $attrib['#size'] = '10';
+    if (!isset($attrib['#maxlength'])) $attrib['#maxlength'] = '10';
+    if (!isset($attrib['#jqrycal']))   $attrib['#jqrycal'] = array();
+  }
+  
+  // Assign form attributes to the form item
+  foreach ($attrib as $key => $val) {
+    $form_item[$key] = $val;
+  }
+  
+  // Prep and load the jQuery script
+  $js = _jquery_calendar_get_js($attrib['#jqrycal']);
+  $js = str_replace(JQRY_CALENDAR_PLACE_HOLDER, $obj, $js);
+  drupal_add_js($js, 'inline');
+  
+  return $form_item;
+}
