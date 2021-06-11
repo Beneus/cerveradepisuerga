@@ -1,6 +1,0 @@
-{
-    "require": {
-        "nahid/jsonq": "^5.2",
-        "clancats/hydrahon": "dev-master"
-    }
-}
