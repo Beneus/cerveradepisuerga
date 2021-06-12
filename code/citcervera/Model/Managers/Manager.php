@@ -93,7 +93,7 @@ class Manager implements IManager
         return $entities;
     }
 
-    public function Save(\Citcervera\Model\Interfaces\IEntityBase $entity)
+    public function Save(IEntityBase $entity)
     {
         $id = $entity->GetId();
         $table = $entity->GetTable();

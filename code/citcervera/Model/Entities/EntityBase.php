@@ -38,6 +38,18 @@ abstract class entityBase implements IEntityBase
 		}
 	}
 
+	public function TakePUT($property, $length = 0)
+	{
+		if($length > 0)
+		{
+			return $this->Limpiar($_PUT[$property] ?? '',$length);
+		}
+		else
+		{
+			return $_PUT[$property] ?? '';
+		}
+	}
+
 	private function Limpiar($cad,$longitud)
 	{
 		$cad = str_replace("'","",$cad);

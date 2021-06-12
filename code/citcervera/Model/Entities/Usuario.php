@@ -71,4 +71,14 @@ class Usuario extends EntityBase implements IEntityBase
 		$this->Email 			= parent::TakeGET('EMAIL', 100);
 		$this->Fecha 			= parent::TakeGET('FECHA');
 	}
+
+	function _PUT()
+	{
+		$this->Idusuario 		= parent::TakePUT('IDUSUARIO');
+		$this->Usuario 			= parent::TakePUT('USUARIO', 100);
+		$this->Clave 			= parent::TakePUT('CLAVE', 16);
+		$this->TipoUsuario 		= parent::TakePUT('TIPOUSUARIO');
+		$this->Email 			= parent::TakePUT('EMAIL', 100);
+		$this->Fecha 			= parent::TakePUT('FECHA');
+	}
 }
