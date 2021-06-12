@@ -1,11 +1,13 @@
 <?php
+
 namespace citcervera\Controller;
 
 use citcervera\Model\Managers\Manager;
 use citcervera\Model\Interfaces\IEntityBase;
 use Exception;
 
-class Controller {
+class Controller
+{
 
     private $_response;
     private $_requestMethod;
@@ -23,7 +25,7 @@ class Controller {
 
     public function processRequest()
     {
-        try{
+        try {
             switch ($this->_requestMethod) {
                 case 'GET':
                     if ($this->_data) {
@@ -31,7 +33,7 @@ class Controller {
                     } else {
                         $this->_response = $this->getAllUsers();
                     };
-                    
+
                     if ($this->_response['status'] === '200 OK') {
                         echo json_encode($this->_response);
                     }
@@ -61,11 +63,9 @@ class Controller {
                     }
                     break;
             }
-        }catch(Exception $e){
+        } catch (Exception $e) {
             echo json_encode($e);
         }
-        
-        
     }
 
     private function get($id)
@@ -84,8 +84,9 @@ class Controller {
         return $response;
     }
 
-    private function create($input){
-        $input = $this->_entityManager->cast($this->_entity,$input);
+    private function create($input)
+    {
+        $input = $this->_entityManager->cast($this->_entity, $input);
         $result = $this->_entityManager->Save($input);
         $response['status_code_header'] = '201 Created';
         $response['body'] = $result;
@@ -94,7 +95,7 @@ class Controller {
 
     private function update($input)
     {
-        $input = $this->_entityManager->cast($this->_entity,$input);
+        $input = $this->_entityManager->cast($this->_entity, $input);
         $result = $this->_entityManager->Save($input);
         $response['status_code_header'] = '200 Updated';
         $response['body'] = $result;
@@ -115,5 +116,4 @@ class Controller {
         $response['body'] = null;
         return $response;
     }
-
 }
