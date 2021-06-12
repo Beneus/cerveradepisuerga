@@ -2,13 +2,12 @@
 
 namespace citcervera\Model\Entities;
 
-include_once('Models/Entities/EntityBase.php');
-
 use citcervera\Model\Interfaces\IEntityBase;
 
 class BannersVistos extends EntityBase implements IEntityBase
 {
 	private $_tableName = 'BannersVistos';
+	private $_id = 'idBannersVistos';
 	var $idBannersVistos;
 	var $idBanner;
 	var $idBannersGestion;
@@ -47,5 +46,10 @@ class BannersVistos extends EntityBase implements IEntityBase
 	function GetTable()
 	{
 		return $this->_tableName;
+	}
+
+	function GetId()
+	{
+		return $this->_id;
 	}
 }

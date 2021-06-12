@@ -1,23 +1,20 @@
 <?php
-
 namespace citcervera\Model\Entities;
-
-include_once('Models/Entities/EntityBase.php');
 
 use citcervera\Model\Interfaces\IEntityBase;
 
 class Banners extends EntityBase implements IEntityBase
 {
 	private $_tableName = 'Banners';
-	var $idBanner;
-	var $TextoBanner;
-	var $UrlBanner;
-	var $Banner;
-	var $Tamano;
-	var $Ancho;
-	var $Alto;
-	var $Orden;
-	var $Fecha;
+	public $idBanner;
+	public $TextoBanner;
+	public $UrlBanner;
+	public $Banner;
+	public $Tamano;
+	public $Ancho;
+	public $Alto;
+	public $Orden;
+	public $Fecha;
 
 	function Banners(
 		$_idBanner,
@@ -46,7 +43,8 @@ class Banners extends EntityBase implements IEntityBase
 		return $this->_tableName;
 	}
 
-	function GetId(){
+	function GetId()
+	{
 		return $this->_id;
 	}
 }

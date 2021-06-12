@@ -7,12 +7,12 @@ class Usuario extends EntityBase implements IEntityBase
 {
 	private $_tableName = 'Usuarios';
 	private $_id = 'Idusuario';
-	var $Idusuario;
-	var $Usuario;
-	var $Clave;
-	var $TipoUsuario;
-	var $Email;
-	var $Fecha;
+	public $Idusuario;
+	public $Usuario;
+	public $Clave;
+	public $TipoUsuario;
+	public $Email;
+	public $Fecha;
 
 	public function __construct()
 	{

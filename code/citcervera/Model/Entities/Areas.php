@@ -2,16 +2,14 @@
 
 namespace citcervera\Model\Entities;
 
-include_once('Models/Entities/EntityBase.php');
-
 use citcervera\Model\Interfaces\IEntityBase;
 
 class Areas extends EntityBase implements IEntityBase
 {
 	private $_tableName = 'Areas';
 	private $_id = 'idAreas';
-	var $idArea;
-	var $NombreArea;
+	public $idArea;
+	public $NombreArea;
 
 	function Areas(
 		$_idArea,
@@ -26,7 +24,10 @@ class Areas extends EntityBase implements IEntityBase
 		return $this->_tableName;
 	}
 
-	function GetId(){
+	function GetId()
+	{
 		return $this->_id;
 	}
+
+	
 }

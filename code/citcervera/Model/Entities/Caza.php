@@ -2,18 +2,16 @@
 
 namespace citcervera\Model\Entities;
 
-include_once('Models/Entities/EntityBase.php');
-
 use citcervera\Model\Interfaces\IEntityBase;
 
 class Caza extends EntityBase implements IEntityBase
 {
 	private $_tableName = 'Caza';
 	private $_id = 'idCaza';
-	var $idCaza;
-	var $ImgDescripcion;
-	var $Descripcion;
-	var $Fecha;
+	public $idCaza;
+	public $ImgDescripcion;
+	public $Descripcion;
+	public $Fecha;
 
 	function Caza(
 		$_idCaza,
@@ -32,7 +30,8 @@ class Caza extends EntityBase implements IEntityBase
 		return $this->_tableName;
 	}
 
-	function GetId(){
+	function GetId()
+	{
 		return $this->_id;
 	}
 }

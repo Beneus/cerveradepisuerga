@@ -1,33 +1,52 @@
 <?php
-namespace citcervera\Model\Entities;
 
-include_once('Models/Entities/EntityBase.php');
+namespace citcervera\Model\Entities;
 
 use citcervera\Model\Interfaces\IEntityBase;
 
 class Rutas extends EntityBase implements IEntityBase
 {
-	var $idRuta;
-	var $Ruta;
-	var $Inicio;
-	var $Llegada;
-	var $Distancia;
-	var $Tiempo;
-	var $Desnivel;
-	var $Piso;
-	var $Dificultad;
-	var $Epoca;
-	var $Descripcion;
-	var $Flora;
-	var $Fauna;
-	var $ImgDescripcion;
-	var $ImgFlora;
-	var $ImgFauna;
-	var $URL;
-	var $Fecha;
+	private $_tableName = 'Rutas';
+	private $_id = 'IdRuta';
+	public $idRuta;
+	public $Ruta;
+	public $Inicio;
+	public $Llegada;
+	public $Distancia;
+	public $Tiempo;
+	public $Desnivel;
+	public $Piso;
+	public $Dificultad;
+	public $Epoca;
+	public $Descripcion;
+	public $Flora;
+	public $Fauna;
+	public $ImgDescripcion;
+	public $ImgFlora;
+	public $ImgFauna;
+	public $URL;
+	public $Fecha;
 
 	function Rutas(
-$_idRuta,$_Ruta,$_Inicio,$_Llegada,$_Distancia,$_Tiempo,$_Desnivel,$_Piso,$_Dificultad,$_Epoca,$_Descripcion,$_Flora,$_Fauna,$_ImgDescripcion,$_ImgFlora,$_ImgFauna,$_URL,$_Fecha){
+		$_idRuta,
+		$_Ruta,
+		$_Inicio,
+		$_Llegada,
+		$_Distancia,
+		$_Tiempo,
+		$_Desnivel,
+		$_Piso,
+		$_Dificultad,
+		$_Epoca,
+		$_Descripcion,
+		$_Flora,
+		$_Fauna,
+		$_ImgDescripcion,
+		$_ImgFlora,
+		$_ImgFauna,
+		$_URL,
+		$_Fecha
+	) {
 		$this->idRuta = $_idRuta;
 		$this->Ruta = $_Ruta;
 		$this->Inicio = $_Inicio;
@@ -46,5 +65,15 @@ $_idRuta,$_Ruta,$_Inicio,$_Llegada,$_Distancia,$_Tiempo,$_Desnivel,$_Piso,$_Difi
 		$this->ImgFauna = $_ImgFauna;
 		$this->URL = $_URL;
 		$this->Fecha = $_Fecha;
+	}
+
+	function GetTable()
+	{
+		return $this->_tableName;
+	}
+
+	function GetId()
+	{
+		return $this->_id;
 	}
 }
