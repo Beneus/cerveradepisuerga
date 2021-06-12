@@ -1,8 +1,11 @@
 <?php
+
 namespace citcervera\Model\Connections;
 
+ini_set('memory_limit', '-1');
+
 use citcervera\Model\Interfaces\IConnection;
-//use Citcervera\Moddels\Entities\IEntityBase;
+
 use mysqli;
 
 if ( !class_exists( 'DB' ) ) {
