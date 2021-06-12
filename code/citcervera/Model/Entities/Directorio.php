@@ -2,34 +2,33 @@
 
 namespace citcervera\Model\Entities;
 
-include_once('Models/Entities/EntityBase.php');
-
 use citcervera\Model\Interfaces\IEntityBase;
 
 class Directorio extends EntityBase implements IEntityBase
 {
 	private $_tableName = 'Directorio';
-	var $idDirectorio;
-	var $NombreComercial;
-	var $Direccion;
-	var $Latitud;
-	var $Longitud;
-	var $idNucleoUrbano;
-	var $Provincia;
-	var $CP;
-	var $Telefono;
-	var $Movil;
-	var $Fax;
-	var $Email;
-	var $URL;
-	var $NombreContacto;
-	var $Apellido1Contacto;
-	var $Apellido2Contacto;
-	var $FechaCreacion;
-	var $ImgDescripcion;
-	var $Descripcion;
-	var $Prestaciones;
-	var $Fecha;
+	private $_id = 'idDirectorio';
+	public $idDirectorio;
+	public $NombreComercial;
+	public $Direccion;
+	public $Latitud;
+	public $Longitud;
+	public $idNucleoUrbano;
+	public $Provincia;
+	public $CP;
+	public $Telefono;
+	public $Movil;
+	public $Fax;
+	public $Email;
+	public $URL;
+	public $NombreContacto;
+	public $Apellido1Contacto;
+	public $Apellido2Contacto;
+	public $FechaCreacion;
+	public $ImgDescripcion;
+	public $Descripcion;
+	public $Prestaciones;
+	public $Fecha;
 
 	function Directorio(
 		$_idDirectorio,
@@ -80,5 +79,10 @@ class Directorio extends EntityBase implements IEntityBase
 	function GetTable()
 	{
 		return $this->_tableName;
+	}
+
+	function GetId()
+	{
+		return $this->_id;
 	}
 }
