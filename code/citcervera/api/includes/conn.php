@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 ini_set("display_errors","On");
 
 define(__NAMESPACE__ ,'citcervera');
-function __autoload($class_name)
+function my_autoloader($class_name)
 {
     //echo $class_name . PHP_EOL;
 	$class_name = str_replace('\\','/', $class_name);
@@ -14,6 +14,6 @@ function __autoload($class_name)
 		return;
 	}   
 }
-spl_autoload_register(__NAMESPACE__."\__autoload");
+spl_autoload_register('my_autoloader');
 
 ?>
