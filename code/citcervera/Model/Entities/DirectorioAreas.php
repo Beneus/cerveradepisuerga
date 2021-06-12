@@ -2,17 +2,16 @@
 
 namespace citcervera\Model\Entities;
 
-include_once('Models/Entities/EntityBase.php');
-
 use citcervera\Model\Interfaces\IEntityBase;
 
 class DirectorioAreas extends EntityBase implements IEntityBase
 {
 	private $_tableName = 'DirectorioAreas';
-	var $idDirectorioAreas;
-	var $idDirectorio;
-	var $idArea;
-	var $Fecha;
+	private $_id = 'idDirectorioAreas';
+	public $idDirectorioAreas;
+	public $idDirectorio;
+	public $idArea;
+	public $Fecha;
 
 	function DirectorioAreas(
 		$_idDirectorioAreas,
@@ -29,5 +28,10 @@ class DirectorioAreas extends EntityBase implements IEntityBase
 	function GetTable()
 	{
 		return $this->_tableName;
+	}
+
+	function GetId()
+	{
+		return $this->_id;
 	}
 }

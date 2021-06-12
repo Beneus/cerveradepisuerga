@@ -1,22 +1,37 @@
 <?php
-namespace citcervera\Model\Entities;
 
-include_once('Models/Entities/EntityBase.php');
+namespace citcervera\Model\Entities;
 
 use citcervera\Model\Interfaces\IEntityBase;
 
 class DirectorioServicio extends EntityBase implements IEntityBase
 {
-	var $idDirectorioServicio;
-	var $idDirectorio;
-	var $idservicio;
-	var $Fecha;
+	private $_tableName = 'DirectorioServicio';
+	private $_id = 'idDirectorioServicio';
+	public $idDirectorioServicio;
+	public $idDirectorio;
+	public $idservicio;
+	public $Fecha;
 
 	function DirectorioServicio(
-$_idDirectorioServicio,$_idDirectorio,$_idservicio,$_Fecha){
+		$_idDirectorioServicio,
+		$_idDirectorio,
+		$_idservicio,
+		$_Fecha
+	) {
 		$this->idDirectorioServicio = $_idDirectorioServicio;
 		$this->idDirectorio = $_idDirectorio;
 		$this->idservicio = $_idservicio;
 		$this->Fecha = $_Fecha;
+	}
+
+	function GetTable()
+	{
+		return $this->_tableName;
+	}
+
+	function GetId()
+	{
+		return $this->_id;
 	}
 }
