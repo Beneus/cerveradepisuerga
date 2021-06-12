@@ -61,7 +61,4 @@ abstract class entityBase implements IEntityBase
 		return $cad;
 	}
 
-	function GetId(){
-		return $this->_id;
-	}
 }
