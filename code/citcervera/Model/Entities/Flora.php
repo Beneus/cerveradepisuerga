@@ -1,27 +1,39 @@
 <?php
+
 namespace citcervera\Model\Entities;
 
 use citcervera\Model\Interfaces\IEntityBase;
 
-
-
 class Flora extends EntityBase implements IEntityBase
 {
-	var $idFlora;
-	var $NombreComun;
-	var $NombreCientifico;
-	var $Familia;
-	var $Descripcion;
-	var $Habitat;
-	var $Usos;
-	var $ImgDescripcion;
-	var $ImgHabitat;
-	var $ImgUsos;
-	var $Fecha;
+	private $_tableName = 'Flora';
+	private $_id = 'idFlora';
+	public $idFlora;
+	public $NombreComun;
+	public $NombreCientifico;
+	public $Familia;
+	public $Descripcion;
+	public $Habitat;
+	public $Usos;
+	public $ImgDescripcion;
+	public $ImgHabitat;
+	public $ImgUsos;
+	public $Fecha;
 
 
 	function Flora(
-$_idFlora,$_NombreComun,$_NombreCientifico,$_Familia,$_Descripcion,$_Habitat,$_Usos,$_ImgDescripcion,$_ImgHabitat,$_ImgUsos,$_Fecha){
+		$_idFlora,
+		$_NombreComun,
+		$_NombreCientifico,
+		$_Familia,
+		$_Descripcion,
+		$_Habitat,
+		$_Usos,
+		$_ImgDescripcion,
+		$_ImgHabitat,
+		$_ImgUsos,
+		$_Fecha
+	) {
 		$this->idFlora = $_idFlora;
 		$this->NombreComun = $_NombreComun;
 		$this->NombreCientifico = $_NombreCientifico;
@@ -37,8 +49,11 @@ $_idFlora,$_NombreComun,$_NombreCientifico,$_Familia,$_Descripcion,$_Habitat,$_U
 
 	function GetTable()
 	{
-		
+		return $this->_tableName;
 	}
 
-	
+	function GetId()
+	{
+		return $this->_id;
+	}
 }
