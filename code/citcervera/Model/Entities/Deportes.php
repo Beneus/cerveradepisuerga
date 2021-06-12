@@ -2,29 +2,28 @@
 
 namespace citcervera\Model\Entities;
 
-include_once('Models/Entities/EntityBase.php');
-
 use citcervera\Model\Interfaces\IEntityBase;
 
 class Deportes extends EntityBase implements IEntityBase
 {
 	private $_tableName = 'Deportes';
-	var $idDeporte;
-	var $idNucleoUrbano;
-	var $ActoDeportivo;
-	var $FechaInicio;
-	var $FechaFinal;
-	var $Hora;
-	var $Lugar;
-	var $Contacto;
-	var $Telefono;
-	var $Email;
-	var $Url;
-	var $Descripcion;
-	var $Precio;
-	var $ImgDescripcion;
-	var $DocDeporte;
-	var $Fecha;
+	private $_id = 'idDeporte';
+	public $idDeporte;
+	public $idNucleoUrbano;
+	public $ActoDeportivo;
+	public $FechaInicio;
+	public $FechaFinal;
+	public $Hora;
+	public $Lugar;
+	public $Contacto;
+	public $Telefono;
+	public $Email;
+	public $Url;
+	public $Descripcion;
+	public $Precio;
+	public $ImgDescripcion;
+	public $DocDeporte;
+	public $Fecha;
 
 	function Deportes(
 		$_idDeporte,
@@ -65,5 +64,10 @@ class Deportes extends EntityBase implements IEntityBase
 	function GetTable()
 	{
 		return $this->_tableName;
+	}
+
+	function GetId()
+	{
+		return $this->_id;
 	}
 }
