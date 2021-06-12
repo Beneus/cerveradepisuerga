@@ -27,6 +27,11 @@ class Rutas extends EntityBase implements IEntityBase
 	public $URL;
 	public $Fecha;
 
+	public function __construct()
+	{
+		//parent::__construct();
+	}
+	
 	function Rutas(
 		$_idRuta,
 		$_Ruta,
