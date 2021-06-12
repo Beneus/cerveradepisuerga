@@ -6,6 +6,7 @@ use citcervera\Model\Interfaces\IEntityBase;
 class Banners extends EntityBase implements IEntityBase
 {
 	private $_tableName = 'Banners';
+	private $_id = 'idBanner';
 	public $idBanner;
 	public $TextoBanner;
 	public $UrlBanner;
