@@ -16,4 +16,14 @@ function my_autoloader($class_name)
 }
 spl_autoload_register('my_autoloader');
 
+
+function getEntityfromPath(){
+	$path = explode("/", getcwd());
+	end($path);
+	$entityName = ucfirst(prev($path));
+
+	return 'citcervera\\Model\\Entities\\' . $entityName;
+}
+
+
 ?>

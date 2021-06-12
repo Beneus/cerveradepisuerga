@@ -7,11 +7,12 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 use citcervera\Controller\Controller;
-use citcervera\Model\Entities\Religion;
+
+$entityName =  getEntityfromPath();
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $data = json_decode(file_get_contents("php://input"));
-    $entity = new Religion();
+    $entity = new $entityName();
     $Controller = new Controller($entity,'POST', $data);
     $Controller->processRequest();
 }
