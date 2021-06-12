@@ -3,6 +3,7 @@ include("../../includes/conn.php");
 
 use citcervera\Controller\Controller;
 use citcervera\Model\Entities\Usuario;
+
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
