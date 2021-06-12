@@ -9,10 +9,11 @@ use citcervera\Model\Interfaces\IEntityBase;
 class ComoLlegar extends EntityBase implements IEntityBase
 {
 	private $_tableName = 'ComoLlegar';
-	var $idComoLlegar;
-	var $ImgDescripcion;
-	var $Descripcion;
-	var $Fecha;
+	private $_id = 'idComoLlegar';
+	public $idComoLlegar;
+	public $ImgDescripcion;
+	public $Descripcion;
+	public $Fecha;
 
 	function ComoLlegar(
 		$_idComoLlegar,
@@ -29,5 +30,10 @@ class ComoLlegar extends EntityBase implements IEntityBase
 	function GetTable()
 	{
 		return $this->_tableName;
+	}
+
+	function GetId()
+	{
+		return $this->_id;
 	}
 }
