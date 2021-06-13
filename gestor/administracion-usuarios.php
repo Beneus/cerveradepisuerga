@@ -4,6 +4,8 @@ include("includes/variables.php");
 include("includes/funciones.php");
 
 
+$idNucleoUrbano = $_GET["idNucleoUrbano"] ?? '';
+$idSubservicio = $_GET["idSubservicio"] ?? '';
 $TipoUsuario = $_GET["TipoUsuario"] ?? '';
 $Buscar = $_GET["Buscar"] ?? '';
 $Pagina = $_GET["Pagina"] ?? '';
@@ -36,7 +38,7 @@ if (!is_numeric($Mostrar)) $Mostrar = 10;
 					}
 				}
 			}
-			var urldest = "administracion-eliminar-user.php";
+			var urldest = "administracion-usuarios-eliminar.php";
 			var cad = "Pagina=" + pag + "&cadEliminados=" + cad_eliminados;
 			if (cad_eliminados != "") {
 				window.open(urldest + "?" + cad, '', 'width=200,height=200');
@@ -55,19 +57,19 @@ if (!is_numeric($Mostrar)) $Mostrar = 10;
 		}
 
 		function Paginar(x) {
-			location.href = "administracion-list-user.php?&Buscar=<?php echo $Buscar; ?>&TipoUsuario=<?php echo $TipoUsuario; ?>&Mostrar=" + x.value;
+			location.href = "administracion-usuarios.php?&Buscar=<?php echo $Buscar; ?>&TipoUsuario=<?php echo $TipoUsuario; ?>&Mostrar=" + x.value;
 		}
 
 		function CambiarPagina(x) {
-			location.href = "administracion-list-user.php?Mostrar=<?php echo $Mostrar; ?>&Buscar=<?php echo $Buscar; ?>&Pagina=" + x.value;
+			location.href = "administracion-usuarios.php?Mostrar=<?php echo $Mostrar; ?>&Buscar=<?php echo $Buscar; ?>&Pagina=" + x.value;
 		}
 
 		function CambiarTipo(x) {
-			location.href = "administracion-list-user.php?TipoUsuario=" + x.value;
+			location.href = "administracion-usuarios.php?TipoUsuario=" + x.value;
 		}
 
 		function Buscar(x) {
-			location.href = "administracion-list-user.php?Buscar=" + x.value;
+			location.href = "administracion-usuarios.php?Buscar=" + x.value;
 		}
 	</script>
 </head>
@@ -283,10 +285,10 @@ if (!is_numeric($Mostrar)) $Mostrar = 10;
 											<td>&nbsp;</td>
 											<td><?php
 												if (($Pagina > 1) and ($Mostrar < $NumTotalRegistros)) {
-													echo "<a href=\"administracion-list-user.php?Pagina=" . ($Pagina - 1) . "&Mostrar=$Mostrar&buscar=$Buscar&idNucleoUrbano=$idNucleoUrbano&idSubservicio=$idSubservicio\" class=\"linkBlanco\"> << Anterior </a>";
+													echo "<a href=\"administracion-usuarios.php?Pagina=" . ($Pagina - 1) . "&Mostrar=$Mostrar&buscar=$Buscar&idNucleoUrbano=$idNucleoUrbano&idSubservicio=$idSubservicio\" class=\"linkBlanco\"> << Anterior </a>";
 												}
 												if (($Pagina < $numPags) and ($Mostrar < $NumTotalRegistros)) {
-													echo "<a href=\"administracion-list-user.php?Pagina=" . ($Pagina + 1) . "&Mostrar=$Mostrar&buscar=$Buscar&idNucleoUrbano=$idNucleoUrbano&idSubservicio=$idSubservicio\" class=\"linkBlanco\"> Siguiente >> </a>";
+													echo "<a href=\"administracion-usuarios.php?Pagina=" . ($Pagina + 1) . "&Mostrar=$Mostrar&buscar=$Buscar&idNucleoUrbano=$idNucleoUrbano&idSubservicio=$idSubservicio\" class=\"linkBlanco\"> Siguiente >> </a>";
 												}
 												?></td>
 											<td>

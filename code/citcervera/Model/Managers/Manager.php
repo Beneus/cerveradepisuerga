@@ -127,7 +127,7 @@ class Manager implements IManager
             );
             if ($ret)
             {
-                return 'Inserted into Agenda ';
+                return 'Inserted into ' . $table;
             }
             else
             {

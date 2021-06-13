@@ -1,4 +1,5 @@
 <?php
+
 namespace citcervera\Model\Entities;
 
 use citcervera\Model\Interfaces\IEntityBase;
@@ -50,6 +51,25 @@ class Usuario extends EntityBase implements IEntityBase
 		$this->TipoUsuario = $_TipoUsuario;
 		$this->Email = $_Email;
 		$this->Fecha = $_Fecha;
+	}
+
+	public function ValidateRules()
+	{
+		$validation = [
+			'Usuario' => [
+				'required' => true,
+				'min-length' => 6
+			],
+			'Clave' => [
+				'required' => true,
+				'min-length' => 8
+			],
+			'Email' => [
+				'required' => true,
+				'format' => 'email'
+			]
+		];
+		return $validation;
 	}
 
 	function _POST()

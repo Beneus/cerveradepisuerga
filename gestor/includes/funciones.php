@@ -1,5 +1,4 @@
 <?php
-use citcervera\Model\Managers\DataCarrier;
 
 function isEmail($email)
 {
