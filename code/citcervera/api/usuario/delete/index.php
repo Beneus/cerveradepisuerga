@@ -1,11 +1,5 @@
 <?php
-include("../../includes/conn.php");
-
-use citcervera\Controller\Controller;
-
-$entityName =  getEntityfromPath();
-
-header("Content-Type: application/json; charset=UTF-8");
+include("../../includes/header.php");
 
 if ($_SERVER['REQUEST_METHOD'] == "DELETE") {
     $id = '';
@@ -14,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == "DELETE") {
 	}
 
     $entity = new $entityName();
-    $Controller = new Controller($entity,'DELETE', $id);
+    $Controller = new $controller($entity,'DELETE', $id);
     $Controller->processRequest();
 }
 ?>

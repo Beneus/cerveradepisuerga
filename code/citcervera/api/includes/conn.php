@@ -25,6 +25,11 @@ function getEntityfromPath()
     return 'citcervera\\Model\\Entities\\' . $entityName;
 }
 
+function getController()
+{
+    return 'citcervera\\Controller\\Controller';
+}
+
 
 function isEmail($email)
 {
@@ -41,7 +46,7 @@ function validate($entity, $data)
             switch ($ruleKey) {
                 case 'required':
                     if ($ruelValue) {
-                        if(!($data->{$fieldKey})){
+                        if (!($data->{$fieldKey})) {
                             array_push($ErrorMsn, [$fieldKey => $fieldKey . ' es obligatorio']);
                         }
                     }
@@ -60,7 +65,7 @@ function validate($entity, $data)
             }
         }
     }
-    if(count($ErrorMsn) > 0){
+    if (count($ErrorMsn) > 0) {
         $validation['status'] =  'No created';
     }
     $validation['errors'] = $ErrorMsn;

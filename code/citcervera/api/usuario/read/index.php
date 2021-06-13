@@ -1,11 +1,5 @@
 <?php
-include("../../includes/conn.php");
-
-use citcervera\Controller\Controller;
-
-$entityName =  getEntityfromPath();
-
-header("Content-Type: application/json; charset=UTF-8");
+include("../../includes/header.php");
 
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
     $id = '';
@@ -13,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         $id = $_GET['id'];
 	}
     $entity = new $entityName();
-    $Controller = new Controller($entity,'GET', $id);
+    $Controller = new $controller($entity,'GET', $id);
     $Controller->processRequest();
 }
 ?>
