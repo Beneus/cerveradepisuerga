@@ -34,9 +34,6 @@ $camposImage = array_values(array_filter($columnKeys, function ($ret2) {
 	return stripos($ret2, "Img") !== false;
 }));
 
-print_r($camposImage);
-
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -47,7 +44,7 @@ print_r($camposImage);
 	<link rel="stylesheet" href="css/menu.css" />
 	<link rel="stylesheet" href="css/form.css" type="text/css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<script src="http://code.jquery.com/jquery-latest.pack.js" type="text/javascript"></script>
+	<script src="https://code.jquery.com/jquery-latest.pack.js" type="text/javascript"></script>
 	<!-- <script type="text/javascript" src="js/jquery.funciones.js"></script> -->
 	<!--[if lt IE 9]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 	<script src="https://use.fontawesome.com/4ecc3dbb0b.js"></script>
@@ -214,7 +211,7 @@ print_r($camposImage);
 											<label></label>
 											<div class="input_field">
 												<span><i aria-hidden="true" class="fa fa-file-o"></i></span>
-												
+
 												<img class="galeria-fotografica-thumb" src="<?php echo "../" . $Path . "/" . $Archivo ?>" width="<?= $AnchoThumb ?>" height="<?= $AltoThumb ?>" title="<?= $Titulo ?>" />
 											</div>
 										</div>
