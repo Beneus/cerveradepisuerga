@@ -38,8 +38,6 @@ $Pagina = $_GET["Pagina"] ?? '';
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 	$Agenda->_POST();
-	//var_dump($Agenda);
-
 	if ($Agenda->Evento == "") {
 		$ErrorMsg = "<span class=\"errortexto\">Evento.</span><br/>";
 	}
@@ -51,44 +49,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	if (is_null($Agenda->FechaEvento)) {
 		$ErrorMsg .= "<span class=\"errortexto\">Fecha del evento.</a><br/>";
 	}
-	if (isset($Agenda->FechaEvento)) {
-		if (($Agenda->FechaEvento != "") && ((!isValidaFechaCorta($Agenda->FechaEvento)) or (strlen($Agenda->FechaEvento) != 10))) {
-			$ErrorMsg .= "<span class=\"errortexto\">Fecha del evento.</a><br/>";
-		} else {
-			$Agenda->FechaEvento = FechaReves($Agenda->FechaEvento);
-		}
-	}
-	if (isset($Agenda->HoraEvento)) {
-		if (($Agenda->HoraEvento != "") && ((!isValidaHoraCorta($Agenda->HoraEvento)) or (strlen($Agenda->HoraEvento) != 5))) {
-			$ErrorMsg .= "<span class=\"errortexto\">Hora del evento.</a><br/>";
-		}
-	}
 
-	//echo $ErrorMsg;
-
-	if ($ErrorMsg == "") 
-	{
+	if ($ErrorMsg == "") {
 		$agendaManager->Save($Agenda);
 		$lastInsertedId = $agendaManager->GetLastInsertedId();
 
-		if ($lastInsertedId) 
-		{
+		if ($lastInsertedId) {
 			$idAgenda->idAgenda = $lastInsertedId;
 			$dc->Set($agendaManager->Get($lastInsertedId), 'Agenda');
 		}
-		// if ($Adjuntar) 
-		// {
-		// 	header("Location:agenda-editar.php?idAgenda=$idAgenda");
-		// } 
-		// else 
-		// {
-		// 	header("Location:agenda-editar.php");
-		// }
-		// exit;
-	} //if ($ErrorMsg == "" ){
-	else 
-	{
-		// devolvemos el error
+	} else {
 		$ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:<br/>";
 		$ErrorMsn .= "<blockquote>";
 		$ErrorMsn .= $ErrorMsg;
@@ -114,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="http://code.jquery.com/jquery-latest.pack.js" type="text/javascript"></script>
 	<script type="text/javascript" src="js/funciones.js"></script>
-	<!--[if lt IE 9]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
+	<!--[if lt IE 9]> <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 	<script src="https://use.fontawesome.com/4ecc3dbb0b.js"></script>
 	<link href="css/form.css" rel="stylesheet" type="text/css">
 
@@ -124,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 			height: "250",
 			mode: "textareas",
 			theme: "advanced",
-			content_css : 'css/form.css',
+			content_css: 'css/form.css',
 			theme_advanced_buttons1: "newdocument,bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink",
 			theme_advanced_buttons1_add: "outdent,indent",
 			theme_advanced_buttons2: "",
@@ -214,34 +184,34 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 									<div class="col_half">
 										<label>Tipo evento</label>
 										<div class="select_field"> <span><i aria-hidden="true" class="fa fa-list"></i></span>
-										<?php
-											$list = GetSmallArrayFromBiggerOne($dc, 'TipoEvento', array('idTipoEvento','TipoEvento') );
-											echo GetSelect("IDTIPOEVENTO","idTipoEvento","TipoEvento",$list,"","","","",$Agenda->idTipoEvento);
-										?>
+											<?php
+											$list = GetSmallArrayFromBiggerOne($dc, 'TipoEvento', array('idTipoEvento', 'TipoEvento'));
+											echo GetSelect("IDTIPOEVENTO", "idTipoEvento", "TipoEvento", $list, "", "", "", "", $Agenda->idTipoEvento);
+											?>
 										</div>
 									</div>
 									<div class="col_half">
 										<label>Poblaci&oacute;n</label>
 										<div class="select_field"> <span><i aria-hidden="true" class="fa fa-list"></i></span>
-										<?php
-											
-											$list = GetSmallArrayFromBiggerOne($dc, 'NucleosUrbanos', array('idNucleoUrbano','NombreNucleoUrbano') );
-											echo GetSelect("IDNUCLEOURBANO","idNucleoUrbano","NombreNucleoUrbano",$list,"","","","",$Agenda->idNucleoUrbano);
-										?>
+											<?php
+
+											$list = GetSmallArrayFromBiggerOne($dc, 'NucleosUrbanos', array('idNucleoUrbano', 'NombreNucleoUrbano'));
+											echo GetSelect("IDNUCLEOURBANO", "idNucleoUrbano", "NombreNucleoUrbano", $list, "", "", "", "", $Agenda->idNucleoUrbano);
+											?>
 										</div>
 									</div>
 								</div>
 								<div class="row clearfix">
 									<div class="col_half">
 										<label>Hora evento</label>
-										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-clock-o"></i></span>
-											<input name="HORAEVENTO" type="text" id="HORAEVENTO" placeholder="hh:mm" value="<?= HoraCorta($Agenda->HoraEvento); ?>" />
+										<div class="input_field">
+											<input name="HORAEVENTO" type="time" id="HORAEVENTO" placeholder="hh:mm" value="<?= $Agenda->HoraEvento; ?>" />
 										</div>
 									</div>
 									<div class="col_half">
 										<label>Fecha evento</label>
-										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-calendar"></i></span>
-											<input name="FECHAEVENTO" type="text" id="FECHAEVENTO" placeholder="dd/mm/aaaa" value="<?= FechaDerecho($Agenda->FechaEvento); ?>" maxlength="10" />
+										<div class="input_field">
+											<input name="FECHAEVENTO" type="date" id="FECHAEVENTO" placeholder="dd/mm/aaaa" value="<?= $Agenda->FechaEvento ? $Agenda->FechaEvento : date("Y-m-d"); ?>" />
 										</div>
 									</div>
 								</div>

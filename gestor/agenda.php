@@ -82,6 +82,87 @@ $tipoEvento = $tipoEventoManager->GetAll();
 $dc->Set($eventos, 'Agenda');
 $dc->Set($nucleosUrbanos, 'NucleosUrbanos');
 $dc->Set($tipoEvento, 'TipoEvento');
+
+
+
+
+
+
+
+function SearchResult($buscar, $idNucleoUrbano, $Ano, $Mes, $Dia, $Mostrar, $pagina, $db)
+{
+	$sql = "SELECT AG.*, NU.NombreNucleoUrbano FROM Agenda as AG ";
+
+	if ($idNucleoUrbano > 0) {
+		$sql = $sql . " inner JOIN NucleosUrbanos as NU ON AG.idNucleoUrbano = NU.idNucleoUrbano where AG.idNucleoUrbano = $idNucleoUrbano ";
+		if ($buscar != "") {
+			$sql .= " and  AG.Evento like '%$buscar%' "
+				. " or AG.Lugar like '%$buscar%' "
+				. " or NU.NombreNucleoUrbano like '%$buscar%'"
+				. " or AG.FechaEvento like '%$buscar%'"
+				. " or AG.HoraEvento like '%$buscar%'"
+				. " or AG.Descripcion like '%$buscar%'";
+		}
+		if ($Ano != "") {
+			$sql .= " and Year(AG.FechaEvento) = '$Ano'";
+		}
+		if ($Mes != "") {
+			$sql .= " and Month(AG.FechaEvento) = '$Mes'";
+		}
+		if ($Dia != "") {
+			$sql .= " and day(AG.FechaEvento) = '$Dia'";
+		}
+	} else {
+		$sql = $sql . " left JOIN NucleosUrbanos as NU ON AG.idNucleoUrbano = NU.idNucleoUrbano ";
+		if ($buscar != "") {
+			$sql .= " where  AG.Evento like '%$buscar%' "
+				. " or AG.Lugar like '%$buscar%' "
+				. " or NU.NombreNucleoUrbano like '%$buscar%'"
+				. " or AG.FechaEvento like '%$buscar%'"
+				. " or AG.HoraEvento like '%$buscar%'"
+				. " or AG.Descripcion like '%$buscar%'";
+			if ($Ano != "") {
+				$sql .= " and Year(AG.FechaEvento) = '$Ano'";
+				if ($Mes != "") {
+					$sql .= " and Month(AG.FechaEvento) = '$Mes'";
+				}
+				if ($Dia != "") {
+					$sql .= " and day(AG.FechaEvento) = '$Dia'";
+				}
+			}
+		} elseif ($Ano != "") {
+			$sql .= " where Year(AG.FechaEvento) = '$Ano'";
+			if ($Mes != "") {
+				$sql .= " and Month(AG.FechaEvento) = '$Mes'";
+			}
+			if ($Dia != "") {
+				$sql .= " and day(AG.FechaEvento) = '$Dia'";
+			}
+		} elseif ($Mes != "") {
+			$sql .= " where Month(AG.FechaEvento) = '$Mes'";
+			if ($Dia != "") {
+				$sql .= " and day(AG.FechaEvento) = '$Dia'";
+			}
+		} elseif ($Dia != "") {
+			$sql .= " where day(AG.FechaEvento) = '$Dia'";
+		}
+	}
+
+	$sql = $sql . " order by FechaEvento desc, HoraEvento ";
+
+	$list = $db->query($sql);
+	$NumTotalRegistros = count($list);
+
+	if ($Mostrar > 0) {
+		$sql = $sql . " LIMIT " . ((($pagina * $Mostrar) - $Mostrar)) . "," . $Mostrar;
+	} else {
+		$sql = $sql . " LIMIT " . ((($pagina * $NumTotalRegistros) - $NumTotalRegistros)) . "," . ($NumTotalRegistros);
+	}
+
+	return ['total' => $NumTotalRegistros, 'result' => $db->query($sql, 'fetch_object')];
+}
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -93,7 +174,6 @@ $dc->Set($tipoEvento, 'TipoEvento');
 	<link rel="stylesheet" href="css/table.css" />
 	<link rel="stylesheet" href="css/form.css" type="text/css" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<script src="http://code.jquery.com/jquery-latest.pack.js" type="text/javascript"></script>
 	<script type="text/javascript" src="js/jquery.funciones.js"></script>
 	<script type="text/javascript" src="js/funciones.js"></script>
 	<!--[if lt IE 9]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
@@ -264,7 +344,8 @@ $dc->Set($tipoEvento, 'TipoEvento');
 										<option value="50" <?php if ($Mostrar == 50) echo "selected"; ?>>50</option>
 										<option value="100" <?php if ($Mostrar == 100) echo "selected"; ?>>100</option>
 										<option value="0" <?php if ($Mostrar == 0) echo "selected"; ?>>Todos</option>
-									</select> </td>
+									</select>
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -275,67 +356,9 @@ $dc->Set($tipoEvento, 'TipoEvento');
 				//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-				$sql = "SELECT AG.*, NU.NombreNucleoUrbano FROM Agenda as AG ";
-
-				if ($idNucleoUrbano > 0) {
-					$sql = $sql . " inner JOIN NucleosUrbanos as NU ON AG.idNucleoUrbano = NU.idNucleoUrbano where AG.idNucleoUrbano = $idNucleoUrbano ";
-					if ($buscar != "") {
-						$sql .= " and  AG.Evento like '%$buscar%' "
-							. " or AG.Lugar like '%$buscar%' "
-							. " or NU.NombreNucleoUrbano like '%$buscar%'"
-							. " or AG.FechaEvento like '%$buscar%'"
-							. " or AG.HoraEvento like '%$buscar%'"
-							. " or AG.Descripcion like '%$buscar%'";
-					}
-					if ($Ano != "") {
-						$sql .= " and Year(AG.FechaEvento) = '$Ano'";
-					}
-					if ($Mes != "") {
-						$sql .= " and Month(AG.FechaEvento) = '$Mes'";
-					}
-					if ($Dia != "") {
-						$sql .= " and day(AG.FechaEvento) = '$Dia'";
-					}
-				} else {
-					$sql = $sql . " left JOIN NucleosUrbanos as NU ON AG.idNucleoUrbano = NU.idNucleoUrbano ";
-					if ($buscar != "") {
-						$sql .= " where  AG.Evento like '%$buscar%' "
-							. " or AG.Lugar like '%$buscar%' "
-							. " or NU.NombreNucleoUrbano like '%$buscar%'"
-							. " or AG.FechaEvento like '%$buscar%'"
-							. " or AG.HoraEvento like '%$buscar%'"
-							. " or AG.Descripcion like '%$buscar%'";
-						if ($Ano != "") {
-							$sql .= " and Year(AG.FechaEvento) = '$Ano'";
-							if ($Mes != "") {
-								$sql .= " and Month(AG.FechaEvento) = '$Mes'";
-							}
-							if ($Dia != "") {
-								$sql .= " and day(AG.FechaEvento) = '$Dia'";
-							}
-						}
-					} elseif ($Ano != "") {
-						$sql .= " where Year(AG.FechaEvento) = '$Ano'";
-						if ($Mes != "") {
-							$sql .= " and Month(AG.FechaEvento) = '$Mes'";
-						}
-						if ($Dia != "") {
-							$sql .= " and day(AG.FechaEvento) = '$Dia'";
-						}
-					} elseif ($Mes != "") {
-						$sql .= " where Month(AG.FechaEvento) = '$Mes'";
-						if ($Dia != "") {
-							$sql .= " and day(AG.FechaEvento) = '$Dia'";
-						}
-					} elseif ($Dia != "") {
-						$sql .= " where day(AG.FechaEvento) = '$Dia'";
-					}
-				}
-
-				$list = $db->query($sql);
-				$NumTotalRegistros = count($list);
-
-				//calculo el total de p�ginas
+				$res = SearchResult($buscar, $idNucleoUrbano, $Ano, $Mes, $Dia, $Mostrar, $pagina, $db);
+				$NumTotalRegistros = $res['total'];
+				$list = $res['result'];
 
 				if ($Mostrar > 0) {
 					$numPags = ceil($NumTotalRegistros / $Mostrar);
@@ -343,17 +366,13 @@ $dc->Set($tipoEvento, 'TipoEvento');
 					$numPags = 1;
 				}
 
-				$sql = $sql . " order by FechaEvento desc, HoraEvento ";
-
 				if ($Mostrar > 0) {
 					$sigMostrar = $Mostrar;
-					$sql = $sql . " LIMIT " . ((($pagina * $Mostrar) - $Mostrar)) . "," . $Mostrar;
 				} else {
 					$Mostrar = $NumTotalRegistros;
 					$sigMostrar = 0;
-					$sql = $sql . " LIMIT " . ((($pagina * $NumTotalRegistros) - $NumTotalRegistros)) . "," . ($NumTotalRegistros);
 				}
-				$list = $db->query($sql, 'fetch_object');
+
 				//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -416,17 +435,14 @@ $dc->Set($tipoEvento, 'TipoEvento');
 									<td role="cell">
 
 										<?php
+
 										if (($pagina > 1) and ($Mostrar < $NumTotalRegistros)) {
-											//echo "<a href=\"noticias-listado.php?Pagina=".($pagina - 1)."&Mostrar=$Mostrar&buscar=$buscar&idNucleoUrbano=$idNucleoUrbano&idSubservicio=$idSubservicio\"><img src=\"images/pag_der_a.gif\" width=\"9\" height=\"13\" border=\"0\"></a>";
-											echo "<a href=\"agenda-listado.php?Pagina=" . ($pagina - 1) . "&Mostrar=$Mostrar&buscar=$buscar&idNucleoUrbano=$idNucleoUrbano\" class=\"linkBlanco\"> << Anterior </a>";
-										} else {
-											//echo "<img src=\"images/pag_der_d.gif\" width=\"9\" height=\"13\" border=\"0\">";
+
+											echo "<a href=\"agenda.php?Pagina=" . ($pagina - 1) . "&Mostrar=$Mostrar&buscar=$buscar&idNucleoUrbano=$idNucleoUrbano\" class=\"linkBlanco\"> << Anterior </a>";
 										}
 										if (($pagina < $numPags) and ($Mostrar < $NumTotalRegistros)) {
-											//echo "<a href=\"noticias-listado.php?Pagina=".($pagina + 1)."&Mostrar=$Mostrar&buscar=$buscar&idNucleoUrbano=$idNucleoUrbano&idSubservicio=$idSubservicio\"><img src=\"images/pag_der_a.gif\" width=\"9\" height=\"13\" border=\"0\"></a>";
-											echo "<a href=\"agenda-listado.php?Pagina=" . ($pagina + 1) . "&Mostrar=$Mostrar&buscar=$buscar&idNucleoUrbano=$idNucleoUrbano\" class=\"linkBlanco\"> Siguiente >> </a>";
-										} else {
-											//echo "<img src=\"images/pag_izq_d.gif\" width=\"9\" height=\"13\" border=\"0\">";
+
+											echo "<a href=\"agenda.php?Pagina=" . ($pagina + 1) . "&Mostrar=$Mostrar&buscar=$buscar&idNucleoUrbano=$idNucleoUrbano\" class=\"linkBlanco\"> Siguiente >> </a>";
 										}
 										?> </td>
 									<td role="cell"></td>

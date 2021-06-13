@@ -34,7 +34,7 @@ $camposImage = array_values(array_filter($columnKeys, function ($ret2) {
 	return stripos($ret2, "Img") !== false;
 }));
 
-print_r($camposImage );
+print_r($camposImage);
 
 
 ?>
@@ -163,8 +163,8 @@ print_r($camposImage );
 					</div>
 				</div>
 				<div class="content">
-					
-					<div class="image_wrapper" id="draggableArea"  >
+
+					<div class="image_wrapper" id="draggableArea">
 
 						<?php
 						// datos de la entrada del directorio
@@ -212,8 +212,10 @@ print_r($camposImage );
 									<div class="row clearfix">
 										<div class="col_half">
 											<label></label>
-											<div class="input_field"> <span><i aria-hidden="true" class="fa fa-file-o"></i></span>
-												<img src="<?php echo str_replace("images", "thumb", "../" . $Path . "/" . $Archivo); ?>" width="<?= $AnchoThumb ?>" height="<?= $AltoThumb ?>" title="<?= $Titulo ?>" />
+											<div class="input_field">
+												<span><i aria-hidden="true" class="fa fa-file-o"></i></span>
+												
+												<img class="galeria-fotografica-thumb" src="<?php echo "../" . $Path . "/" . $Archivo ?>" width="<?= $AnchoThumb ?>" height="<?= $AltoThumb ?>" title="<?= $Titulo ?>" />
 											</div>
 										</div>
 										<div class="col_half">

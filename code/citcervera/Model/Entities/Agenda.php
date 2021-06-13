@@ -88,20 +88,10 @@ class Agenda extends EntityBase implements IEntityBase
 		$validation = [
 			'Evento' => [
 				'required' => true
-			],
-			'FechaEvento' => [
-				'format' => 'fechaCorta'
-			],
-			'HoraEvento' => [
-				'format' => 'horaCorta'
 			]
 		];
 		return $validation;
 	}
-
-
-
-
 
 	function _POST()
 	{
