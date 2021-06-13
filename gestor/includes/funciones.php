@@ -325,7 +325,7 @@ function GetSmallArrayFromBiggerOne($dc,$entityName, $arrayKeys)
 			}
 			else
 			{
-				echo $key;
+			
 				$ret2[$key] = $entity->{$key};
 			}	
 		}

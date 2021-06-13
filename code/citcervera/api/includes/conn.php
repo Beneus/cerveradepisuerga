@@ -36,6 +36,66 @@ function isEmail($email)
     return preg_match('|^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]{2,})+$|i', $email);
 }
 
+function isValidaFechaCorta($Fecha)
+{
+	//  dd/mm/aaaa
+	$date = explode("/", $Fecha);
+    if(count($date) !== 3){
+        return false;
+    }
+
+	$dia = trim($date[0]);
+	$mes = trim($date[1]);
+	$anyo = trim($date[2]);
+
+    if($dia === '' || $mes === '' || $anyo === ''){
+        return false;
+    }
+
+    if(is_int(intval($dia)) and is_int(intval($mes))and is_int(intval($anyo))){
+        echo is_int(intval($anyo));
+        if (checkdate($mes,$dia,$anyo)){
+            return true;
+        }else{
+            return false;
+        }
+    }else{
+        return false;
+    }	
+	
+}
+
+function isValidaHoraCorta($Hora)
+{
+		//  dd/mm/aaaa
+	$tiempo = explode(":", $Hora);
+    if(count($tiempo) !== 2){
+        return false;
+    }
+
+	$hora = $tiempo[0];
+	$minuto = $tiempo[1];
+
+    if($hora === '' || $minuto === ''){
+        return false;
+    }
+    
+    $hora = intval($hora);
+    if (($hora < 0) || ($hora > 23)){
+        return false;
+    }
+
+    $minuto = intval($minuto);
+    if(is_numeric($minuto)){
+        if($minuto < 0 || $minuto > 59){
+            return false;
+        }
+    }else{
+        return false;
+    }
+	return true;
+}
+
 function validate($entity, $data)
 {
     $validation['status'] =  'OK';
@@ -59,6 +119,14 @@ function validate($entity, $data)
                 case 'format':
                     if ('email' === $ruelValue) {
                         if (!isEmail($data->{$fieldKey}))
+                            array_push($ErrorMsn, [$fieldKey => $fieldKey . ' no valido']);
+                    }
+                    if ('fechaCorta' === $ruelValue) {
+                        if (!isValidaFechaCorta($data->{$fieldKey}))
+                            array_push($ErrorMsn, [$fieldKey => $fieldKey . ' no valido']);
+                    }
+                    if ('horaCorta' === $ruelValue) {
+                        if (!isValidaHoraCorta($data->{$fieldKey}))
                             array_push($ErrorMsn, [$fieldKey => $fieldKey . ' no valido']);
                     }
                     break;

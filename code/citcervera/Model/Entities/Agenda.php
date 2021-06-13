@@ -83,6 +83,26 @@ class Agenda extends EntityBase implements IEntityBase
 		$this->Fecha 			= $_Fecha;
 	}
 
+	public function ValidateRules()
+	{
+		$validation = [
+			'Evento' => [
+				'required' => true
+			],
+			'FechaEvento' => [
+				'format' => 'fechaCorta'
+			],
+			'HoraEvento' => [
+				'format' => 'horaCorta'
+			]
+		];
+		return $validation;
+	}
+
+
+
+
+
 	function _POST()
 	{
 		$this->idAgenda 		= parent::TakePOST('IDAGENDA');

@@ -187,7 +187,7 @@ disDiv("contenido",true);
         </div>    </li>  
         <li class="campoform">
         <div class="tituloentradaform">Fecha evento</div>
-        <div class="valorentradaform"><input name="FECHAEVENTO" type="text" id="FECHAEVENTO" value="<?php echo $FechaEvento; ?>" size="10" maxlength="10" />
+        <div class="valorentradaform"><input name="FECHAEVENTO" type="date" id="FECHAEVENTO" value="<?php echo $FechaEvento; ?>" size="10" maxlength="10" />
           (dd/mm/aaaa)         </div>
         </li>
         
