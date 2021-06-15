@@ -174,7 +174,7 @@ function Getcolhalf(){
 	div.appendChild(div2);
 
 	return div;
-	document.getElementById("moreUploads").appendChild(div);
+	
 	
 }
 

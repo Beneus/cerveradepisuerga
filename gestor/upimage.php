@@ -137,7 +137,7 @@ for ($i = 0; $i < $cantidad; $i++) {
 					$nuevoancho = floor(($ancho * floor($porcentaje * 100)) / 100);
 					$nuevoalto = floor(($alto * floor($porcentaje * 100)) / 100);
 				}
-/*
+				/*
 				if (strtolower($ext) == "jpg") {
 					redimensionar_jpeg($fotolocation, $thumblocation, $nuevoancho, $nuevoalto, 100);
 				}

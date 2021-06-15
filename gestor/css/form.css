@@ -151,7 +151,7 @@ body {
 	box-shadow:0 0 2px 1px rgba(255, 169, 0, 0.5);
 	border:1px solid #f5ba1a;
 }
-.form_wrapper input[type="submit"], .form_wrapper input[type="button"]  {
+.form_wrapper input[type="submit"], .form_wrapper input[type="button"], .form_wrapper button {
 	background:#448040;
 	/* height:50px; */
 	/* line-height:50px; */
@@ -166,12 +166,15 @@ body {
 	-ms-transition: all 0.30s ease-in-out;
 	transition: all 0.30s ease-in-out;
 }
-.form_wrapper input[type="submit"]:hover, .form_wrapper input[type="submit"]:focus {
+.form_wrapper input[type="submit"]:hover, .form_wrapper input[type="submit"]:focus, .form_wrapper button:focus {
 	background-color: rgba(75, 139, 89, 0.5);
 }
-.form_wrapper input[type="button"]:hover, .form_wrapper input[type="button"]:focus {
+.form_wrapper input[type="button"]:hover, .form_wrapper input[type="button"]:focus, .form_wrapper button:focus {
 	background-color: rgba(75, 139, 89, 0.5);
 }
+
+
+
 .credit{
 	position:relative;
 	z-index:1;
@@ -331,7 +334,7 @@ textarea:focus {
 
 }
 
-input, select{
+input, select, button{
 	padding:10px;
 	font-size: 1.2em;
 	
