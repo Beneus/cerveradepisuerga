@@ -82,7 +82,7 @@ $camposDoc = array_values(array_filter($columnKeys, function ($ret2) {
 					contentType: false,
 					processData: false,
 					success: function(data) {
-						console.log(data);
+						//console.log(data);
 						$('#moreUploads').html('');
 					}
 				})
@@ -126,7 +126,7 @@ $camposDoc = array_values(array_filter($columnKeys, function ($ret2) {
 					contentType: false,
 					processData: false,
 					success: function(data) {
-						console.log(data);
+						//console.log(data);
 					}
 				})
 
