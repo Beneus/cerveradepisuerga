@@ -60,9 +60,6 @@ function NombreItem($Amb, $Camp, $idAmb)
 	}
 }
 
-
-
-
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 	$Usuario->_POST();

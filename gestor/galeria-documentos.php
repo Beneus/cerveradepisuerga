@@ -62,14 +62,15 @@ $camposDoc = array_values(array_filter($columnKeys, function ($ret2) {
 		$(document).ready(function() {
 			$('#buttonUp').on('click', function(e) {
 				$('#uploadform').submit();
-
+				e.preventDefault();
+				return false;
 			});
 			$('#uploadform').on('submit', function(e) {
 				var formData = new FormData(this);
 				$('#progress').show();
 				$.ajax({
 					type: 'POST',
-					url: 'updoc.php',
+					url: 'doc-upload.php',
 					data: formData,
 					xhr: function() {
 						var xhr = new window.XMLHttpRequest();
@@ -81,12 +82,11 @@ $camposDoc = array_values(array_filter($columnKeys, function ($ret2) {
 					contentType: false,
 					processData: false,
 					success: function(data) {
-						$('#moreUploads').html('');
 						console.log(data);
+						$('#moreUploads').html('');
 					}
 				})
 				e.preventDefault();
-
 				return false;
 			});
 
@@ -103,7 +103,39 @@ $camposDoc = array_values(array_filter($columnKeys, function ($ret2) {
 				evt.preventDefault();
 				return false;
 			});
+
+			$('.eliminar-doc').on('click',function(evt){
+				
+				EliminarDoc($(this).attr('idDoc'));
+				evt.preventDefault();
+				return false;
+
+			})
+			function EliminarDoc(idDoc) {
+				$.ajax({
+					type: 'GET',
+					url: 'doc-delete.php?idDoc=' + idDoc,
+					data: 'idDoc=' + idDoc,
+					xhr: function() {
+						var xhr = new window.XMLHttpRequest();
+						xhr.upload.addEventListener("progress", progress, false);
+						return xhr;
+					},
+
+					cache: false,
+					contentType: false,
+					processData: false,
+					success: function(data) {
+						console.log(data);
+					}
+				})
+
+			}
+
+			
 		});
+
+		
 	</script>
 </head>
 
@@ -150,7 +182,7 @@ $camposDoc = array_values(array_filter($columnKeys, function ($ret2) {
 									<span class="sr-only">70% Complete</span>
 								</div>
 							</div>
-							<form method="POST" enctype="multipart/form-data" id="uploadform">
+							<form enctype="multipart/form-data" id="uploadform">
 								<input type="hidden" name="IDAMBITO" value="<?php echo $idAmbito; ?>" />
 								<input type="hidden" name="AMBITO" value="<?php echo $Ambito; ?>" />
 								<div class="document">
@@ -278,7 +310,7 @@ $camposDoc = array_values(array_filter($columnKeys, function ($ret2) {
 								}
 								echo "/></li>\n";
 								// Eliminar
-								echo "<li><img onmouseover=\"this.style.cursor='pointer';\" src=\"images/eliminarfoto.gif\" alt=\"Eliminar foto\" width=\"50\" height=\"25\" onClick=\"EliminarDoc(" . $idDoc . ")\" /></li>";
+								echo "<li><img onmouseover=\"this.style.cursor='pointer';\" src=\"images/eliminarfoto.gif\" alt=\"Eliminar foto\" width=\"50\" height=\"25\" idDoc=\"$idDoc\" class=\"eliminar-doc\" /></li>";
 								echo "</form>\n";
 								// Asociacion de imagenes
 

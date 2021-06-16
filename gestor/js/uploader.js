@@ -389,11 +389,7 @@ function EliminarImagen(idImg){
 	window.open(cad,'','width=100px,height=100px');
 	
 }
-function EliminarDoc(idDoc){
-	var cad = "eliminardoc.php?idDoc=" + idDoc;
-	window.open(cad,'','width=100px,height=100px');
-	
-}
+
 function Publicar(idImg,x){
 	document.getElementById("espere").style.display = "block";
 	var cad = "" ;

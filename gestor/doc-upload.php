@@ -8,9 +8,13 @@ use citcervera\Model\Entities\Documentos;
 use citcervera\Model\Managers\DataCarrier;
 use citcervera\Model\Managers\Manager;
 
+const __FILESPATH__ = 'files/';
+$_ROOTPATH = $_SERVER['DOCUMENT_ROOT'] . '/' .  __FILESPATH__;
+
+
 $dc = new DataCarrier();
 $documento = new Documentos();
-$documentoManager = new Manager($documento);
+$documentManager = new Manager($documento);
 
 
 $uploadErrors = array(
@@ -53,41 +57,40 @@ $pies = $_POST['PIES'];
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Creo la carpeta del cliente donde se guardaran sus archivos
 
-if (!is_dir("../$Ambito")) {
-	mkdir("../$Ambito");
-	chmod("../$Ambito",  0777);
+if (!is_dir($_ROOTPATH . $Ambito)) {
+	mkdir($_ROOTPATH . $Ambito);
+	chmod($_ROOTPATH . $Ambito,  0777);
 	//sleep(1);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Creo la carpeta del cliente donde se guardaran sus archivos
 
-if (!is_dir("../$Ambito/$idAmbito")) {
-	mkdir("../$Ambito/$idAmbito");
-	chmod("../$Ambito/$idAmbito",  0777);
+if (!is_dir($_ROOTPATH . "$Ambito/$idAmbito")) {
+	mkdir($_ROOTPATH . "$Ambito/$idAmbito");
+	chmod($_ROOTPATH . "$Ambito/$idAmbito",  0777);
 	//sleep(1);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Creo la carpeta del cliente donde se guardaran sus archivos
 
-if (!is_dir("../$Ambito/$idAmbito/docs")) {
-	mkdir("../$Ambito/$idAmbito/docs");
-	chmod("../$Ambito/$idAmbito/docs",  0777);
+if (!is_dir($_ROOTPATH . "$Ambito/$idAmbito/docs")) {
+	mkdir($_ROOTPATH . "$Ambito/$idAmbito/docs");
+	chmod($_ROOTPATH . "$Ambito/$idAmbito/docs",  0777);
 	//sleep(1);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-var_dump($_FILES['DOCUMENTS']);
-var_dump($titulos);
-var_dump($pies);
+//var_dump($_FILES['DOCUMENTS']);
+//var_dump($titulos);
+//var_dump($pies);
 $documents = $_FILES['DOCUMENTS'];
 $cantidad = count($documents['name']);
 
-echo $cantidad;
-
 for ($i = 0; $i < $cantidad; $i++) {
+
 	if (!$documents['size'][$i]) {
 		continue;
 	}
@@ -99,9 +102,10 @@ for ($i = 0; $i < $cantidad; $i++) {
 		$tamano = $documents['size'][$i];
 		$nombre  = $documents['name'][$i];
 		$ext = substr(strrchr($nombre, "."), 1);
-		$documentolocation = "../$Ambito/$idAmbito/docs/$nombre";
+		$documentolocation = $_ROOTPATH . "$Ambito/$idAmbito/docs/$nombre";
 		$titulo = $titulos[$i];
 		$pie = $pies[$i];
+
 		// Si existe un archivo con el mismo nombre lo borro antes de introducir el nuevo
 		if (file_exists($documentolocation)) {
 			unlink($documentolocation);
@@ -119,106 +123,40 @@ for ($i = 0; $i < $cantidad; $i++) {
 		}
 
 		$sql = "Select * From Documentos where Ambito = '$Ambito' and idAmbito = $idAmbito and Archivo = '$nombre' ";
-		$ret = $documentoManager->Query($sql, $fetch_type = 'fetch_assoc', $documento);
+		$ret = $documentManager->Query($sql, $fetch_type = 'fetch_assoc', $documento);
 		$documento = new Documentos();
+
 		if (count($ret) > 0) {
-			$documento->idDocumento = $ret[0]->idDocumeto;
+			$documento->idDoc = $ret[0]['idDoc'];
 		}
+
 		$documento->Ambito = $Ambito;
 		$documento->idAmbito = $idAmbito;
-		$documento->Archivo = $Limpiar($nombre, 100);
-		$documento->Path = $Ambito . '/' . $idAmbito . '/docs';
+		$documento->Archivo = Limpiar($nombre, 100);
+		$documento->Path = __FILESPATH__ . $Ambito . '/' . $idAmbito . '/docs';
 		$documento->Tipo = $tipo;
 		$documento->Tamano = $tamano;
 		$documento->Titulo = Limpiar($titulo, 100);
 		$documento->Pie = Limpiar($pie, 250);
+		$documento->Publicar = false;
+		
 		if (count($ret) > 0) {
-			$documento->Orden = $ret[0]->Orden;
+			$documento->Orden = $ret[0]['Orden'];
 		}
+		
 		$documento->Fecha = date("Y-m-d H:m:s");
-		$documentoManager->Save($documento);
-		if (count($ret) === 0) {
-			$lastInsertedId = $documentoManager->GetLastInsertedId();
+
+		$documentManager->Save($documento);
+
+		if (count($ret) == 0) {
+			
+			$lastInsertedId = $documentManager->GetLastInsertedId();
+			$documento->idDoc = $lastInsertedId;
 			$documento->Orden = $lastInsertedId;
-			$documentoManager->Save($documento);
+
+			$documentManager->Save($documento);
 		}
 	}else {
 		echo $uploadErrors[$documents['error'][$i]];
 	}
 }
-
-
-
-/*
-$link = ConnBDCervera();
-for ($i = 0; $i < $cantidad; $i++) {
-	if (!$documento['size'][$i])
-		continue;
-	if ($documento['error'][$i] == UPLOAD_ERR_OK) {
-		//echo "no hay error ";
-		$tmp_name = $documento['tmp_name'][$i];
-		$tipo = $documento['type'][$i];
-		$tamano = $documento['size'][$i];
-		$nombre  = $documento['name'][$i];
-		$ext = substr(strrchr($nombre, "."), 1);
-		$documentolocation = "../$Ambito/$idAmbito/docs/$nombre";
-		$titulo = $titulos[$i];
-		$pie = $pies[$i];
-		// Si existe un archivo con el mismo nombre lo borro antes de introducir el nuevo
-		if (file_exists($documentolocation)) {
-			unlink($documentolocation);
-		}
-
-		move_uploaded_file($tmp_name, $documentolocation);
-
-		if (is_uploaded_file($documento['tmp_name'][$i])) {
-			echo "File " . $documento['tmp_name'][$i] . " uploaded successfully.\n";
-			echo "Displaying contents\n";
-			//readfile($foto['tmp_name'][$i]);
-			move_uploaded_file($tmp_name, $documentolocation);
-		} else {
-			echo "Possible file upload attack: ";
-			echo "filename '" . $documento['tmp_name'][$i] . "'.";
-		}
-
-		// Se introducen los valores en la base de datos una vez subido y redimensionado la imagen
-
-		// borramos cualquier archivo con el mismo nombre antes de volverlo a introducir
-		$sqlDel = "Delete From Documentos where Ambito = '$Ambito' and idAmbito = $idAmbito and Archivo = '$nombre' ";
-		$result = mysqli_query($link, $sqlDel);
-
-		// introducimos los datosdel nuevo archivo
-		$sqlIns = " INSERT INTO Documentos (Ambito, idAmbito, Archivo, Path, Tipo, Tamano, Titulo, Pie, Fecha) VALUES ("
-			. " '" . $Ambito . "', "
-			. $idAmbito  . ", "
-			. " '" . Limpiar($nombre, 100) . "', "
-			. " '$Ambito/$idAmbito/docs', "
-			. " '" . $tipo . "', "
-			. " " . $tamano . ", "
-			. " '" . Limpiar($titulo, 100) . "', "
-			. " '" . Limpiar($pie, 250) . "', "
-			. " Now()) ";
-
-		$result = mysqli_query($link, $sqlIns);
-
-		$sql = "select idDoc from Documentos where Ambito = '$Ambito' and idAmbito = $idAmbito order by idDoc desc ";
-		$result = mysqli_query($link, $sql);
-		if (!$result) {
-			$message = "Invalid query" . mysqli_error($link) . "\n";
-			$message .= "whole query: " . $sql;
-			die($message);
-			exit;
-		}
-		$max = mysqli_num_rows($result);
-		if ($max > 0) {
-			$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-			$idDoc = $row["idDoc"];
-		}
-		$sqlUp = "Update Documentos set Orden = $idDoc where idDoc = $idDoc ";
-		$result = mysqli_query($link, $sqlUp);
-	} else {
-		echo $uploadErrors[$documento['error'][$i]];
-	}
-}
-mysqli_close($link);
-*/

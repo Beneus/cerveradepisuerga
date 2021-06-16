@@ -15,8 +15,9 @@ function __autoload($class_name)
 spl_autoload_register(__NAMESPACE__."\__autoload");
 
 session_start();
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//error_reporting(E_ALL);
+
 
 // conexi�n a base de datos
 function Conectarse($servidor,$basedatos,$usuario,$password)
