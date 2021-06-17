@@ -104,13 +104,14 @@ $camposDoc = array_values(array_filter($columnKeys, function ($ret2) {
 				return false;
 			});
 
-			$('.eliminar-doc').on('click',function(evt){
-				
+			$('.eliminar-doc').on('click', function(evt) {
+
 				EliminarDoc($(this).attr('idDoc'));
 				evt.preventDefault();
 				return false;
 
 			})
+
 			function EliminarDoc(idDoc) {
 				$.ajax({
 					type: 'GET',
@@ -132,10 +133,9 @@ $camposDoc = array_values(array_filter($columnKeys, function ($ret2) {
 
 			}
 
-			
-		});
 
-		
+
+		});
 	</script>
 </head>
 
@@ -243,7 +243,7 @@ $camposDoc = array_values(array_filter($columnKeys, function ($ret2) {
 					</div>
 				</div>
 
-				<iframe src="" id="fileframe" name="fileframe" style="width:100%;height:200px"></iframe>
+
 				<div class="content">
 
 					<div class="image_wrapper" id="draggableArea">
@@ -286,106 +286,115 @@ $camposDoc = array_values(array_filter($columnKeys, function ($ret2) {
 								$DocFauna 		= $doc->DocFauna ?? '';
 								$DocAgenda 		= $doc->DocAgenda ?? '';
 
-								echo "<div class=\"galeriaImagen\"  id=\"Doc$idDoc\">\n";
-								echo "<div class=\"Imagen\">\n";
-								//echo "<img src=\"".str_replace("images","thumb","../".$Path."/".$Archivo)."\" width=\"$AnchoThumb\" height=\"$AltoThumb\" border=\"0\" title=\"". $Titulo ."\"/>\n";
-								echo "</div>\n";
-								echo "<div class=\"DatosImagen\">\n";
 
-								echo "<ul>\n";
-								echo "<li>Fecha: " . $Fecha . "</li>\n";
-								echo "<li>Archivo: " . $Archivo . "</li>\n";
-								echo "<li>Tama&ntilde;o: " . $Tamano . "</li>\n";
-								echo "<form name=\"formImagen$idDoc\" >\n";
-								// T�tulo de imagen
-								echo "<li><span onclick=\"Editar('TITULO',$idDoc);\" onmouseover=\"this.style.cursor='pointer';\" alt=\"Hacer click con el bot&oacute;n derecho del rat&oacute;n para editar el t&iacute;tulo de la foto\" title=\"Hacer click con el bot&oacute;n derecho del rat&oacute;n para editar el t&iacute;tulo de la foto\"><strong>T&iacute;tulo (m&aacute;x 100): </strong></span><span id=\"TITULO$idDoc\" onclick=\"Editar('TITULO',$idDoc);\" onmouseover=\"this.style.cursor='pointer';\">" . $Titulo . "</span>";
-								echo "<input type=\"text\" name=\"TITULO\" value=\"" . $Titulo . "\" style=\"display:none\" disabled=\"disabled\" onBlur=\"GuardarDatosDoc('TITULO',$idDoc);\" onchange=\"TextoModificado=true;\" size=\"70\" maxlength=\"100\" class=\"textoimagen\" /></li>\n";
-								// Pie de imagen
-								echo "<li><span onclick=\"Editar('PIE',$idDoc);\" onmouseover=\"this.style.cursor='pointer';\" alt=\"Hacer click con el bot&oacute;n derecho del rat&oacute;n para editar el pie de foto\" title=\"Hacer click con el bot&oacute;n derecho del rat&oacute;n para editar el pie de foto\"><strong>Pie de foto (m&aacute;x 250): </strong></span><span id=\"PIE$idDoc\" onclick=\"Editar('PIE',$idDoc);\" onmouseover=\"this.style.cursor='pointer';\">" . $Pie . "</span>";
-								echo "<textarea name=\"PIE\" cols=\"45\" rows=\"2\" disabled=\"disabled\" style=\"display:none\" onblur=\"GuardarDatosDoc('PIE',$idDoc);\" onchange=\"TextoModificado=true;\"  class=\"textoimagen\"></textarea>";
-								// Publicar
-								echo "<li><strong>Publicar: </strong><input type=\"checkbox\" name=\"PUBLICAR\" value=\"$idDoc\" onclick=\"PublicarDoc($idDoc,this);\" ";
-								if ($Publicar) {
-									echo "checked";
-								}
-								echo "/></li>\n";
-								// Eliminar
-								echo "<li><img onmouseover=\"this.style.cursor='pointer';\" src=\"images/eliminarfoto.gif\" alt=\"Eliminar foto\" width=\"50\" height=\"25\" idDoc=\"$idDoc\" class=\"eliminar-doc\" /></li>";
-								echo "</form>\n";
-								// Asociacion de imagenes
+						?>
 
-								for ($i = 0; $i < sizeof($camposDoc); $i++) {
-									if ($camposDoc[$i] == "DocDescripcion") {
-										echo "<li><strong>Descripci&oacute;n: </strong><input type=\"checkbox\" name=\"DESCRIPCION\" value=\"$idDoc\" onclick=\"AsociarImagen('DocDescripcion',$idDoc,'$Ambito',this,'$Campo',$idAmbito);\" ";
-										if ($DocDescripcion == $idDoc) {
-											echo "checked";
-										}
-										echo "/></li>\n";
-									}
-									if ($camposDoc[$i] == "DocHistoria") {
-										echo "<li><strong>H�storia: </strong><input type=\"checkbox\" name=\"HISTORIA\" value=\"$idDoc\" onclick=\"AsociarImagen('DocHistoria',$idDoc,'$Ambito',this,'$Campo',$idAmbito);\" ";
-										if ($DocHistoria == $idDoc) {
-											echo "checked";
-										}
-										echo "/></li>\n";
-									}
-									if ($camposDoc[$i] == "DocFlora") {
-										echo "<li><strong>Flora: </strong><input type=\"checkbox\" name=\"FLORA\" value=\"$idDoc\" onclick=\"AsociarImagen('DocFlora',$idDoc,'$Ambito',this,'$Campo',$idAmbito);\" ";
-										if ($DocFlora == $idDoc) {
-											echo "checked";
-										}
-										echo "/></li>\n";
-									}
-									if ($camposDoc[$i] == "DocFauna") {
-										echo "<li><strong>Fauna: </strong><input type=\"checkbox\" name=\"FAUNA\" value=\"$idDoc\" onclick=\"AsociarImagen('DocFauna',$idDoc,'$Ambito',this,'$Campo',$idAmbito);\" ";
-										if ($DocFauna == $idDoc) {
-											echo "checked";
-										}
-										echo "/></li>\n";
-									}
-									if ($camposDoc[$i] == "DocUsos") {
-										echo "<li><strong>Usos: </strong><input type=\"checkbox\" name=\"USOS\" value=\"$idDoc\" onclick=\"AsociarImagen('DocUsos',$idDoc,'$Ambito',this,'$Campo',$idAmbito);\" ";
-										if ($DocUsos == $idDoc) {
-											echo "checked";
-										}
-										echo "/></li>\n";
-									}
-									if ($camposDoc[$i] == "DocHabitat") {
-										echo "<li><strong>Habitat: </strong><input type=\"checkbox\" name=\"HABITAT\" value=\"$idDoc\" onclick=\"AsociarImagen('DocHabitat',$idDoc,'$Ambito',this,'$Campo',$idAmbito);\" ";
-										if ($DocHabitat == $idDoc) {
-											echo "checked";
-										}
-										echo "/></li>\n";
-									}
-									if ($camposDoc[$i] == "DocSetas") {
-										echo "<li><strong>Setas: </strong><input type=\"checkbox\" name=\"SETAS\" value=\"$idDoc\" onclick=\"AsociarImagen('DocSetas',$idDoc,'$Ambito',this,'$Campo',$idAmbito);\" ";
-										if ($DocSetas == $idDoc) {
-											echo "checked";
-										}
-										echo "/></li>\n";
-									}
-									if ($camposDoc[$i] == "DocNoticia") {
-										echo "<li><strong>Noticia: </strong><input type=\"checkbox\" name=\"NOTICIAS\" value=\"$idDoc\" onclick=\"AsociarImagen('DocNoticia',$idDoc,'$Ambito',this,'$Campo',$idAmbito);\" ";
-										if ($DocNoticia == $idDoc) {
-											echo "checked";
-										}
-										echo "/></li>\n";
-									}
-									if ($camposDoc[$i] == "DocAgenda") {
-										echo "<li><strong>Agenda: </strong><input type=\"checkbox\" name=\"NOTICIAS\" value=\"$idDoc\" onclick=\"AsociarImagen('DocAgenda',$idDoc,'$Ambito',this,'$Campo',$idAmbito);\" ";
-										if ($DocAgenda == $idDoc) {
-											echo "checked";
-										}
-										echo "/></li>\n";
-									}
-								}
-								echo "<li><strong>Intercambiar posici&oacute;n: </strong><input type=\"checkbox\" name=\"POSICION\" value=\"$idDoc\" onclick=\"IntercambiarDoc(this);\" /></li>";
-								echo "</ul>\n";
+								<div class="galeriaImagen" id="Doc<?= $idDoc ?>">
+									<div class="Imagen">
+									</div>;
+									<div class="DatosImagen">
+										<ul>
+											<li>Fecha: <?= $Fecha ?></li>
+											<li>Archivo: <?= $Archivo ?></li>
+											<li>Tama&ntilde;o: <?= $Tamano ?></li>
 
-								echo "</div>\n";
-								echo "</div>\n";
+											<form name="formImagen<?= $idDoc ?>">
+												<li class="">
+													<span onclick="Editar('TITULO',<?= $idDoc ?>);" onmouseover="this.style.cursor='pointer';" alt="Hacer click con el bot&oacute;n derecho del rat&oacute;n para editar el t&iacute;tulo de la foto" title="Hacer click con el bot&oacute;n derecho del rat&oacute;n para editar el t&iacute;tulo de la foto"><strong>T&iacute;tulo (m&aacute;x 100): </strong></span><span id="TITULO<?= $idDoc ?>" onclick="Editar('TITULO',<?= $idDoc ?>);" onmouseover="this.style.cursor='pointer';"><?= $Titulo ?></span>
+													<input type="text" name="TITULO" value="<?= $Titulo ?>" style="display:none" disabled="disabled" onblur="GuardarDatos('TITULO',<?= $idDoc ?>);" onchange="TextoModificado=true;" width="100%" maxlength="100" class="textoimagen" />
+												</li>
+												<li class=""><span onclick="Editar('PIE',<?= $idDoc ?>);" onmouseover="this.style.cursor='pointer';" alt="Hacer click con el bot&oacute;n derecho del rat&oacute;n para editar el pie de foto\" title="Hacer click con el bot&oacute;n derecho del rat&oacute;n para editar el pie de foto"><strong>Pie de foto (m&aacute;x 250): </strong></span><span id="PIE<?= $idDoc ?>" onclick="Editar('PIE',<?= $idDoc ?>);" onmouseover="this.style.cursor='pointer';"><?= $Pie ?></span>
+													<textarea name="PIE" cols="45" rows="2" disabled="disabled" style="display:none" onblur="GuardarDatos('PIE',<?= $idDoc ?>);" onchange="TextoModificado=true;" class="textoimagen"></textarea>
+												</li>
+												<li class="input_field">
+													<strong>Publicar: </strong>
+													<input class="publicar-doc" type="checkbox" name="PUBLICAR" value="<?= $idDoc ?>" onclick="PublicarDoc(<?= $idDoc ?>,this);" <?= ($Publicar) ? "checked" : ""; ?> />
+												</li>
+												<?php
+												for ($i = 0; $i < sizeof($camposDoc); $i++) {
+													$checked = "";
+													$area = "";
+													switch ($camposDoc[$i]) {
+														case 'DocDescripcion':
+															if ($DocDescripcion == $idDoc) {
+																$checked = "checked";
+															}
+															$area = "Descripcion";
+															break;
+														case 'DocHistoria':
+															if ($DocHistoria == $idDoc) {
+																$checked = "checked";
+															}
+															$area = "Historia";
+															break;
+														case 'DocFlora':
+															if ($DocFlora == $idDoc) {
+																$checked = "checked";
+															}
+															$area = "Flora";
+															break;
+														case 'DocFauna':
+															if ($DocFlora == $idDoc) {
+																$checked = "checked";
+															}
+															$area = "Fauna";
+															break;
+														case 'DocUsos':
+															if ($DocFlora == $idDoc) {
+																$checked = "checked";
+															}
+															$area = "";
+															break;
+														case 'DocHabitat':
+															if ($DocFlora == $idDoc) {
+																$checked = "checked";
+															}
+															$area = "Habitat";
+															break;
+														case 'DocSetas':
+															if ($DocFlora == $idDoc) {
+																$checked = "checked";
+															}
+															$area = "Setas";
+															break;
+														case 'DocNoticia':
+															if ($DocFlora == $idDoc) {
+																$checked = "checked";
+															}
+															$area = "Noticia";
+															break;
+														case 'DocAgenda':
+
+															if ($DocFlora == $idDoc) {
+																$checked = "checked";
+															}
+															$area = "Agenda";
+															break;
+													}
+
+												?>
+													<li>
+														<strong><?= $area ?> </strong>
+														<input type="checkbox" name="<?= $area ?>" value="<?= $idDoc ?>" onclick="AsociarImagen('<?= $camposDoc[$i] ?>',<?= $idDoc ?>,'<?=$Ambito?>',this,'<?=$Campo?>',<?= $idAmbito ?>);" <?= $checked ?> />
+													</li>
+												<?php
+												}
+												?>
+												<li>
+													<strong>Intercambiar posici&oacute;n: </strong><input type="checkbox" name="POSICION" value="<?=$idDoc?>" onclick="IntercambiarDoc(this);" />
+												</li>
+												<li>
+													<img onmouseover="this.style.cursor='pointer';" src="images/eliminarfoto.gif" alt="Eliminar foto" width="50" height="25" onClick="EliminarImagen(<?= $idDoc ?>)" />
+												</li>
+											</form>
+										</ul>
+									</div>
+								</div>
+							<?php
 							}
-							echo "<nobr clear=\"left\" ></nobr>\n";
+							?>
+							<nobr clear="left"></nobr>
+						<?php
 						}
 
 						?>

@@ -407,10 +407,10 @@ function PublicarDoc(idDoc,x){
 	var cad = "" ;
 	if(x.checked){
 		cad = "PUBLICAR=1&IDDOC=" + idDoc ;
-		FAjax('publicardoc.php','espere',cad,'post');
+		FAjax('doc-publicar.php','espere',cad,'post');
 	}else{
 		cad = "PUBLICAR=0&IDDOC=" + idDoc ;
-		FAjax('publicardoc.php','espere',cad,'post');
+		FAjax('doc-publicar.php','espere',cad,'post');
 	}
 }
 
@@ -431,11 +431,11 @@ function AsociarImagen(asociacion,idImg,tabla,x,campo,campovalor){
 	var cad = "" ;
 	if(x.checked){
 		cad = "ASOCIACION="+ asociacion + "&IDIMAGEN=" + idImg + "&TABLA=" + tabla + "&CAMPO=" + campo + "&CAMPOVALOR=" + campovalor;
-		FAjax('asociarimagen.php','espere',cad,'post');
+		FAjax('doc-asociarimagen.php','espere',cad,'post');
 		eval("document.formImagen" + idImg + ".PUBLICAR.checked = true");
 	}else{
 		cad = "ASOCIACION="+ asociacion + "&IDIMAGEN=" + idImg + "&TABLA=" + tabla + "&CAMPO=" + campo + "&CAMPOVALOR=" + campovalor;
-		FAjax('desasociarimagen.php','espere',cad,'post');
+		FAjax('doc-desasociarimagen.php','espere',cad,'post');
 		eval("document.formImagen" + idImg + ".PUBLICAR.checked = true");
 	}
 }
