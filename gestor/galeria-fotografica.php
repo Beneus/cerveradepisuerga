@@ -1,15 +1,5 @@
 <?php
 
-use citcervera\Model\Connections\DB;
-
-include("includes/Conn.php");
-include("includes/variables.php");
-include("includes/funciones.php");
-
-// datos de la entrada del directorio
-
-$db = new DB();
-
 $Ambito = $_GET["Ambito"] ?? '';
 $idAmbito = $_GET["idAmbito"] ?? '';
 $Campo = $_GET["Campo"] ?? '';
@@ -21,18 +11,6 @@ $ImgUsos = '';
 $ImgHabitat = '';
 $ImgSetas = '';
 $Volver = "$Referer?$Campo=$idAmbito";
-
-$sql = " Select * from $Ambito where $Campo = $idAmbito ";
-$ambito = $db->query($sql, 'fetch_object');
-$nombreCampo = $ambito[0]->{$NCampo};
-
-$columns = get_object_vars($ambito[0]);
-
-$keys = array();
-$columnKeys = array_keys($columns);
-$camposImage = array_values(array_filter($columnKeys, function ($ret2) {
-	return stripos($ret2, "Img") !== false;
-}));
 
 ?>
 <!DOCTYPE html>
@@ -51,12 +29,158 @@ $camposImage = array_values(array_filter($columnKeys, function ($ret2) {
 	<script type="text/javascript" src="js/funciones.js" language="javascript"></script>
 	<script type="text/javascript" src="js/uploader.js" language="javascript"></script>
 	<script type="text/javascript">
-		function stopUpload() {
-			document.getElementById('barracargando').style.visibility = 'hidden';
-			document.getElementById('FormImage').style.visibility = 'visible';
-			location.href = "galeria-fotografica.php?Ambito=<?php echo $Ambito; ?>&idAmbito=<?php echo $idAmbito; ?>&Campo=<?php echo $Campo; ?>&NCampo=<?php echo $NCampo; ?>&Referer=<?php echo $Referer; ?>";
-			return true;
-		}
+		var TextoModificado = false;
+		$(document).ready(function() {
+
+			function load() {
+				$.ajax({
+					type: 'GET',
+					url: 'img-list.php',
+					data: '<?= $_SERVER['QUERY_STRING'] ?>',
+					cache: false,
+					contentType: false,
+					processData: false,
+					success: function(data) {
+						$('#draggableArea').html(data);
+					}
+				});
+			}
+
+			function EliminarImg(idImagen) {
+				$.ajax({
+					type: 'GET',
+					url: 'img-delete.php',
+					data: 'idImagen=' + idImagen,
+					success: function(data) {
+						$('#FormImage' + idImagen).remove();
+					}
+				})
+
+			}
+
+			function GuardarDatos(idspan, idImg, value) {
+				if (TextoModificado) {
+					document.getElementById("espere").style.display = "block";
+					cad = "IDIMAGEN=" + idImg + "&CAMPO=" + idspan + "&" + idspan.toUpperCase() + "=" + value;
+					FAjax('img-editar.php', 'espere', cad, 'post');
+				} 
+			}
+
+			//------------------------------------------------------------------------
+
+			$(document).on('click', '.span-titulo-content', function(evt) {
+				var form = $(this).closest('form');
+				var texto = $(this).text();
+				$("input[name='TITULO']", form)
+					.val($.trim(texto))
+					.show()
+
+					.prop("disabled", false).focus();
+
+				evt.preventDefault();
+				return false;
+			});
+
+			$(document).on('click', '.span-pie-content', function(evt) {
+				var form = $(this).closest('form');
+				var texto = $(this).text();
+				$("textarea[name='PIE']", form)
+					.val($.trim(texto))
+					.show()
+
+					.prop("disabled", false).focus();
+
+				evt.preventDefault();
+				return false;
+			});
+
+			$(document).on('click', '.span-titulo', function(evt) {
+				var form = $(this).closest('form');
+				var texto = $(this).next('span').text();
+				$("input[name='TITULO']", form)
+					.val($.trim(texto))
+					.show()
+					.prop("disabled", false).focus();
+
+				evt.preventDefault();
+				return false;
+			});
+
+			$(document).on('click', '.span-pie', function(evt) {
+				var form = $(this).closest('form');
+				var texto = $(this).next('span').text();
+				$("textarea[name='PIE']", form)
+					.val($.trim(texto))
+					.show()
+					.prop("disabled", false).focus();
+
+				evt.preventDefault();
+				return false;
+			});
+
+			$(document).on('blur', '.textoimagen', function(evt) {
+				$(this)
+					.hide()
+					.prop("disabled", true).focus();
+
+				GuardarDatos($(this).attr('name'),$(this).attr('idImagen'), $(this).val());
+				$(this).prev('span').text($(this).val());
+				TextoModificado = false;
+				evt.preventDefault();
+				return false;
+			});
+
+			$(document).on('change', '.textoimagen', function(evt) {
+				TextoModificado = true;
+			});
+
+			load();
+
+			$('#buttonUp').on('click', function(e) {
+				$('#uploadform').submit();
+				e.preventDefault();
+				return false;
+			});
+
+			function progress(evt) {
+				if (evt.lengthComputable) {
+					var percentComplete = (evt.loaded / evt.total) * 100;
+					$('.progress-bar').css('width', percentComplete + '%').attr('aaria-valuenowial', percentComplete);
+				}
+			}
+
+			$('#uploadform').on('submit', function(e) {
+				var formData = new FormData(this);
+				$('#progress').show();
+				$.ajax({
+					type: 'POST',
+					url: 'img-upload.php',
+					data: formData,
+					xhr: function() {
+						var xhr = new window.XMLHttpRequest();
+						xhr.upload.addEventListener("progress", progress, false);
+						return xhr;
+					},
+					cache: false,
+					contentType: false,
+					processData: false,
+					success: function(data) {
+						//console.log(data);
+						$('#moreUploads').html('');
+						load();
+					}
+				})
+				e.preventDefault();
+				return false;
+			});
+
+			$(document).on('click', '.delete', function(evt) {
+				EliminarImg($(this).attr('idImagen'));
+				evt.preventDefault();
+				return false;
+
+			});
+		});
 	</script>
 </head>
 
@@ -69,8 +193,6 @@ $camposImage = array_values(array_filter($columnKeys, function ($ret2) {
 		<div id="errormsn">
 		</div>
 	</div>
-
-
 	<div id="contenido" class="wrapper">
 		<header id="header" class="grid">
 			<div class="grid-cell">
@@ -113,7 +235,7 @@ $camposImage = array_values(array_filter($columnKeys, function ($ret2) {
 									<div class="col_half">
 										<label>Titulo</label>
 										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-file-text"></i></span>
-											<input name="TITULO" type="text" size="50" />
+											<input name="TITULOS[]" type="text" size="50" />
 										</div>
 									</div>
 								</div>
@@ -125,7 +247,7 @@ $camposImage = array_values(array_filter($columnKeys, function ($ret2) {
 									<div class="col_half">
 										<label>Pie</label>
 										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-file-text"></i></span>
-											<input name="PIE" type="text" size="50" />
+											<input name="PIES[]" type="text" size="50" />
 										</div>
 									</div>
 								</div>
@@ -134,12 +256,17 @@ $camposImage = array_values(array_filter($columnKeys, function ($ret2) {
 									<div class="col_half">
 										<label></label>
 										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-picture-o"></i></span>
+
+
 											<input type="button" name="ADDIMAGE" id="ADDIMAGE" class="button" value="Más imagenes" onclick='addFileInput("foto[]");' />
 										</div>
 									</div>
 									<div class="col_half">
 										<label></label>
-										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-title"></i></span>
+										<div class="input_field">
+											<span>
+												<i aria-hidden="true" class="fa fa-title"></i>
+											</span>
 
 										</div>
 									</div>
@@ -151,7 +278,8 @@ $camposImage = array_values(array_filter($columnKeys, function ($ret2) {
 									<div class="col_half">
 										<label></label>
 										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-upload"></i></span>
-											<input type="button" name="SUBIRIMG" id="SUBIRIMG" class="button" value="Subir Imagen" onclick='uploadFile("Img");startUpload();' />
+											<button class="button" id="buttonUp">Subir imagen</button>
+
 										</div>
 									</div>
 								</div>
@@ -160,101 +288,10 @@ $camposImage = array_values(array_filter($columnKeys, function ($ret2) {
 					</div>
 				</div>
 				<div class="content">
-
 					<div class="image_wrapper" id="draggableArea">
-
-						<?php
-						// datos de la entrada del directorio
-
-
-						for ($i = 0; $i < sizeof($camposImage); $i++) {
-							$CamposQuery .= ", AM." . $camposImage[$i];
-						}
-
-						$sql = " SELECT Img.* $CamposQuery FROM Imagenes as Img "
-							. " inner join $Ambito as AM on Img.idAmbito = AM.$Campo "
-							. " WHERE Ambito = '$Ambito' AND idAmbito = $idAmbito ";
-						$sql .= " order by Img.Orden, Img.idImagen ";
-
-						$list = $db->query($sql, 'fetch_object');
-						$max = count($list);
-
-						if ($max > 0) {
-
-							foreach ($list as $imagen) {
-
-								$idImagen  	 	= $imagen->idImagen ?? '';
-								$Ambito  	 	= $imagen->Ambito ?? '';
-								$idAmbito  	 	= $imagen->idAmbito ?? '';
-								$Archivo 		= $imagen->Archivo ?? '';
-								$Path 			= $imagen->Path ?? '';
-								$Tipo 			= $imagen->Tipo ?? '';
-								$Tamano 		= $imagen->Tamano ?? '';
-								$Ancho 			= $imagen->Ancho ?? '';
-								$Alto 			= $imagen->Alto ?? '';
-								$Titulo 		= $imagen->Titulo ?? '';
-								$Pie 			= $imagen->Pie ?? '';
-								$AltoThumb 		= $imagen->AltoThumb ?? '';
-								$AnchoThumb 	= $imagen->AnchoThumb ?? '';
-								$Fecha 			= $imagen->Fecha ?? '';
-								$Publicar 		= $imagen->Publicar ?? '';
-								$ImgDescripcion = $imagen->ImgDescripcion ?? '';
-								$ImgHistoria 	= $imagen->ImgHistoria ?? '';
-								$ImgFlora 		= $imagen->ImgFlora ?? '';
-								$ImgFauna 		= $imagen->ImgFauna ?? '';
-								$ImgAgenda 		= $imagen->ImgAgenda ?? '';
-
-						?>
-								<div class="dragChild form_container" id="FormImage<?= $idImagen ?>">
-									<div class="row clearfix">
-										<div class="col_half">
-											<label></label>
-											<div class="input_field">
-												<span><i aria-hidden="true" class="fa fa-file-o"></i></span>
-
-												<img class="galeria-fotografica-thumb" src="<?php echo "../" . $Path . "/" . $Archivo ?>" width="<?= $AnchoThumb ?>" height="<?= $AltoThumb ?>" title="<?= $Titulo ?>" />
-											</div>
-										</div>
-										<div class="col_half">
-											<label></label>
-											<div class="input_field"> <span><i aria-hidden="true" class="fa fa-file-text"></i></span>
-												<ul>
-													<li>Fecha: <?= $Fecha ?></li>
-													<li>Archivo: <?= $Archivo ?></li>
-													<li>Anchura: <?= $Ancho ?> px.</li>
-													<li>Tama&ntilde;o: <?= $Tamano ?></li>
-													<li>Altura: <?= $Alto ?> px.</li>
-													<form name="formImagen<?= $idImagen ?>">
-														<li class="">
-															<span onclick="Editar('TITULO',<?= $idImagen ?>);" onmouseover="this.style.cursor='pointer';" alt="Hacer click con el bot&oacute;n derecho del rat&oacute;n para editar el t&iacute;tulo de la foto" title="Hacer click con el bot&oacute;n derecho del rat&oacute;n para editar el t&iacute;tulo de la foto"><strong>T&iacute;tulo (m&aacute;x 100): </strong></span><span id="TITULO<?= $idImagen ?>" onclick="Editar('TITULO',<?= $idImagen ?>);" onmouseover="this.style.cursor='pointer';"><?= $Titulo ?></span>
-															<input type="text" name="TITULO" value="<?= $Titulo ?>" style="display:none" disabled="disabled" onblur="GuardarDatos('TITULO',<?= $idImagen ?>);" onchange="TextoModificado=true;" width="100%" maxlength="100" class="textoimagen" />
-														</li>
-														<li class=""><span onclick="Editar('PIE',<?= $idImagen ?>);" onmouseover="this.style.cursor='pointer';" alt="Hacer click con el bot&oacute;n derecho del rat&oacute;n para editar el pie de foto\" title="Hacer click con el bot&oacute;n derecho del rat&oacute;n para editar el pie de foto"><strong>Pie de foto (m&aacute;x 250): </strong></span><span id="PIE<?= $idImagen ?>" onclick="Editar('PIE',<?= $idImagen ?>);" onmouseover="this.style.cursor='pointer';"><?= $Pie ?></span>
-															<textarea name="PIE" cols="45" rows="2" disabled="disabled" style="display:none" onblur="GuardarDatos('PIE',<?= $idImagen ?>);" onchange="TextoModificado=true;" class="textoimagen"></textarea>
-														</li>
-														<li class="input_field">
-															<strong>Publicar: </strong>
-															<input type="checkbox" name="PUBLICAR" value="<?= $idImagen ?>" onclick="Publicar(<?= $idImagen ?>,this);" <?= ($Publicar) ? "checked" : ""; ?> />
-														</li>
-														<li>
-															<img onmouseover="this.style.cursor='pointer';" src="images/eliminarfoto.gif" alt="Eliminar foto" width="50" height="25" onClick="EliminarImagen(<?= $idImagen ?>)" />
-														</li>
-													</form>
-												</ul>
-											</div>
-										</div>
-									</div>
-								</div>
-						<?php
-							}
-						}
-						?>
 					</div>
 				</div>
 			</div>
-			<?php
-			//include("./footer.php");
-			?>
 		</div>
 	</div>
 </body>

@@ -50,10 +50,10 @@ function fileExt($tipoImagen)
 
 // Build Function name for ImageCreateFromSUFFIX 
 
-$idAmbito = $_POST['IDAMBITO'];
-$Ambito = $_POST['AMBITO'];
-$titulos = $_POST['TITULOS'];
-$pies = $_POST['PIES'];
+$idAmbito = $_POST['IDAMBITO'] ?? '';
+$Ambito = $_POST['AMBITO'] ?? '';
+$titulos = $_POST['TITULOS'] ?? '';
+$pies = $_POST['PIES'] ?? '';
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Creo la carpeta del cliente donde se guardaran sus archivos
 

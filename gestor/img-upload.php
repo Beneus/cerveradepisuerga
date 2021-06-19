@@ -4,6 +4,19 @@ include("includes/funciones.php");
 include("includes/imagefuncion.php");
 include("includes/Conn.php");
 
+use citcervera\Model\Entities\Imagenes;
+use citcervera\Model\Managers\DataCarrier;
+use citcervera\Model\Managers\Manager;
+
+
+const __FILESPATH__ = 'files/';
+$_ROOTPATH = $_SERVER['DOCUMENT_ROOT'] . '/' .  __FILESPATH__;
+
+
+$dc = new DataCarrier();
+$imagen = new Imagenes();
+$documentManager = new Manager($imagen);
+
 $uploadErrors = array(
 	UPLOAD_ERR_OK => 'La foto ha subido correctamente.',
 	UPLOAD_ERR_INI_SIZE => 'El tama�o de la foto excede el m�ximo permitido en php.ini.',
@@ -36,37 +49,36 @@ function fileExt($tipoImagen)
 // $function_suffix = $gd_function_suffix[$tipoImagen];
 
 // Build Function name for ImageCreateFromSUFFIX 
-var_dump($_POST);
 $idAmbito = $_POST['IDAMBITO'] ?? '';
 $Ambito = $_POST['AMBITO'] ?? '';
-$titulos = explode(";", $_POST['TITULOS'] ?? '');
-$pies = explode(";", $_POST['PIES'] ?? '');
+$titulos = $_POST['TITULOS'] ?? '';
+$pies = $_POST['PIES'] ?? '';
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Creo la carpeta del cliente donde se guardaran sus archivos
 
 
 
-if (!is_dir("../$Ambito")) {
-	mkdir("../$Ambito");
-	chmod("../$Ambito",  0777);
+if (!is_dir($_ROOTPATH . $Ambito)) {
+	mkdir($_ROOTPATH . $Ambito);
+	chmod($_ROOTPATH . $Ambito,  0777);
 	//sleep(1);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Creo la carpeta del cliente donde se guardaran sus archivos
 
-if (!is_dir("../$Ambito/$idAmbito")) {
-	mkdir("../$Ambito/$idAmbito");
-	chmod("../$Ambito/$idAmbito",  0777);
+if (!is_dir($_ROOTPATH . "$Ambito/$idAmbito")) {
+	mkdir($_ROOTPATH . "$Ambito/$idAmbito");
+	chmod($_ROOTPATH . "$Ambito/$idAmbito",  0777);
 	//sleep(1);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Creo la carpeta del cliente donde se guardaran sus archivos
 
-if (!is_dir("../$Ambito/$idAmbito/images")) {
-	mkdir("../$Ambito/$idAmbito/images");
-	chmod("../$Ambito/$idAmbito/images",  0777);
+if (!is_dir($_ROOTPATH . "$Ambito/$idAmbito/images")) {
+	mkdir($_ROOTPATH . "$Ambito/$idAmbito/images");
+	chmod($_ROOTPATH . "$Ambito/$idAmbito/images",  0777);
 	//sleep(1);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -83,7 +95,8 @@ if (!is_dir("../$Ambito/$idAmbito/thumb")) {
 
 $foto = $_FILES['foto'] ?? '';
 $cantidad = count($foto['name']);
-$link = ConnBDCervera();
+
+var_dump($titulos);
 
 for ($i = 0; $i < $cantidad; $i++) {
 	if (!$foto['size'][$i])
@@ -137,80 +150,53 @@ for ($i = 0; $i < $cantidad; $i++) {
 					$nuevoancho = floor(($ancho * floor($porcentaje * 100)) / 100);
 					$nuevoalto = floor(($alto * floor($porcentaje * 100)) / 100);
 				}
-				/*
-				if (strtolower($ext) == "jpg") {
-					redimensionar_jpeg($fotolocation, $thumblocation, $nuevoancho, $nuevoalto, 100);
-				}
-				if (strtolower($ext) == "gif") {
-					redimensionar_gif($fotolocation, $thumblocation, $nuevoancho, $nuevoalto, 100);
-				}
-				if (strtolower($ext) == "png") {
-					redimensionar_png($fotolocation, $thumblocation, $ancho, $alto, 100);
-				}
-				*/
 			} else {
 				$nuevoancho = $ancho;
 				$nuevoalto = $alto;
-				/*
-				if (strtolower($ext) == "jpg") {
-					redimensionar_jpeg($fotolocation, $thumblocation, $ancho, $alto, 100);
-				}
-				if (strtolower($ext) == "gif") {
-					redimensionar_gif($fotolocation, $thumblocation, $ancho, $alto, 100);
-				}
-				if (strtolower($ext) == "png") {
-					redimensionar_png($fotolocation, $thumblocation, $ancho, $alto, 100);
-				}
-				*/
+				
 			}
-			//				echo "ext".$ext."<br/>";
-			//				echo "fotolocation: ". $fotolocation."<br/>";
-			//				echo "thumblocation: ". $thumblocation."<br/>";
-			//				echo "nuevoancho: ". $nuevoancho."<br/>";
-			//				echo "nuevoalto: ". $nuevoalto."<br/>";
-			//				exit;
+			
 
-			// fin redimension El logo
+			$sql = "Select * From Imagenes where Ambito = '$Ambito' and idAmbito = $idAmbito and Archivo = '$nombre' ";
+			$ret = $documentManager->Query($sql, $fetch_type = 'fetch_assoc', $imagen);
+			$imagen = new Imagenes();
 
-			// Se introducen los valores en la base de datos una vez subido y redimensionado la imagen
-
-			// borramos cualquier archivo con el mismo nombre antes de volverlo a introducir
-			$sqlDel = "Delete From Imagenes where Ambito = '$Ambito' and idAmbito = $idAmbito and Archivo = '$nombre' ";
-			$result = mysqli_query($link, $sqlDel);
-
-			// introducimos los datosdel nuevo archivo
-			$sqlIns = " INSERT INTO Imagenes (Ambito, idAmbito, Archivo, Path, Tipo, Tamano, Ancho, Alto, AnchoThumb, AltoThumb, Titulo, Pie, Fecha) VALUES ("
-				. " '" . $Ambito . "', "
-				. $idAmbito  . ", "
-				. " '" . Limpiar($nombre, 100) . "', "
-				. " '$Ambito/$idAmbito/images', "
-				. " '" . $tipo . "', "
-				. " " . $tamano . ", "
-				. " " . $ancho . ", "
-				. " " . $alto . ", "
-				. " " . $nuevoancho . ", "
-				. " " . $nuevoalto . ", "
-				. " '" . Limpiar($titulo, 100) . "', "
-				. " '" . Limpiar($pie, 250) . "', "
-				. " Now()) ";
-
-			$result = mysqli_query($link, $sqlIns);
-
-			$sql = "select idImagen from Imagenes where Ambito = '$Ambito' and idAmbito = $idAmbito order by idImagen desc ";
-			$result = mysqli_query($link, $sql);
-			if (!$result) {
-				$message = "Invalid query" . mysqli_error($link) . "\n";
-				$message .= "whole query: " . $sql;
-				die($message);
-				exit;
+			if (count($ret) > 0) {
+				$imagen->idImagen = $ret[0]['idImagen'];
 			}
-			$max = mysqli_num_rows($result);
-			if ($max > 0) {
-				$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-				$idImagen = $row["idImagen"];
+
+			$imagen->Ambito = $Ambito;
+			$imagen->idAmbito = $idAmbito;
+			$imagen->Archivo = Limpiar($nombre, 100);
+			$imagen->Path = $Ambito . '/' . $idAmbito . '/images';
+			$imagen->Tipo = $tipo;
+			$imagen->Tamano = $tamano;
+			$imagen->Ancho = $ancho;
+			$imagen->Alto = $alto;
+			$imagen->AnchoThumb = $nuevoancho;
+			$imagen->AltoThumb= $nuevoalto;
+			$imagen->Titulo = Limpiar(trim($titulo), 100);
+			$imagen->Pie = Limpiar(trim($pie), 250);
+			$imagen->Publicar = 0;
+			
+			if (count($ret) > 0) {
+				$imagen->Orden = $ret[0]['Orden'];
 			}
-			$sqlUp = "Update Imagenes set Orden = $idImagen where idImagen = $idImagen ";
-			$result = mysqli_query($link, $sqlUp);
+			
+			$imagen->Fecha = date("Y-m-d H:m:s");
+			
+			$rest = $documentManager->Save($imagen);
+			var_dump($rest);
+			if (count($ret) == 0) {
+			
+				$lastInsertedId = $documentManager->GetLastInsertedId();
+				$imagen->idImagen = $lastInsertedId;
+				$imagen->Orden = $lastInsertedId;
+				var_dump($lastInsertedId);
+				$rest = $documentManager->Save($imagen);
+				var_dump($rest);
+			}
+
 		} else {
 			echo $uploadErrors[$foto['error'][$i]];
 		}
@@ -218,9 +204,3 @@ for ($i = 0; $i < $cantidad; $i++) {
 		echo "La foto " . $foto['name'][$i] . " no tiene el formato adecuado";
 	}
 }
-mysqli_close($link);
-
-?>
-<script language="javascript" type="text/javascript">
-	window.top.window.stopUpload();
-</script>

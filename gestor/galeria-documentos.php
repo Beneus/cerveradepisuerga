@@ -1,15 +1,4 @@
 <?php
-
-use citcervera\Model\Connections\DB;
-
-include("includes/Conn.php");
-include("includes/variables.php");
-include("includes/funciones.php");
-
-// datos de la entrada del directorio
-
-$db = new DB();
-
 $Ambito = $_GET["Ambito"] ?? '';
 $idAmbito = $_GET["idAmbito"] ?? '';
 $Campo = $_GET["Campo"] ?? '';
@@ -17,18 +6,6 @@ $NCampo = $_GET["NCampo"] ?? '';
 $Referer = $_GET["Referer"] ?? '';
 $camposQuery = '';
 $Volver = "$Referer?$Campo=$idAmbito";
-
-$sql = " Select * from $Ambito where $Campo = $idAmbito ";
-$ambito = $db->query($sql, 'fetch_object');
-$nombreCampo = $ambito[0]->{$NCampo};
-
-$columns = get_object_vars($ambito[0]);
-
-$keys = array();
-$columnKeys = array_keys($columns);
-$camposDoc = array_values(array_filter($columnKeys, function ($ret2) {
-	return stripos($ret2, "Doc") !== false;
-}));
 
 ?>
 <!DOCTYPE html>
@@ -92,7 +69,6 @@ $camposDoc = array_values(array_filter($columnKeys, function ($ret2) {
 						xhr.upload.addEventListener("progress", progress, false);
 						return xhr;
 					},
-
 					cache: false,
 					contentType: false,
 					processData: false,
@@ -113,7 +89,7 @@ $camposDoc = array_values(array_filter($columnKeys, function ($ret2) {
 				}
 			}
 
-			$('#ADDMORE').click(function(evt) {
+			$(document).on('click', '#ADDMORE', function(evt) {
 				$('.document:last').clone().appendTo('#moreUploads');
 				evt.preventDefault();
 				return false;
@@ -238,7 +214,9 @@ $camposDoc = array_values(array_filter($columnKeys, function ($ret2) {
 									</div>
 									<div class="col_half">
 										<label></label>
-										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-title"></i></span>
+										<div class="input_field"> 
+											<span><i aria-hidden="true" class="fa fa-title"></i><
+												/span>
 										</div>
 									</div>
 								</div>

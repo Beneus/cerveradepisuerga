@@ -315,7 +315,7 @@ textarea:focus {
 	font-size:16px;
 }
 .container .main .content .image_wrapper ul{
-	padding: 1rem 1rem 0 1rem;
+	padding: 1rem 1rem 0 2rem;
 	margin:auto;
 }
 @media (max-width: 1024px) {

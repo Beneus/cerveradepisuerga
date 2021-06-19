@@ -269,15 +269,15 @@ function startUpload(){
 
 var TextoModificado = false;
 
-function Editar(idspan,idImg){
-	var objSpan = eval("document.getElementById('"+idspan+idImg+"')");
-	var objForm = eval("document.formImagen"+ idImg+"."+idspan);
-	objSpan.style.display='none';
-	objForm.style.display = "";
-	objForm.value = objSpan.innerHTML;
-	objForm.disabled = false;
-	objForm.focus();
-}
+// function Editar(idspan,idImg){
+// 	var objSpan = eval("document.getElementById('"+idspan+idImg+"')");
+// 	var objForm = eval("document.formImagen"+ idImg+"."+idspan);
+// 	objSpan.style.display='none';
+// 	objForm.style.display = "";
+// 	objForm.value = objSpan.innerHTML;
+// 	objForm.disabled = false;
+// 	objForm.focus();
+// }
 function GuardarDatos(idspan,idImg){
 	var objSpan = eval("document.getElementById('"+idspan+idImg+"')");
 	var objForm = eval("document.formImagen"+ idImg+"."+idspan);
@@ -382,11 +382,7 @@ function EliminarBannersGestion(idBan){
 	window.open(cad,'','width=100px,height=100px');
 	
 }
-function EliminarImagen(idImg){
-	var cad = "img-delete.php?idImagen=" + idImg;
-	window.open(cad,'','width=100px,height=100px');
-	
-}
+
 
 function Publicar(idImg,x){
 	document.getElementById("espere").style.display = "block";
