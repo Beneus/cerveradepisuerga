@@ -125,8 +125,6 @@ function addFileInput2(nombre) {
 }
 
 
-
-
 function addFileInput() 
 {
 	var div = CreateElement('div');
@@ -287,7 +285,7 @@ function GuardarDatos(idspan,idImg){
 		// enviar datos al servidior;
 		document.getElementById("espere").style.display = "block";
 		cad = "IDIMAGEN=" + idImg + "&CAMPO=" + idspan + "&"+ idspan.toUpperCase() + "=" + objForm.value;
-		FAjax('editarimagen.php','espere',cad,'post');
+		FAjax('img-editar.php','espere',cad,'post');
 			
 		objSpan.innerHTML = objForm.value;
 		objSpan.style.display =  "";
@@ -308,7 +306,7 @@ function GuardarDatosDoc(idspan,idDoc){
 		// enviar datos al servidior;
 		document.getElementById("espere").style.display = "block";
 		cad = "IDDOC=" + idDoc + "&CAMPO=" + idspan + "&"+ idspan.toUpperCase() + "=" + objForm.value;
-		FAjax('editardocumento.php','espere',cad,'post');
+		FAjax('doc-editar.php','espere',cad,'post');
 			
 		objSpan.innerHTML = objForm.value;
 		objSpan.style.display =  "";
@@ -338,7 +336,7 @@ function GuardarDatosBanner(idspan,idBan){
 		// enviar datos al servidior;
 		document.getElementById("espere").style.display = "block";
 		cad = "IDBANNER=" + idBan + "&CAMPO=" + idspan + "&"+ idspan.toUpperCase() + "=" + objForm.value.replace(/&/gi,"_38_");
-		FAjax('editarbanner.php','espere',cad,'post');
+		FAjax('banner-edit.php','espere',cad,'post');
 			
 		objSpan.innerHTML = objForm.value;
 		objSpan.style.display =  "";
@@ -359,7 +357,7 @@ function GuardarDatosBannerGestion(idspan,idBan){
 		// enviar datos al servidior;
 		document.getElementById("espere").style.display = "block";
 		cad = "IDBANNER=" + idBan + "&CAMPO=" + idspan + "&"+ idspan.toUpperCase() + "=" + objForm.value.replace(/&/gi,"_38_");
-		FAjax('editarbannergestion.php','espere',cad,'post');
+		FAjax('bannergestion-edit.php','espere',cad,'post');
 			
 		objSpan.innerHTML = objForm.value;
 		objSpan.style.display =  "";
@@ -375,17 +373,17 @@ function GuardarDatosBannerGestion(idspan,idBan){
 
 
 function EliminarBanner(idBan){
-	var cad = "eliminarbanner.php?idBanner=" + idBan;
+	var cad = "banner-delete.php?idBanner=" + idBan;
 	window.open(cad,'','width=100px,height=100px');
 	
 }
 function EliminarBannersGestion(idBan){
-	var cad = "eliminarbannersgestion.php?idBannersGestion=" + idBan;
+	var cad = "bannersgestion-delete.php?idBannersGestion=" + idBan;
 	window.open(cad,'','width=100px,height=100px');
 	
 }
 function EliminarImagen(idImg){
-	var cad = "eliminarimagen.php?idImagen=" + idImg;
+	var cad = "img-delete.php?idImagen=" + idImg;
 	window.open(cad,'','width=100px,height=100px');
 	
 }
@@ -395,10 +393,10 @@ function Publicar(idImg,x){
 	var cad = "" ;
 	if(x.checked){
 		cad = "PUBLICAR=1&IDIMAGEN=" + idImg ;
-		FAjax('publicarimagen.php','espere',cad,'post');
+		FAjax('img-public.php','espere',cad,'post');
 	}else{
 		cad = "PUBLICAR=0&IDIMAGEN=" + idImg ;
-		FAjax('publicarimagen.php','espere',cad,'post');
+		FAjax('img-public.php','espere',cad,'post');
 	}
 }
 
@@ -419,10 +417,10 @@ function PublicarBanner(idBan,x){
 	var cad = "" ;
 	if(x.checked){
 		cad = "PUBLICAR=1&IDBAN=" + idBan ;
-		FAjax('publicarbanner.php','espere',cad,'post');
+		FAjax('banner-public.php','espere',cad,'post');
 	}else{
 		cad = "PUBLICAR=0&IDBAN=" + idBan ;
-		FAjax('publicarbanner.php','espere',cad,'post');
+		FAjax('banner-public.php','espere',cad,'post');
 	}
 }
 
@@ -458,7 +456,7 @@ function IntercambiarImagen(x){
 			}
 			if(numSel == 2){
 				// LLamar a la funcion Ajax;
-				FAjax('IntercambiarImagen.php','espere','SELA=' +SelA +'&SELB='+ SelB,'post');
+				FAjax('img-order.php','espere','SELA=' +SelA +'&SELB='+ SelB,'post');
 				Intercambiar("Img",SelA,SelB);
 			}
 		}	
@@ -489,7 +487,7 @@ function IntercambiarDoc(x){
 			}
 			if(numSel == 2){
 				// LLamar a la funcion Ajax;
-				FAjax('IntercambiarDoc.php','espere','SELA=' +SelA +'&SELB='+ SelB,'post');
+				FAjax('doc-order.php','espere','SELA=' +SelA +'&SELB='+ SelB,'post');
 				Intercambiar("Doc",SelA,SelB);
 			}
 		}	
@@ -520,7 +518,7 @@ function IntercambiarBanner(x){
 			}
 			if(numSel == 2){
 				// LLamar a la funcion Ajax;
-				FAjax('IntercambiarBanner.php','espere','SELA=' +SelA +'&SELB='+ SelB,'post');
+				FAjax('banner-order.php','espere','SELA=' +SelA +'&SELB='+ SelB,'post');
 				Intercambiar("Ban",SelA,SelB);
 			}
 		}	
@@ -551,7 +549,7 @@ function IntercambiarBannersGestion(x){
 			}
 			if(numSel == 2){
 				// LLamar a la funcion Ajax;
-				FAjax('IntercambiarBannersGestion.php','espere','SELA=' +SelA +'&SELB='+ SelB,'post');
+				FAjax('bannergestion-order.php','espere','SELA=' +SelA +'&SELB='+ SelB,'post');
 				Intercambiar("Ban",SelA,SelB);
 			}
 		}	
