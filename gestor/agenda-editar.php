@@ -32,8 +32,8 @@ $idTipoEvento = '';
 $ErrorMsn = '';
 $HoraEvento = '';
 $FechaEvento = '';
-$Mostrar = $_GET["Mostrar"] ?? '';
-$Pagina = $_GET["Pagina"] ?? '';
+$mostrar = $_GET["mostrar"] ?? '';
+$pagina = $_GET["pagina"] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	}
 
 	if ($ErrorMsg == "") {
+		$Agenda->Fecha = date("Y-m-d H:m:s");
 		$agendaManager->Save($Agenda);
 		$lastInsertedId = $agendaManager->GetLastInsertedId();
 
@@ -81,12 +82,14 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
 	<link rel="stylesheet" href="css/beneus.css" />
 	<link rel="stylesheet" href="css/menu.css" />
+	<link href="css/form.css" rel="stylesheet" type="text/css">
+	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="http://code.jquery.com/jquery-latest.pack.js" type="text/javascript"></script>
 	<script type="text/javascript" src="js/funciones.js"></script>
 	<!--[if lt IE 9]> <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 	<script src="https://use.fontawesome.com/4ecc3dbb0b.js"></script>
-	<link href="css/form.css" rel="stylesheet" type="text/css">
+	
 
 	<script type="text/javascript" src="scripts/tiny_mce.js" language="javascript"></script>
 	<script language="javascript" type="text/javascript">
@@ -152,8 +155,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 						<li>
 							<h2><?= explode('.', curPageName())[0] ?></h2>
 						</li>
-						<li class="liselect"><a title="A&ntilde;adir monumento" href="agenda-editar.php">A&ntilde;adir entrada</a></li>
-						<li><a title="Listado del monumentos" href="agenda.php">Listado</a></li>
+						<li class="liselect"><a href="agenda-editar.php">A&ntilde;adir entrada</a></li>
+						<li><a href="agenda.php">Listado</a></li>
 					</ul>
 				</div>
 
@@ -291,7 +294,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 									<div class="col_half">
 										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-save"></i></span>
 											<?php
-											$volver = 'location.href="agenda.php?Mostrar=' . $Mostrar . '&Pagina=' . $Pagina . '"';
+											$volver = 'location.href="agenda.php?Mostrar=' . $mostrar . '&Pagina=' . $pagina . '"';
 											?>
 											<input type="button" name="VOLVER2" id="VOLVER2" class="button" value="Volver al listado" onclick='<?= $volver ?>' />
 

@@ -218,7 +218,8 @@ $Volver = "$Referer?$Campo=$idAmbito";
 					<div class="form_wrapper">
 						<div class="form_container" id="FormImage">
 							<div class="title_container">
-								<h2>Galeria de imagenes de <?php echo $nombreCampo; ?></h2>
+								<h2>Imagenes de <?php echo $NCampo; ?></h2>
+								<a class="volver" href="<?php echo $Volver; ?>">Volver</a>
 							</div>
 							<form method="post" enctype="multipart/form-data" id="uploadform">
 								<input type="hidden" name="IDAMBITO" value="<?php echo $idAmbito; ?>" />

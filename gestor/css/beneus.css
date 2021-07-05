@@ -240,3 +240,7 @@ footer {
 .galeria-fotografica-thumb{
   padding-left: 2rem;
 }
+
+a.volver {
+  color: white;
+}

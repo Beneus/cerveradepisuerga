@@ -167,7 +167,8 @@ $Volver = "$Referer?$Campo=$idAmbito";
 					<div class="form_wrapper">
 						<div class="form_container" id="FormImage">
 							<div class="title_container">
-								<h2>Documentos de <?php echo $nombreCampo; ?></h2>
+								<h2>Documentos de <?php echo $NCampo; ?></h2>
+								<a class="volver" href="<?php echo $Volver; ?>">Volver</a>
 							</div>
 							<div class="progress">
 								<div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
