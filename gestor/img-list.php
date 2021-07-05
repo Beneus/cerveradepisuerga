@@ -79,7 +79,7 @@ if ($max > 0) {
                     <div class="input_field">
                         <span><i aria-hidden="true" class="fa fa-file-o"></i></span>
 
-                        <img class="galeria-fotografica-thumb" src="<?php echo "../" . $Path . "/" . $Archivo ?>" width="<?= $AnchoThumb ?>" height="<?= $AltoThumb ?>" title="<?= $Titulo ?>" />
+                        <img class="galeria-fotografica-thumb" src="<?php echo "../files/" . $Path . "/" . $Archivo ?>" width="<?= $AnchoThumb ?>" height="<?= $AltoThumb ?>" title="<?= $Titulo ?>" />
                     </div>
                 </div>
                 <div class="">

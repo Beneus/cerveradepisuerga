@@ -107,8 +107,8 @@ for ($i = 0; $i < $cantidad; $i++) {
 			$tamano = $foto['size'][$i];
 			$nombre  = $foto['name'][$i];
 			$ext = substr(strrchr($nombre, "."), 1);
-			$fotolocation = "../$Ambito/$idAmbito/images/$nombre";
-			$thumblocation = "../$Ambito/$idAmbito/thumb/$nombre";
+			$fotolocation = $_ROOTPATH . "$Ambito/$idAmbito/images/$nombre";
+			$thumblocation = $_ROOTPATH . "$Ambito/$idAmbito/thumb/$nombre";
 			$titulo = $titulos[$i];
 			$pie = $pies[$i];
 			// Si existe un archivo con el mismo nombre lo borro antes de introducir el nuevo
@@ -131,7 +131,6 @@ for ($i = 0; $i < $cantidad; $i++) {
 
 			// redimension El logo
 			list($ancho, $alto) = getimagesize($fotolocation);
-var_dump($ancho);
 
 			if (($ancho > 250) || ($alto > 250)) {
 				if ($ancho > $alto) {
@@ -154,7 +153,6 @@ var_dump($ancho);
 				
 			}
 			
-
 			$sql = "Select * From Imagenes where Ambito = '$Ambito' and idAmbito = $idAmbito and Archivo = '$nombre' ";
 			$ret = $documentManager->Query($sql, $fetch_type = 'fetch_assoc', $imagen);
 			$imagen = new Imagenes();
@@ -182,7 +180,7 @@ var_dump($ancho);
 			}
 			
 			$imagen->Fecha = date("Y-m-d H:m:s");
-			var_dump($imagen);
+
 			$rest = $documentManager->Save($imagen);
 
 			if (count($ret) == 0) {

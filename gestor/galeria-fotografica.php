@@ -27,7 +27,7 @@ $Volver = "$Referer?$Campo=$idAmbito";
 	<!--[if lt IE 9]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 	<script src="https://use.fontawesome.com/4ecc3dbb0b.js"></script>
 	<script type="text/javascript" src="js/funciones.js" language="javascript"></script>
-	<script type="text/javascript" src="js/uploader.js" language="javascript"></script>
+	
 	<script type="text/javascript">
 		var TextoModificado = false;
 		$(document).ready(function() {
@@ -165,7 +165,7 @@ $Volver = "$Referer?$Campo=$idAmbito";
 					contentType: false,
 					processData: false,
 					success: function(data) {
-						//console.log(data);
+						console.log(data);
 						$('#moreUploads').html('');
 						load();
 					}
