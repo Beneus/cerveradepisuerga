@@ -180,6 +180,9 @@ $Volver = "$Referer?$Campo=$idAmbito";
 				return false;
 
 			});
+
+			
+        
 		});
 	</script>
 </head>
@@ -210,10 +213,7 @@ $Volver = "$Referer?$Campo=$idAmbito";
 			?>
 		</nav>
 		<div class="grid container">
-
 			<div class="main">
-				<div id="barracargando" style="visibility:hidden">Cargando fotos...<br /><img src="images/loader.gif" /></div>
-				<iframe src="" id="fileframe" name="fileframe" style="display:none"></iframe>
 				<div class="content">
 					<div class="form_wrapper">
 						<div class="form_container" id="FormImage">
@@ -295,6 +295,4 @@ $Volver = "$Referer?$Campo=$idAmbito";
 		</div>
 	</div>
 </body>
-<script type="text/javascript" src="js/draganddrop.js"></script>
-
 </html>

@@ -96,8 +96,6 @@ if (!is_dir("../$Ambito/$idAmbito/thumb")) {
 $foto = $_FILES['foto'] ?? '';
 $cantidad = count($foto['name']);
 
-var_dump($titulos);
-
 for ($i = 0; $i < $cantidad; $i++) {
 	if (!$foto['size'][$i])
 		continue;
@@ -133,7 +131,7 @@ for ($i = 0; $i < $cantidad; $i++) {
 
 			// redimension El logo
 			list($ancho, $alto) = getimagesize($fotolocation);
-
+var_dump($ancho);
 
 			if (($ancho > 250) || ($alto > 250)) {
 				if ($ancho > $alto) {
@@ -184,9 +182,9 @@ for ($i = 0; $i < $cantidad; $i++) {
 			}
 			
 			$imagen->Fecha = date("Y-m-d H:m:s");
-			
+			var_dump($imagen);
 			$rest = $documentManager->Save($imagen);
-			var_dump($rest);
+
 			if (count($ret) == 0) {
 			
 				$lastInsertedId = $documentManager->GetLastInsertedId();
@@ -194,7 +192,7 @@ for ($i = 0; $i < $cantidad; $i++) {
 				$imagen->Orden = $lastInsertedId;
 				var_dump($lastInsertedId);
 				$rest = $documentManager->Save($imagen);
-				var_dump($rest);
+
 			}
 
 		} else {
