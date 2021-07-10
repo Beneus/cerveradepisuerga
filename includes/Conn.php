@@ -1,7 +1,7 @@
 <?php
 define(__NAMESPACE__ ,'citcervera');
 
-function __autoload($class_name)
+function __citcervera_libraries($class_name)
 {
 	$class_name = str_replace('\\','/', 'code\\' . $class_name);
 	if(file_exists($class_name . '.php'))
@@ -10,7 +10,8 @@ function __autoload($class_name)
 		return;
 	}   
 }
-spl_autoload_register(__NAMESPACE__."\__autoload");
+spl_autoload_register("__citcervera_libraries");
+
 
 session_start();
 ini_set('display_errors', 1);
