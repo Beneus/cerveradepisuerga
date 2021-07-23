@@ -43,7 +43,11 @@ include("includes/variables.php");
                </div>
                
                <div class="content">
-                    
+
+
+
+
+               
                </div>
           </div>
           <?php
