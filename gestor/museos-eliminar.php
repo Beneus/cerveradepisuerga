@@ -39,8 +39,9 @@ for ($i = 0; $i < $NumEntradas; $i++) {
 	foreach ($dc->GetEntities('Documentos') as $doc){
 		$documentoManager->Delete($doc->idDoc);
 	}
-	delete_directory("../files/Museos/$idDirs[$i]");
+	
 	$entityManager->Delete($idDirs[$i]);
+	delete_directory("../files/Museos/$idDirs[$i]");
 }
 ?>
 <!DOCTYPE html>

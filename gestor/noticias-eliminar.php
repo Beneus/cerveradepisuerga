@@ -4,66 +4,62 @@ include("includes/Conn.php");
 include("includes/variables.php");
 include("includes/funciones.php");
 
+use citcervera\Model\Entities\Noticias;
+use citcervera\Model\Entities\Documentos;
+use citcervera\Model\Entities\Imagenes;
+use citcervera\Model\Managers\Manager;
+use citcervera\Model\Managers\DataCarrier;
 
-function BorrarDirectorio($directorio) {
 
-	$archivos = scandir($directorio); //hace una lista de archivos del directorio
-	$num = count($archivos); //los cuenta
-	//Los borramos
-	for ($i=0; $i<=$num; $i++) {
-	 unlink ($directorio."/".$archivos[$i]); 
-	}
-	
-	//borramos el directorio
-	
-	rmdir ($directorio);
-}
+$entity = new Noticias();
+$entityManager = new Manager($entity);
+$documentos = new Documentos();
+$documentoManager = new Manager($documentos);
+$imagenes = new Imagenes();
+$imagenManager = new Manager($imagenes);
+
 
 $cadEliminados = $_GET["cadEliminados"];
-
 $idDirs = explode("-",$cadEliminados);
 $NumEntradas = count($idDirs);
-$link = ConnBDCervera();
 for ($i=0; $i< $NumEntradas; $i++){
 	
-	$sql = " SELECT ImgNoticia, DocNoticia FROM Noticias WHERE idNoticia = $idDirs[$i] ";
-	$result = mysqli_query($link,$sql);
-	if (!$result)
-		{
-		$message = "Invalid query".mysqli_error($link)."\n";
-		$message .= "whole query: " .$sql;	
-		die($message);
-		exit;
-		}
-	$max = mysqli_num_rows($result);	
-	if($max > 0){  
-		$ImgNoticia = $row["ImgNoticia"]; 
-		$DocNoticia = $row["DocNoticia"]; 
+	$dc = new DataCarrier();
+
+	$sql = "select * from Imagenes where Ambito = 'Noticias' and idAmbito = " . $idDirs[$i];
+	$image = $imagenManager->Query($sql, 'fetch_object', new Imagenes());
+	$dc->Set($image, 'Imagenes');
+
+	$sql = "select * from Documentos where Ambito = 'Noticias' and idAmbito = " . $idDirs[$i];
+	$documentos = $documentoManager->Query($sql, 'fetch_object', new Documentos());
+	$dc->Set($documentos, 'Documentos');
+
+	foreach ($dc->GetEntities('Imagenes') as $img){
+		$imagenManager->Delete($img->idImagen);
 	}
-	mysqli_free_result($result);
+	foreach ($dc->GetEntities('Documentos') as $doc){
+		$documentoManager->Delete($doc->idDoc);
+	}
+
 	
-	$sqlDel = "DELETE FROM Documentos WHERE idDocumento = $ImgNoticia ";
-	mysqli_query($link,$sqlDel); 
-	$sqlDel = "DELETE FROM Imagenes WHERE idImagen = $ImgNoticia ";
-	mysqli_query($link,$sqlDel);  
-	$sqlDel = "DELETE FROM Noticias WHERE idNoticia = $idDirs[$i] ";
-	mysqli_query($link,$sqlDel); 
-	echo "../Noticias/$idDirs[$i]";
-	delete_directory("../Noticias/$idDirs[$i]");
+	$entityManager->Delete($idDirs[$i]);
+	delete_directory("../files/Noticias/$idDirs[$i]");
+	
 }
-	mysqli_close($link);
 	
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8" />
-<title>Gestor de contenidos: Noticias elimnar</title>
+<title>Gestor de contenidos: Agenda eliminar</title>
 </head>
 <body>
-	Eliminado noticia...
+	Eliminado evento de la agenda...
 	<script type="text/javascript">
-window.parent.opener.location.reload();self.close();
+
+		window.parent.opener.location.reload();self.close();
+
 	</script>
 </body>
 </html>
