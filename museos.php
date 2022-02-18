@@ -93,7 +93,7 @@ $MetaKeywords =  "Cervera de Pisuerga, Guia de museos, Montaña Palentina, Casa 
 
                                         if ($imgDescription) {
                                              $image = $imgDescription[0];
-                                             echo "<a href=\"museos-detalle.php?idMuseo=$Museo->idMuseo\" class=\"strDirectorio\" title=\"$image->Titulo\"><img src=\"../" . $image->Path . "/" . $image->Archivo . "\" title=\"$image->Titulo\" alt=\"$image->Titulo\" /></a>";
+                                             echo "<a href=\"museos-detalle.php?idMuseo=$Museo->idMuseo\" class=\"strDirectorio\" title=\"$image->Titulo\"><img src=\"../files/" . $image->Path . "/" . $image->Archivo . "\" title=\"$image->Titulo\" alt=\"$image->Titulo\" /></a>";
                                         }
                                    }
 

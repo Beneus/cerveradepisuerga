@@ -39,7 +39,7 @@ function GetDescripcion($descripcion)
 }
 
 
-function RenderDocumentos($dc, $ambito, $idAmbito)
+function RenderDocumentos($dc)
 {
 	if ($dc->GetEntities('Documentos')) {
 ?>

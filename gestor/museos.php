@@ -123,13 +123,13 @@ function Pagination($pageName, $pagina, $mostrar, $numTotalRegistros, $numPags, 
     <link rel="stylesheet" href="css/form.css" type="text/css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="http://code.jquery.com/jquery-latest.pack.js" type="text/javascript"></script>
-    <script type="text/javascript" src="js/jquery.funciones.js"></script>
     <script type="text/javascript" src="js/funciones.js"></script>
     <script>
         function SeleccionNucleoUrbano(x) {
-			location.href = "<?= $pageName; ?>?Mostrar=<?php echo $Mostrar; ?>&idNucleoUrbano=" + x.value;
+            location.href = "<?= $pageName; ?>?Mostrar=<?php echo $Mostrar; ?>&idNucleoUrbano=" + x.value;
 
-		}
+        }
+
         function Buscar(x) {
             location.href = "<?= $pageName; ?>?buscar=" + x.value;
         }
@@ -140,6 +140,42 @@ function Pagination($pageName, $pagina, $mostrar, $numTotalRegistros, $numPags, 
 
         function CambiarPagina(x) {
             location.href = "<?= $pageName; ?>?mostrar=<?= $mostrar; ?>&idNucleoUrbano=<?= $idNucleoUrbano; ?>&pagina=" + x.value;
+        }
+
+        function SelTodos(x) {
+            var CheckDir = document.getElementsByName('idDir');
+
+            for (i = 0; i < CheckDir.length; i++) {
+                if (x.checked) {
+                    CheckDir[i].checked = true;
+                } else {
+                    CheckDir[i].checked = false;
+                }
+
+            }
+
+        }
+
+        function EliminarEntrada(pag) {
+            var num_idleg = document.getElementsByName("idDir").length;
+            var cad_eliminados = "";
+            for (i = 0; i < num_idleg; i++) {
+                if (document.getElementsByName("idDir")[i].checked) {
+
+                    if (cad_eliminados == "") {
+                        cad_eliminados += document.getElementsByName("idDir")[i].value;
+                    } else {
+                        cad_eliminados += "-" + document.getElementsByName("idDir")[i].value;
+                    }
+                }
+            }
+            var urldest = "museos-eliminar.php";
+            var cad = "page=" + pag + "&cadEliminados=" + cad_eliminados;
+          
+            if (cad_eliminados != "") {
+
+                window.open(urldest + "?" + cad, '', 'width=200,height=200');
+            }
         }
     </script>
 </head>
@@ -267,7 +303,7 @@ function Pagination($pageName, $pagina, $mostrar, $numTotalRegistros, $numPags, 
                                         </td>
                                         <td role="cell">
                                             <div align="center">
-                                                <input type="checkbox" name="idDir" value="<?php echo $item->idNoticia; ?>" />
+                                                <input type="checkbox" name="idDir" value="<?php echo $item->idMuseo; ?>" />
                                             </div>
                                         </td>
 
