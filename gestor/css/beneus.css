@@ -244,3 +244,7 @@ footer {
 a.volver {
   color: white;
 }
+
+.image_wrapper .dragChild{
+  flex: 0 0 20%;
+}

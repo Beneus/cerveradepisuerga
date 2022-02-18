@@ -34,7 +34,7 @@ include('./head.php');
                </div>
                <div class="content">
                     <div class="center">
-                         <a href="images/Mapaextensible.jpg" rel='lightbox'><img src="images/Mapaextensible.gif" alt="Ver imagen m�s grande" width="580" height="409" class="center" /></a><br />
+                         <a href="images/Mapaextensible.jpg" rel='lightbox'><img src="images/Mapaextensible.gif" alt="Ver imagen más grande" width="580" height="409" class="center" /></a><br />
                     <br />
                     <a href="callejero/Mapaextensible.pdf" target="_blank" class="linkVerde">descargar callejero en formato pdf</a><br />
                     <br />

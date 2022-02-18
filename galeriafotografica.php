@@ -1,8 +1,21 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+namespace citcervera;
+
 include("includes/Conn.php");
 include("includes/funciones.php");
+
+const __FILESPATH__ = 'files/';
+$_ROOTPATH = $_SERVER['DOCUMENT_ROOT'] . '/' .  __FILESPATH__;
+
+use citcervera\Model\Managers\Manager;
+use citcervera\Model\Connections\DB;
+use citcervera\Model\Entities\Imagenes;
+// datos de la entrada del directorio
+
+$db = new DB();
+$imageEntity = new Imagenes();
+$imageManager = new Manager($imageEntity);
+
 
 $MetaTitulo = '';
 $idServicio = $_GET["idServicio"] ?? '';
@@ -132,21 +145,22 @@ $MetaKeywords =  GenKeyWords($MetaDescripcion,3);
 			
 				<?php
 					$sql = "select * from Imagenes where Ambito = '$Ambito' and idAmbito = $idAmbito and Publicar = 1 ";
-					$sql .= " order by Orden, idImagen ";
-					$link = ConnBDCervera();
-					$result = mysqli_query($link,$sql);
-					mysqli_query($link,'SET NAMES utf8');
-					if (!$result){
-						$message = "Invalid query".mysqli_error($link)."\n";
-						$message .= "whole query: " .$sql;	
-						die($message);
-						exit;
+					$sql .= " order by Orden, idImagen ";	
+
+					$list = $imageManager->Query($sql,'fetch_object', new Imagenes());
+					foreach ($list as $imagen) {
+						$fotolocation = $_ROOTPATH . $imagen->Path . "/" . $imagen->Archivo;
+						if (file_exists($fotolocation)) {
+						?>
+						<div class="foto">
+							<div class="fotopie"><span><?= $imagen->Pie ?></span></div>
+							<div class="fototitulo"><span><?= $imagen->Titulo ?></span></div>
+							<img src="../files/<?=$imagen->Path?>/<?=$imagen->Archivo?>"/>
+						</div>
+					<?php
+						}
+						
 					}
-					$max = mysqli_num_rows($result);
-					$NumTotalRegistros = mysqli_num_rows($result);
-					$numPags=ceil($NumTotalRegistros/$Mostrar);	
-					mysqli_free_result($result);
-					mysqli_close($link);	
 				?>
 			</div>
 		<?php

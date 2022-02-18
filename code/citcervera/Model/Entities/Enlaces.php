@@ -40,4 +40,24 @@ class Enlaces extends EntityBase implements IEntityBase
 	{
 		return $this->_id;
 	}
+
+	function _POST()
+	{
+		$this->idEnlace 		= parent::TakePOST('IDENLACE');
+		$this->TextoEnlace 		= parent::TakePOST('TEXTOENLACE',255);
+		$this->Descripcion 		= htmlentities(parent::TakePOST('DESCRIPCION'),ENT_QUOTES);
+		$this->UrlEnlace 		= parent::TakePOST('URLENLACE');
+		$this->Orden 			= parent::TakePOST('ORDEN');
+		$this->Fecha 			= parent::TakePOST('FECHA');
+	}
+
+	function _GET()
+	{
+		$this->idEnlace 		= parent::TakeGET('IDENLACE');
+		$this->TextoEnlace 		= parent::TakeGET('TEXTOENLACE',255);
+		$this->Descripcion 		= htmlentities(parent::TakeGET('DESCRIPCION'),ENT_QUOTES);
+		$this->UrlEnlace 		= parent::TakeGET('URLENLACE');
+		$this->Orden 			= parent::TakeGET('ORDEN');
+		$this->Fecha 			= parent::TakeGET('FECHA');
+	}
 }

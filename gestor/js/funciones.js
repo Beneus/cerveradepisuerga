@@ -105,7 +105,7 @@ function EnviarEntradaBanner(x,tipo){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Entrada de datos de Localizacion
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-function EnviarEntradaLocalizacion(x,tipo){
+function EnviarEntradaLocalizacionOld(x,tipo){
 
 	var cad = ""; 
 	var subservicios = "";
@@ -145,7 +145,7 @@ function EnviarEntradaLocalizacion(x,tipo){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Entrada de datos de Como Llegar
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-function EnviarEntradaComoLlegar(x,tipo){
+function EnviarEntradaComoLlegarOld(x,tipo){
 
 	var cad = ""; 
 	var subservicios = "";

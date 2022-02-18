@@ -25,6 +25,19 @@ class Inicio extends EntityBase implements IEntityBase
 		$this->Fecha = $_Fecha;
 	}
 
+	public function __construct()
+	{
+		//parent::__construct();
+	}
+	
+	public function Init(Array $properties=array())
+	{
+		foreach($properties as $key => $value)
+		{
+		  	$this->{$key} = $value;
+		}
+	}
+
 	function GetTable()
 	{
 		return $this->_tableName;
@@ -33,5 +46,22 @@ class Inicio extends EntityBase implements IEntityBase
 	function GetId()
 	{
 		return $this->_id;
+	}
+
+
+	function _POST()
+	{
+		$this->idInicio 		= parent::TakePOST('IDINICIO');
+		$this->ImgDescripcion 	= parent::TakePOST('IMGDESCRIPCION',255);
+		$this->Descripcion 	= htmlentities(parent::TakePOST('DESCRIPCION'),ENT_QUOTES);
+		$this->Fecha 			= parent::TakePOST('FECHA');
+	}
+
+	function _GET()
+	{
+		$this->idInicio 		= parent::TakeGET('IDINICIO');
+		$this->ImgDescripcion 	= parent::TakeGET('IMGDESCRIPCION',255);
+		$this->Descripcion 		= htmlentities(parent::TakeGET('DESCRIPCION'),ENT_QUOTES);
+		$this->Fecha 			= parent::TakeGET('FECHA');
 	}
 }

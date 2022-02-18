@@ -17,8 +17,8 @@ spl_autoload_register("__citcervera_libraries");
 
 
 session_start();
-//ini_set('display_errors', 1);
-//error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// error_reporting(E_ALL);
 
 
 // conexi�n a base de datos
@@ -48,7 +48,7 @@ function Conectarse($servidor,$basedatos,$usuario,$password)
 }
 function ConnBDCervera()
 {
-	return Conectarse("localhost","citcerveradb","root","12345");
+	return Conectarse("db","citcerveradb","root","12345");
 }
 
 function segundo_domingo_marzo($anyo)

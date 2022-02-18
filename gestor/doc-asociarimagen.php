@@ -22,20 +22,20 @@ if($ErrorMsn != ""){
 }
 
 if ($ErrorMsn == "" ){		
-$link = ConnBDCervera();
+	$link = ConnBDCervera();
 
 	$sqlUp = " Update $tabla set "
-					. " $Asociacion = $idImagen, " 	 	   	    				
-					. " Fecha = Now() "						 
-					. " where $Campo = $CampoValor ";
-$result = mysqli_query($link,$sqlUp);
+						. " $Asociacion = $idImagen, " 	 	   	    				
+						. " Fecha = Now() "						 
+						. " where $Campo = $CampoValor ";
+	$result = mysqli_query($link,$sqlUp);
 	$sqlUp = " Update Imagenes set "
-					. " Publicar = 1, " 	 	   	    				
-					. " Fecha = Now() "						 
-					. " where idImagen = $idImagen ";
+						. " Publicar = 1, " 	 	   	    				
+						. " Fecha = Now() "						 
+						. " where idImagen = $idImagen ";
 
-$result = mysqli_query($link,$sqlUp);
-mysqli_close($link);		
+	$result = mysqli_query($link,$sqlUp);
+	mysqli_close($link);		
 
 
 }

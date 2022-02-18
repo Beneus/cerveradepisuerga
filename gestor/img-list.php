@@ -34,6 +34,8 @@ $camposImage = array_values(array_filter($columnKeys, function ($ret2) {
     return stripos($ret2, "Img") !== false;
 }));
 
+
+
 for ($i = 0; $i < sizeof($camposImage); $i++) {
     $CamposQuery .= ", AM." . $camposImage[$i];
 }
@@ -70,9 +72,10 @@ if ($max > 0) {
         $ImgFlora         = $imagen->ImgFlora ?? '';
         $ImgFauna         = $imagen->ImgFauna ?? '';
         $ImgAgenda         = $imagen->ImgAgenda ?? '';
+        $ImgOrden         = $imagen->Orden ?? '';
 
 ?>
-        <div class="dragChild form_container" id="FormImage<?= $idImagen ?>">
+        <div class="dragChild form_container" id="FormImage<?= $idImagen ?>" fileid="<?= $idImagen ?>" orden="<?= $ImgOrden ?>">
             <div class="row clearfix">
                 <div class="">
                     <label></label>
@@ -117,6 +120,55 @@ if ($max > 0) {
                                     <strong>Publicar: </strong>
                                     <input type="checkbox" name="PUBLICAR" value="<?= $idImagen ?>" onclick="Publicar(<?= $idImagen ?>,this);" <?= ($Publicar) ? "checked" : ""; ?> />
                                 </li>
+                                <?php
+                                for($i = 0; $i < sizeof($camposImage); $i++){
+                                    if( $camposImage[$i] == "ImgDescripcion"){
+                                        echo "<li><strong>Descripci&oacute;n: </strong><input type=\"checkbox\" name=\"DESCRIPCION\" value=\"$idImagen\" onclick=\"AsociarImagen('ImgDescripcion',$idImagen,'$Ambito',this,'$Campo',$idAmbito);\" ";
+                                        if($ImgDescripcion == $idImagen){echo "checked";}
+                                        echo "/></li>\n";
+                                    }
+                                    if( $camposImage[$i] == "ImgHistoria"){
+                                        echo "<li><strong>Hístoria: </strong><input type=\"checkbox\" name=\"HISTORIA\" value=\"$idImagen\" onclick=\"AsociarImagen('ImgHistoria',$idImagen,'$Ambito',this,'$Campo',$idAmbito);\" ";
+                                        if($ImgHistoria == $idImagen){echo "checked";}
+                                        echo "/></li>\n";
+                                    }
+                                    if( $camposImage[$i] == "ImgFlora"){
+                                        echo "<li><strong>Flora: </strong><input type=\"checkbox\" name=\"FLORA\" value=\"$idImagen\" onclick=\"AsociarImagen('ImgFlora',$idImagen,'$Ambito',this,'$Campo',$idAmbito);\" ";
+                                        if($ImgFlora == $idImagen){echo "checked";}
+                                        echo "/></li>\n";
+                                    }
+                                    if( $camposImage[$i] == "ImgFauna"){
+                                        echo "<li><strong>Fauna: </strong><input type=\"checkbox\" name=\"FAUNA\" value=\"$idImagen\" onclick=\"AsociarImagen('ImgFauna',$idImagen,'$Ambito',this,'$Campo',$idAmbito);\" ";
+                                        if($ImgFauna == $idImagen){echo "checked";}
+                                        echo "/></li>\n";
+                                    }	
+                                    if( $camposImage[$i] == "ImgUsos"){
+                                        echo "<li><strong>Usos: </strong><input type=\"checkbox\" name=\"USOS\" value=\"$idImagen\" onclick=\"AsociarImagen('ImgUsos',$idImagen,'$Ambito',this,'$Campo',$idAmbito);\" ";
+                                        if($ImgUsos == $idImagen){echo "checked";}
+                                        echo "/></li>\n";
+                                    }	
+                                    if( $camposImage[$i] == "ImgHabitat"){
+                                        echo "<li><strong>Habitat: </strong><input type=\"checkbox\" name=\"HABITAT\" value=\"$idImagen\" onclick=\"AsociarImagen('ImgHabitat',$idImagen,'$Ambito',this,'$Campo',$idAmbito);\" ";
+                                        if($ImgHabitat == $idImagen){echo "checked";}
+                                        echo "/></li>\n";
+                                    }	
+                                    if( $camposImage[$i] == "ImgSetas"){
+                                        echo "<li><strong>Setas: </strong><input type=\"checkbox\" name=\"SETAS\" value=\"$idImagen\" onclick=\"AsociarImagen('ImgSetas',$idImagen,'$Ambito',this,'$Campo',$idAmbito);\" ";
+                                        if($ImgSetas == $idImagen){echo "checked";}
+                                        echo "/></li>\n";
+                                    }	
+                                    if( $camposImage[$i] == "ImgNoticia"){
+                                        echo "<li><strong>Noticia: </strong><input type=\"checkbox\" name=\"NOTICIAS\" value=\"$idImagen\" onclick=\"AsociarImagen('ImgNoticia',$idImagen,'$Ambito',this,'$Campo',$idAmbito);\" ";
+                                        if($ImgNoticia == $idImagen){echo "checked";}
+                                        echo "/></li>\n";
+                                    }
+                                }
+                                ?>
+
+
+
+
+
                                 <li>
                                     <button idImagen="<?= $idImagen ?>" class="delete">Eliminar</button>
                                 </li>
@@ -131,114 +183,3 @@ if ($max > 0) {
 }
 ?>
 
-<script>
-    (function($items) {
-        var dragSrcEl = null;
-        var lastId;
-
-        function handleDragStart(e) {
-            lastId = e.currentTarget.parentElement.lastElementChild;
-            // Target (this) element is the source node.
-            dragSrcEl = this;
-            //e.currentTarget.style.backgroundColor = 'red';
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html', this.outerHTML);
-
-            this.classList.add('dragElem');
-        }
-
-        function handleDragOver(e) {
-            if (e.preventDefault) {
-                e.preventDefault(); // Necessary. Allows us to drop.
-            }
-            this.classList.add('over');
-
-            e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object.
-            //e.currentTarget.style.backgroundColor = 'blueviolet';
-            return false;
-        }
-
-        function handleDragEnter(e) {
-            // this / e.target is the current hover target.
-            //e.currentTarget.style.backgroundColor = 'blue';
-        }
-
-        function handleDragLeave(e) {
-            this.classList.remove('over'); // this / e.target is previous target element.
-            //e.currentTarget.style.backgroundColor = 'blueviolet';
-        }
-
-        function handleDrop(e) {
-            // this/e.target is current target element.
-
-            if (e.stopPropagation) {
-                e.stopPropagation(); // Stops some browsers from redirecting.
-            }
-
-            // Don't do anything if dropping the same column we're dragging.
-            if (dragSrcEl != this) {
-                // Set the source column's HTML to the HTML of the column we dropped on.
-                //alert(this.outerHTML);
-                //dragSrcEl.innerHTML = this.innerHTML;
-                //this.innerHTML = e.dataTransfer.getData('text/html');
-                this.parentNode.removeChild(dragSrcEl);
-                var dropHTML = e.dataTransfer.getData('text/html');
-                var dropElem;
-                this.insertAdjacentHTML('beforebegin', dropHTML);
-                dropElem = this.previousSibling;
-                // if (this == lastId) {
-                //     this.insertAdjacentHTML('afterend', dropHTML);
-                //     dropElem = this.nextSibling;
-                // } else {
-                //     this.insertAdjacentHTML('beforebegin', dropHTML);
-                //     dropElem = this.previousSibling;
-                // }
-                addDnDHandlers(dropElem);
-                //dropElem.style.backgroundColor = 'blueviolet';
-            }
-            this.classList.remove('over');
-            //e.currentTarget.style.backgroundColor = 'blueviolet';
-            var cols = e.currentTarget.parentElement.children;
-            var ids = [];
-            [].forEach.call(cols, function(elem) {
-                ids.push(elem.id);
-            });
-
-            updateOrder(ids);
-            return false;
-        }
-
-        const updateOrder = (ids) => {
-            console.log(ids);
-        }
-
-
-        function handleDragEnd(e) {
-            // this/e.target is the source node.
-            this.classList.remove('over');
-            // console.log(e.currentTarget)
-            e.currentTarget.style.backgroundColor = '';
-            /*[].forEach.call(cols, function (col) {
-                col.classList.remove('over');
-            });*/
-            //e.currentTarget.style.backgroundColor = 'blueviolet';
-
-
-        }
-
-        function addDnDHandlers(elem) {
-            elem.draggable = true;
-            elem.addEventListener('dragstart', handleDragStart, false);
-            elem.addEventListener('dragenter', handleDragEnter, false)
-            elem.addEventListener('dragover', handleDragOver, false);
-            elem.addEventListener('dragleave', handleDragLeave, false);
-            elem.addEventListener('drop', handleDrop, false);
-            elem.addEventListener('dragend', handleDragEnd, false);
-
-        }
-
-        var cols = document.querySelectorAll($items);
-        [].forEach.call(cols, addDnDHandlers);
-
-    })('#draggableArea .dragChild')
-</script>

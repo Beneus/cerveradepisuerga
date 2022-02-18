@@ -3,132 +3,205 @@ include("includes/Conn.php");
 include("includes/variables.php");
 include("includes/funciones.php");
 
+use citcervera\Model\Entities\Enlaces;
+use citcervera\Model\Managers\Manager;
+use citcervera\Model\Connections\DB;
+use citcervera\Model\Managers\DataCarrier;
 
-$idEnlace = $_GET["idEnlace"];
-$Mostrar = $_GET["Mostrar"];
-$Pagina = $_GET["Pagina"];
+$dc = new DataCarrier();
+$db = new DB();
+$Enlaces = new Enlaces();
+$enlacesManager = new Manager($Enlaces);
 
-$link = ConnBDCervera();
-$sql = "SELECT * FROM Enlaces where idEnlace = $idEnlace ";
-$result = mysqli_query($link,$sql);
-if (!$result)
-	{
-	$message = "Invalid query".mysqli_error($link)."\n";
-	$message .= "whole query: " .$sql;	
-	die($message);
-	exit;
-	}
-$max = mysqli_num_rows($result);	
-if($max > 0){
-	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-	$TextoEnlace = $row["TextoEnlace"];
-	$UrlEnlace = $row["UrlEnlace"];
-	$Descripcion = $row["Descripcion"];
+$ErrorMsg = "";
+$idEnlace = $_GET["idEnlace"] ?? '';
+$mostrar = $_GET["Mostrar"] ?? '';
+$pagina = $_GET["Pagina"] ?? '';
 
-}else{
-	header("Location:enlaces-listado.php");
-	exit;
-	
+
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+
+  $Enlaces->_POST();
+
+  
+  if ($Enlaces->UrlEnlace == "") {
+    $ErrorMsg = "<span class=\"errortexto\">Url Enlace</span><br/>";
+  }
+  if ($ErrorMsg == "") {
+    $Enlaces->Fecha = date("Y-m-d H:m:s");
+    //var_dump($Enlaces);
+    $enlacesManager->Save($Enlaces);
+    $lastInsertedId = $enlacesManager->GetLastInsertedId();
+
+    if ($lastInsertedId) {
+      $Enlaces->idEnlace = $lastInsertedId;
+      $dc->Set($enlacesManager->Get($lastInsertedId), 'Enlaces');
+    }
+  } else {
+    $ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:<br/>";
+    $ErrorMsn .= "<blockquote>";
+    $ErrorMsn .= $ErrorMsg;
+    $ErrorMsn .= "</blockquote>";
+  }
 }
-mysqli_free_result($result);
-mysqli_close($link);	
+
+if ($_SERVER['REQUEST_METHOD'] == "GET") {
+  if (isset($_GET['idEnlace'])) {
+    $enlacesManager->Get($_GET['idEnlace']);
+    //var_dump($Enlaces);
+  }
+}
 
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8" />
-<meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
-<title>Gestor de contenidos: Noticias editar</title>
-<link href="css/menu.css" rel="stylesheet" type="text/css" />
-<link href="css/gestor.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="scripts/tiny_mce.js" language="javascript" ></script>
-<script type="text/javascript" src="js/funciones.js" language="javascript"></script>
+  <meta charset="UTF-8" />
+  <meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
+  <title>Gestor de contenidos: Noticias editar</title>
+  <link rel="stylesheet" href="css/beneus.css" />
+	<link rel="stylesheet" href="css/menu.css" />
+	<link href="css/form.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="scripts/tiny_mce.js" language="javascript"></script>
+  <script type="text/javascript" src="js/funciones.js" language="javascript"></script>
 
-<script language="javascript" type="text/javascript">
-tinyMCE.init({
-	mode : "textareas",
-	theme : "advanced",
-	theme_advanced_buttons1 : "newdocument,bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink",
-	theme_advanced_buttons1_add : "outdent,indent",
-	theme_advanced_buttons2 : "",
-	theme_advanced_buttons3 : "",
-	theme_advanced_toolbar_location : "top",
-	theme_advanced_toolbar_align : "left",
-	theme_advanced_path_location : "bottom",
-	extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"
-});
-
-function stopUpload(){
-      //document.getElementById('barracargando').style.visibility = 'hidden';
-      //document.getElementById('FormImage').style.visibility = 'visible';
-	  	location.href="noticias-editar.php?idNoticia=<?php echo $idNoticia;?>";
-	  	return true;   
-}
-</script>
+  <script language="javascript" type="text/javascript">
+    tinyMCE.init({
+      mode: "textareas",
+      theme: "advanced",
+      theme_advanced_buttons1: "newdocument,bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink",
+      theme_advanced_buttons1_add: "outdent,indent",
+      theme_advanced_buttons2: "",
+      theme_advanced_buttons3: "",
+      theme_advanced_toolbar_location: "top",
+      theme_advanced_toolbar_align: "left",
+      theme_advanced_path_location: "bottom",
+      extended_valid_elements: "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"
+    });
+  </script>
 </head>
+
 <body>
-	<div id="espere" style="display:none" >
-  <div align="center"><img src="images/cargando.gif" alt="Enviando datos" width="32" height="32" /></div>
-</div>
-<div id="error" style="display:none" >
-  <div id="errorcab" align="right"><a href="#" onclick="document.getElementById('error').style.display='none';disDiv('contenido',false);">Cerrar&nbsp;[x]</a>&nbsp;</div>
-  <div id="errormsn" >
+  <div id="espere" style="display:none">
+    <div align="center"><img src="images/cargando.gif" alt="Enviando datos" width="32" height="32" /></div>
   </div>
-</div>
-<div id="cab">
-  <div><img src="images/cab.gif" width="1024" height="100" border="0" usemap="#Map" />
-<map name="Map" id="Map">
-<area shape="rect" coords="857,40,1011,73" href="#" onclick="location.href='desconexion.php';" alt="Desconectar del gestor" />
-</map></div>
-</div>
-<div id="menu">
-<?php echo $strMenu; ?>
-</div>
-<nobr clear="left" ></nobr>
-<div id="submenu">
-<?php echo $strSubMenu; ?>
-</div>
-<div id="opciones">
-  <ul>
-    <li class="liselect"><a title="A&ntilde;adir enlace" href="enlaces-entrada.php">A&ntilde;adir enlace</a></li>
-    <li><a title="Listado del enlaces"  href="enlaces-listado.php">Listado</a></li>
-  </ul>
-</div>
-<hr class="separador" />
-<div id="contenido">
-<form enctype="multipart/form-data" name="formEntrada" id="formEntrada" onsubmit="EnviarEntradaEnlace(this,'editar');return false;" method="post">
-<div class="textolargo">
-<ul class="tablaformtextolargo">
-    <li class="campoform">
-      <div class="tituloentradaform">Texto enlace</div>
-      <div class="valorentradaform">
-        <input name="TEXTOENLACE" type="text" id="TEXTOENLACE" value="<?php echo $TextoEnlace; ?>" size="100" maxlength="100" />
+  <?php
+  if ($ErrorMsn != "") {
+  ?>
+    <script type="text/javascript">
+      disDiv("contenido", true);
+    </script>
+    <div id="error">
+      <div id="errorcab" align="right"><a href="#" onclick="document.getElementById('error').style.display='none';disDiv('contenido',false);">Cerrar&nbsp;[x]</a>&nbsp;</div>
+      <div id="errormsn"><?php echo $ErrorMsn; ?>
       </div>
-     </li>
-   
-       <li class="campoform">
-        <div class="tituloentradaform">URL</div>
-        <div class="valorentradaform"><input name="URLENLACE" type="text" id="URLENLACE" value="<?php echo $UrlEnlace; ?>" size="100" maxlength="255" />
+    </div>
+  <?php
+  }
+  ?>
+
+  <div class="wrapper">
+    <header id="header" class="grid">
+      <div class="grid-cell">
+        <div class="grid">
+          <a href="/"><img id="logo" src="images/LOGO-CIT-CERVERA.gif"></a>
         </div>
-        </li>
-        <li class="campoform">
-        <div class="tituloentradaform">Cuerpo de la noticia</div>
-        <div class="valorentradaform">
-          <textarea name="DESCRIPCION" cols="80" rows="20" id="DESCRIPCION"><?php echo $Descripcion; ?></textarea>
-         </div>
-        </li>
-     <li class="campoform">
-        <div class="tituloentradaform">&nbsp;</div>
-        <div class="valorentradaform">
-          <input type="submit" name="ENVIAR" id="ENVIAR" value="Enviar" />
-        <input type="button" name="VOLVER" id="VOLVER" value="Volver al listado" onclick="location.href='enlaces-listado.php?Mostrar=<?php echo $Mostrar; ?>&Pagina=<?php echo $Pagina; ?>'"/>
-        </div>    </li>    
-</ul>
-</div>
-	<input type="hidden" name="IDENLACE" value="<?php echo $idEnlace;?>"/>
-</form>
-</div>
-<iframe src="" id="fileframe" name="fileframe" style="display:none"></iframe>
+      </div>
+    </header>
+    <label for="menu-toggle" class="label-toggle"></label>
+    <input type="checkbox" id="menu-toggle" />
+    <nav>
+      <?php
+      echo $strMenu;
+
+      ?>
+    </nav>
+    <div class="grid container">
+
+      <div class="main">
+
+        <div id="opciones">
+          <ul>
+            <li>
+              <h2><?= explode('.', curPageName())[0] ?></h2>
+            </li>
+            <li class="liselect"><a href="enlaces-editar.php">A&ntilde;adir enlace</a></li>
+            <li><a href="enlaces.php">Listado</a></li>
+          </ul>
+        </div>
+
+        <div class="content">
+        <div class="form_wrapper">
+						<div class="form_container">
+							<div class="title_container">
+								<h2>Noticias</h2>
+							</div>
+              <form name="formEntrada" id="formEntrada" action="enlaces-editar.php" onsubmit="EnviarEntradaEnlace(this,'editar');return false;" method="post">
+								<div class="row clearfix">
+									<div class="col_half">
+										<label>Texto enlace</label>
+										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                      <input name="TEXTOENLACE" type="text" id="TEXTOENLACE" value="<?= $Enlaces->TextoEnlace; ?>" size="100" maxlength="100" />
+										</div>
+									</div>
+									<div class="col_half">
+										<label>Url enace</label>
+										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                    <input name="URLENLACE" type="text" id="URLENLACE" value="<?= $Enlaces->UrlEnlace; ?>" size="100" maxlength="255" />
+										</div>
+									</div>
+								</div>
+                <div class="row clearfix">
+									<div class="col">
+										<label>Descripción</label>
+										<div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
+                    <textarea name="DESCRIPCION" cols="80" rows="40" id="DESCRIPCION">
+												<?= $Enlaces->Descripcion; ?></textarea>
+											</textarea>
+
+										</div>
+									</div>
+								</div>
+                <div class="row clearfix">
+									<div class="col_half">
+										<label></label>
+										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
+											<input type="hidden" name="IDENLACE" value="<?php echo $Enlaces->idEnlace; ?>" />
+											<button type="submit" class="button" name="ENVIAR" id="ENVIAR">Salvar</button>
+										</div>
+									</div>
+									<div class="col_half">
+										<label></label>
+										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
+											<?php
+											$volver = 'location.href="enlaces.php?mostrar=' . $mostrar . '&pagina=' . $pagina . '"';
+											?>
+											<input type="button" name="VOLVER2" id="VOLVER2" class="button" value="Volver al listado" onclick='<?= $volver ?>' />
+										</div>
+									</div>
+								</div>
+              </form>
+            </div>
+        </div>
+        <div class="content">
+          
+        </div>
+        <div class="content">
+          
+        </div>
+        <div class="content">
+          
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+ 
 </body>
+
 </html>

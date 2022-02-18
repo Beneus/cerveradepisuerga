@@ -1,10 +1,5 @@
 <?php
 
-function curPageName() 
-{
-	return substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+1);
-}
-
 function isEmail($email) 
 {
     return preg_match('|^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]{2,})+$|i', $email);
@@ -115,6 +110,40 @@ function GetSelect($nombre,$valor,$nombreValor,$list,$tipo,$tamano,$clase,$accio
 }
 
 function CrearSelect($nombre,$valor,$nombreValor,$sql,$link,$tipo,$tamano,$clase,$accion,$valorSel)
+{
+
+	$result = mysqli_query($link,$sql);
+	if (!$result)
+		{
+		$message = "Invalid query".mysqli_error($link)."\n";
+		$message .= "whole query: " .$sql;	
+		die($message);
+		exit;
+		}
+	$max = mysqli_num_rows($result);
+	//echo "El numero de registros es: ".$max;	
+	if($max > 0){
+		$listadoSelect = "<select id=\"$nombre\" name=\"$nombre\" class=\"$clase\" $accion size=\"$tamano\" $tipo>";
+		//if ($valorSel != "Sin"){
+		$listadoSelect .= "<option value=\"\">Todos</option>";
+		//}
+		while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+			if($valorSel == $row[$valor]){
+				$listadoSelect .= "<option value=\"$row[$valor]\" selected=\"selected\">$row[$nombreValor]</option>";
+			}else{
+				$listadoSelect .= "<option value=\"$row[$valor]\">$row[$nombreValor]</option>";
+			}
+		}
+		$listadoSelect .= "</select>";
+	}else{
+		$listadoSelect = "";	
+	}
+	mysqli_free_result($result);
+	mysqli_close($link);
+	return $listadoSelect;
+}
+
+function CrearSelectFromDC($nombre,$valor,$nombreValor,$sql,$link,$tipo,$tamano,$clase,$accion,$valorSel)
 {
 
 	$result = mysqli_query($link,$sql);

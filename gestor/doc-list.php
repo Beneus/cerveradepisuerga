@@ -96,7 +96,7 @@ if ($max > 0) {
                         </li>
                         <li class="input_field">
                             <strong>Publicar: </strong>
-                            <input class="publicar-doc" type="checkbox" name="PUBLICAR" value="<?= $idDoc ?>" onclick="PublicarDoc(<?= $idDoc ?>,this);" <?= ($Publicar) ? "checked" : ""; ?> />
+                            <input class="publicar-doc" type="checkbox" name="PUBLICAR" value="<?= $idDoc ?>" onclick="Publicar(<?= $idDoc ?>,this);" <?= ($Publicar) ? "checked" : ""; ?> />
                         </li>
                         <?php
                         for ($i = 0; $i < sizeof($camposDoc); $i++) {

@@ -81,7 +81,7 @@ if (!is_numeric($Mostrar))$Mostrar = 10;
 </div>
 <div id="opciones">
   <ul>
-    <li><a title="A&ntilde;adir enlace" href="enlaces-entrada.php">A&ntilde;adir enlace</a></li>
+    <li><a title="A&ntilde;adir enlace" href="enlaces-editar.php">A&ntilde;adir enlace</a></li>
     <li class="liselect"><a title="Listado del enlaces"  href="enlaces-listado.php">Listado</a></li>
   </ul>
 </div>

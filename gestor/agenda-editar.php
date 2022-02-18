@@ -79,17 +79,14 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 <html>
 
 <head>
-
 	<link rel="stylesheet" href="css/beneus.css" />
 	<link rel="stylesheet" href="css/menu.css" />
 	<link href="css/form.css" rel="stylesheet" type="text/css">
-	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="http://code.jquery.com/jquery-latest.pack.js" type="text/javascript"></script>
 	<script type="text/javascript" src="js/funciones.js"></script>
 	<!--[if lt IE 9]> <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 	<script src="https://use.fontawesome.com/4ecc3dbb0b.js"></script>
-	
 
 	<script type="text/javascript" src="scripts/tiny_mce.js" language="javascript"></script>
 	<script language="javascript" type="text/javascript">
@@ -112,23 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
 <body>
 
-	<div id="espere" style="display:none">
-		<div align="center"><img src="images/cargando.gif" alt="Enviando datos" width="32" height="32" /></div>
-	</div>
-	<?php
-	if ($ErrorMsn != "") {
-	?>
-		<script type="text/javascript">
-			disDiv("contenido", true);
-		</script>
-		<div id="error">
-			<div id="errorcab" align="right"><a href="#" onclick="document.getElementById('error').style.display='none';disDiv('contenido',false);">Cerrar&nbsp;[x]</a>&nbsp;</div>
-			<div id="errormsn"><?php echo $ErrorMsn; ?>
-			</div>
-		</div>
-	<?php
-	}
-	?>
+	
 
 	<div class="wrapper">
 		<header id="header" class="grid">

@@ -85,4 +85,55 @@ class Museos extends EntityBase implements IEntityBase
 	{
 		return $this->_id;
 	}
+
+	function _POST()
+	{
+		$this->idMuseo = parent::TakePOST('IDMUSEO');
+		$this->idArea = parent::TakePOST('IDAREA');
+		$this->idNucleoUrbano = parent::TakePOST('IDNUCLEOURBANO');
+		$this->Provincia = parent::TakePOST('PROVINCIA');
+		$this->CP = parent::TakePOST('CP');;
+		$this->Museo = parent::TakePOST('MUSEO');
+		$this->Direccion = parent::TakePOST('DIRECCION');
+		$this->Latitud = parent::TakePOST('LATITUD');
+		$this->Longitud = parent::TakePOST('LONGITUD');
+		$this->Telefono = parent::TakePOST('TELEFONO');
+		$this->Responsable = parent::TakePOST('RESPONSABLE');
+		$this->URL = parent::TakePOST('URL');
+		$this->Email = parent::TakePOST('EMAIL');
+		$this->Tema = parent::TakePOST('TEMA');
+		$this->FechaInauguracion = parent::TakePOST('FECHAINAUGURACION');
+		$this->FechaClausura = parent::TakePOST('FECHACLAUSURA');
+		$this->Tipo = parent::TakePOST('TIPO');;
+		$this->Horario = parent::TakePOST('HORARIO');
+		$this->Descripcion = htmlentities(parent::TakePOST('DESCRIPCION'),ENT_QUOTES);
+		$this->ImgDescripcion = parent::TakePOST('IMGDESCRIPCION',255);
+		$this->Fecha = parent::TakePOST('FECHA');
+
+	}
+
+	function _GET()
+	{
+		$this->idMuseo = parent::TakeGET('IDMUSEO');
+		$this->idArea = parent::TakeGET('IDAREA');
+		$this->idNucleoUrbano = parent::TakeGET('IDNUCLEOURBANO');
+		$this->Provincia = parent::TakeGET('PROVINCIA');
+		$this->CP = parent::TakeGET('CP');;
+		$this->Museo = parent::TakeGET('MUSEO');
+		$this->Direccion = parent::TakeGET('DIRECCION');
+		$this->Latitud = parent::TakeGET('LATITUD');
+		$this->Longitud = parent::TakeGET('LONGITUD');
+		$this->Telefono = parent::TakeGET('TELEFONO');
+		$this->Responsable = parent::TakeGET('RESPONSABLE');
+		$this->URL = parent::TakeGET('URL');
+		$this->Email = parent::TakeGET('EMAIL');
+		$this->Tema = parent::TakeGET('TEMA');
+		$this->FechaInauguracion = parent::TakeGET('FECHAINAUGURACION');
+		$this->FechaClausura = parent::TakeGET('FECHACLAUSURA');
+		$this->Tipo = parent::TakeGET('TIPO');;
+		$this->Horario = parent::TakeGET('HORARIO');
+		$this->Descripcion = htmlentities(parent::TakeGET('DESCRIPCION'),ENT_QUOTES);
+		$this->ImgDescripcion = parent::TakeGET('IMGDESCRIPCION',255);
+		$this->Fecha = parent::TakeGET('FECHA');
+	}
 }

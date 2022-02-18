@@ -11,7 +11,7 @@ $ImgUsos = '';
 $ImgHabitat = '';
 $ImgSetas = '';
 $Volver = "$Referer?$Campo=$idAmbito";
-
+ 
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,9 +30,8 @@ $Volver = "$Referer?$Campo=$idAmbito";
 	
 	<script type="text/javascript">
 		var TextoModificado = false;
-		$(document).ready(function() {
 
-			function load() {
+		function load() {
 				$.ajax({
 					type: 'GET',
 					url: 'img-list.php',
@@ -41,10 +40,44 @@ $Volver = "$Referer?$Campo=$idAmbito";
 					contentType: false,
 					processData: false,
 					success: function(data) {
-						$('#draggableArea').html(data);
-					}
+						$('#draggableArea').html('');
+						$('#draggableArea').append(data);
+						dragAndDrop('#draggableArea .dragChild')
+						
+			 		}
+			
 				});
 			}
+			
+			function AsociarImagen(asociacion,idImg,tabla,x,campo,campovalor){
+				var cad = "" ;
+				if(x.checked){
+					
+					cad = "ASOCIACION="+ asociacion + "&IDIMAGEN=" + idImg + "&TABLA=" + tabla + "&CAMPO=" + campo + "&CAMPOVALOR=" + campovalor;
+					FAjax('doc-asociarimagen.php','espere',cad,'post');
+					eval("document.formImagen" + idImg + ".PUBLICAR.checked = true");
+				}else{
+					cad = "ASOCIACION="+ asociacion + "&IDIMAGEN=" + idImg + "&TABLA=" + tabla + "&CAMPO=" + campo + "&CAMPOVALOR=" + campovalor;
+					FAjax('doc-desasociarimagen.php','espere',cad,'post');
+					eval("document.formImagen" + idImg + ".PUBLICAR.checked = true");
+				}
+			}
+
+			function Publicar(idImg,x){
+				document.getElementById("espere").style.display = "block";
+				var cad = "" ;
+				if(x.checked){
+					cad = "PUBLICAR=1&IDIMAGEN=" + idImg ;
+					FAjax('img-public.php','espere',cad,'post');
+				}else{
+					cad = "PUBLICAR=0&IDIMAGEN=" + idImg ;
+					FAjax('img-public.php','espere',cad,'post');
+				}
+			}
+			
+		$(document).ready(function() {
+
+			
 
 			function EliminarImg(idImagen) {
 				$.ajax({
@@ -296,4 +329,5 @@ $Volver = "$Referer?$Campo=$idAmbito";
 		</div>
 	</div>
 </body>
+<script src="js/draganddrop.js" ></script>
 </html>

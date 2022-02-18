@@ -3,13 +3,13 @@
   <nav>
       <ul >
       <li><a href="/">Inicio</a></li>
-      <li class="has-children"><a href="#">Localización</a><i class="anchor">+</i>
+      <li class="has-children"><a href="localizacion.php">Localización</a><i class="anchor">+</i>
         <ul>
           <li><a class="areas" title="Como llegar, tecla C" href="como-llegar.php">Cómo llegar</a><i class="anchor"></i></li>
           <li><a class="areas" title="Como llegar y salir de la Montaña Palentina, planifica tu viaje a Cervera de Pisuerga" href="planificador-rutas.php">Planifica tu viaje</a><i class="anchor"></i></li>
           <li><a class="areas" title="Mapa del municipio" href="mapa-municipio.php">Mapa del municipio</a><i class="anchor"></i></li>
           <li><a class="areas" title="Callejero de Cervera," href="callejero.php">Callejero de Cervera</a><i class="anchor"></i></li>
-          <li><a class="areas" title="Predicción meteorológica" href="metereologia.php">Predicción meteorológica</a><i class="anchor"></i></li>
+          <li><a class="areas" title="Predicción meteorológica" href="http://www.aemet.es/es/eltiempo/prediccion/municipios/cervera-de-pisuerga-id34056" target="blank">Predicción meteorológica</a><i class="anchor"></i></li>
         </ul>
       </li>
       <li class="has-children"><a href="#">Que ofrecemos</a><i class="anchor">+</i>

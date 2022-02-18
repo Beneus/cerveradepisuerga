@@ -1,127 +1,121 @@
 <?php
+
+namespace citcervera;
+
 include("includes/funciones.php");
 include("includes/Conn.php");
-  
-$link = ConnBDCervera();
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// Inicio +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   
-$sql = " select * from ComoLlegar Limit 0,1";  
-$result = mysqli_query($link,$sql);
-if (!$result)
-	{
-	$message = "Invalid query".mysqli_error($link)."\n";
-	$message .= "whole query: " .$sql;	
-	die($message);
-	exit;
-	}
-$max = mysqli_num_rows($result);	
-if($max > 0){  
-$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-$Descripcion = html_entity_decode($row["Descripcion"]);	
-$ImgDescripcion = $row["ImgDescripcion"];		
+use citcervera\Model\Entities\ComoLlegar;
+use citcervera\Model\Managers\DataCarrier;
+use citcervera\Model\Managers\Manager;
+use citcervera\Model\Entities\Imagenes;
+
+$dc = new DataCarrier();
+$Manager = new Manager();
+
+$sql = " select * from ComoLlegar Limit 0,1 ";
+$localizacion = $Manager->Query($sql, 'fetch_object', new ComoLlegar());
+
+$dc->Set($localizacion, 'ComoLlegar');
+
+$sql = "select * from Imagenes where Ambito = 'ComoLlegar' and Publicar = 1 order by Orden";
+$image = $Manager->Query($sql, 'fetch_object', new Imagenes());
+
+$dc->Set($image, 'Imagenes');
+
+function GetDescription($dc)
+{
+     echo html_entity_decode($dc->GetEntities('ComoLlegar')[0]->Descripcion);
 }
-mysqli_free_result($result);
-mysqli_close($link);	
-$MetaTitulo = "Cervera de Pisuerga: Como llegar en coche, autobus, tren, avión";
-$MetaDescripcion="Cómo llegar a Cervera y al resto de la Montaña Palentina desde: Palencia, Vallaolid, Madrid, Burgos, Santander, León... por carretera, coche , autobus, tren, y avión";
-$MetaKeywords="Cervera de Pisuerga, Montaña Palentina, ALSA, FEVE, RENFE, Autobuses DUQUE, Autobuses del Pisuerga, avión, transporte, comunicación, carreteras, Palencia, Vallaolid, Madrid, Burgos, Santander, León...";
+
+function GetImageDescription($dc)
+{
+     foreach ($dc->GetEntities('Imagenes') as $imagen) {
+          if ($imagen->idImagen == $dc->GetEntities('ComoLlegar')[0]->ImgDescripcion) {
+               PrintImage($imagen);
+               break;
+          }
+     }
+}
+
+function RenderGaleria($dc)
+{
+
+     if ($dc->GetEntities('Imagenes')) {
+          echo "<a href='galeriafotografica.php?Ambito=ComoLlegar&amp;idAmbito=1&amp;Origen=como-llegar.php&amp;Campo=' hreflang='es'>";
+          echo "<h3>Galería fotográfica</h3>";
+          echo "</a>";
+     }
+}
+
+function PrintImage($imagen)
+{
+
+     if ($imagen) {
+          $Path = $imagen->Path;
+          $Archivo = $imagen->Archivo;
+          $Titulo = $imagen->Titulo;
+          $Pie = $imagen->Pie;
+          $Ancho = $imagen->Ancho;
+          $Alto = $imagen->Alto;
+          $AnchoThumb = $imagen->AnchoThumb;
+          $AltoThumb = $imagen->AltoThumb;
+          echo "<a href='../files/$Path/$Archivo'  class='lightbox' title='$Titulo' hreflang='es' ><img src=\"../files/$Path/$Archivo\" title=\"$Titulo\" alt=\"$Titulo\" /></a>";
+     }
+}
+
+$MetaTitulo = "Cervera de Pisuerga, Palencia: El corazón de la Montaña Palentina";
+
 ?>
 <!DOCTYPE html>
 <html>
-     <head>
-<?php
-include('./head.php');
-?>        
-     </head>
-<body>
-<div class="wrapper">
+
+<head>
      <?php
-     include('./header.php');
-     include("./menu.php");
+     include('./head.php');
      ?>
-     <div class="grid container">
-          <?php
-          include('./aside1.php');
-          include('./aside2.php');
-          ?>
-               
-          <div class="main">     
-               <div class="content">
-               <h1>Cómo llegar</h1>
-                    <div class="MigasdePan">
-                    <a href="localizacion.php">Localización</a>&nbsp;&gt;&nbsp;
-                    <a href="como-llegar.php">cómo llegar</a>   	
-                    </div>
-               </div>
-               <div class="content">
-               <?php 
+</head>
 
-if($ImgDescripcion > 0){
-     $link = ConnBDCervera();
-     $sql = "select * from Imagenes where idImagen = $ImgDescripcion and Publicar = 1 ";
-     $result = mysqli_query($link,$sql);
-       if (!$result){
-            $message = "Invalid query".mysqli_error($link)."\n";
-            $message .= "whole query: " .$sql;	
-            die($message);
-            exit;
-       }
-       $max = mysqli_num_rows($result);	
-       if($max > 0){
-            $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-            $Path = $row["Path"];
-            $Archivo = $row["Archivo"];
-            $Titulo = $row["Titulo"];
-            $Pie = $row["Pie"]; 
-            $Ancho = $row["Ancho"];
-            $Alto = $row["Alto"];
-            $AnchoThumb = $row["AnchoThumb"];
-            $AltoThumb = $row["AltoThumb"];
-            
-       }
-       mysqli_free_result($result);
-       
-     
-     echo "<a href='$Path/$Archivo' class='lightbox'><img src=\"$Path/$Archivo\" title=\"$Titulo\" alt=\"$Titulo\" /></a>";
-}
-     echo $Descripcion; 
-?>
-               </div>
-               <div class="content">
+<body>
+     <div class="wrapper">
+          <?php
+          include('./header.php');
+          include("./menu.php");
+          ?>
+          <div class="grid container">
                <?php
-   		$sql = "select * from Imagenes where Ambito = 'ComoLlegar' ";
-   		$result = mysqli_query($link, $sql);
-			if (!$result){
-				$message = "Invalid query".mysqli_error($link)."\n";
-				$message .= "whole query: " .$sql;	
-				die($message);
-				exit;
-			}
-			
-			$max = mysqli_num_rows($result);	
-	
-			if($max > 0){
-
-			echo"<a href='galeriafotografica.php?Ambito=ComoLlegar&amp;idAmbito=1&amp;Origen=como-llegar.php&amp;Campo='>";
-			echo "<h3>Galería fotográfica</h3>";
-			echo "</a>";
-	   	}
-	   	mysqli_free_result($result);
-			mysqli_close($link);	
-   		?>
-
+               include('./aside1.php');
+               include('./aside2.php');
+               ?>
+               <div class="main">
+                    <div class="content">
+                         <h1>Cómo llegar</h1>
+                         <div class="MigasdePan"><a href="como-llegar.php" title="Cómo llegar">cómo llegar</a></div>
+                    </div>
+                    <div class="content">
+                         <?php
+                         GetImageDescription($dc);
+                         ?>
+                    </div>
+                    <div class="content">
+                         <?php
+                         GetDescription($dc);
+                         ?>
+                    </div>
+                    <div class="content">
+                         <?php
+                         RenderGaleria($dc);
+                         ?>
+                    </div>
+                    <?php
+                    include("./sponsors.php");
+                    ?>
                </div>
-          <?php
-          include("./sponsors.php");
-          ?>         
+               <?php
+               include("./footer.php");
+               ?>
           </div>
-          <?php
-          include("./footer.php");
-          ?>
      </div>
-</div>    
 </body>
+
 </html>

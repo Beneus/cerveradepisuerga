@@ -13,7 +13,7 @@ $Noticias = new Noticias();
 $noticiasManager = new Manager($Noticias);
 $db = new DB();
 
-
+$ErrorMsg = "";
 $idNoticia = $_GET["idNoticia"] ?? '';
 $mostrar = $_GET["mostrar"] ?? '';
 $pagina = $_GET["pagina"] ?? '';

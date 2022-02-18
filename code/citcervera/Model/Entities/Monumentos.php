@@ -76,4 +76,48 @@ class Monumentos extends EntityBase implements IEntityBase
 	{
 		return $this->_id;
 	}
+
+	function _POST()
+	{
+		$this->idMonumento = parent::TakePOST('IDMONUMENTO');
+		$this->idNucleoUrbano = parent::TakePOST('IDNUCLEOURBANO');
+		$this->idArea = parent::TakePOST('IDAREA');
+		$this->Monumento = parent::TakePOST('MONUMENTO');
+		$this->Direccion = parent::TakePOST('DIRECCION');
+		$this->Latitud = parent::TakePOST('LATITUD');
+		$this->Longitud = parent::TakePOST('LONGITUD');
+		$this->Telefono = parent::TakePOST('TELEFONO');
+		$this->Responsable = parent::TakePOST('RESPONSABLE');
+		$this->URL = parent::TakePOST('URL');
+		$this->Email = parent::TakePOST('EMAIL');
+		$this->Descripcion = htmlentities(parent::TakePOST('DESCRIPCION'),ENT_QUOTES);
+		$this->FechaInauguracion = parent::TakePOST('FECHAINAUGURACION');
+		$this->FechaClausura = parent::TakePOST('FECHACLAUSURA');
+		$this->Tipo = parent::TakePOST('TIPO');
+		$this->Horario = parent::TakePOST('HORARIO');
+		$this->ImgDescripcion = parent::TakePOST('IMGDESCRIPCION',255);
+		$this->Fecha = parent::TakePOST('FECHA');
+	}
+
+	function _GET()
+	{
+		$this->idMonumento = parent::TakeGET('IDMONUMENTO');
+		$this->idNucleoUrbano = parent::TakeGET('IDNUCLEOURBANO');
+		$this->idArea = parent::TakeGET('IDAREA');
+		$this->Monumento = parent::TakeGET('MONUMENTO');
+		$this->Direccion = parent::TakeGET('DIRECCION');
+		$this->Latitud = parent::TakeGET('LATITUD');
+		$this->Longitud = parent::TakeGET('LONGITUD');
+		$this->Telefono = parent::TakeGET('TELEFONO');
+		$this->Responsable = parent::TakeGET('RESPONSABLE');
+		$this->URL = parent::TakeGET('URL');
+		$this->Email = parent::TakeGET('EMAIL');
+		$this->Descripcion = htmlentities(parent::TakeGET('DESCRIPCION'),ENT_QUOTES);
+		$this->FechaInauguracion = parent::TakeGET('FECHAINAUGURACION');
+		$this->FechaClausura = parent::TakeGET('FECHACLAUSURA');
+		$this->Tipo = parent::TakeGET('TIPO');
+		$this->Horario = parent::TakeGET('HORARIO');
+		$this->ImgDescripcion = parent::TakeGET('IMGDESCRIPCION',255);
+		$this->Fecha = parent::TakeGET('FECHA');
+	}
 }

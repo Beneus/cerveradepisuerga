@@ -10,43 +10,46 @@ $MetaKeywords = "Cervera de Pisuerga, Pisuerga, Montaña Palentina, rural,tradic
 ?>
 <!DOCTYPE html>
 <html>
-     <head>
-<?php
-include('./head.php');
-?>        
-     </head>
-<body>
-<div class="wrapper">
+
+<head>
      <?php
-     include('./header.php');
-     include("./menu.php");
+     include('./head.php');
      ?>
-     <div class="grid container">
+</head>
+
+<body>
+     <div class="wrapper">
           <?php
-          include('./aside1.php');
-          include('./aside2.php');
+          include('./header.php');
+          include("./menu.php");
           ?>
-               
-          <div class="main">     
-               <div class="content">
-                    <h1>Mapa del municipio</h1>
-                    <div class="MigasdePan">
-                         <a title="Localización" href="localizacion.php">Localización </a>&gt; <a title="Mapa del municipio" href="mapa-municipio.php">Mapa del municipio </a>
-                    </div> 
+          <div class="grid container">
+               <?php
+               include('./aside1.php');
+               include('./aside2.php');
+               ?>
+
+               <div class="main">
+                    <div class="content">
+                         <h1>Mapa del municipio</h1>
+                         <div class="MigasdePan">
+                              <a title="Localización" href="localizacion.php">Localización </a>&gt; <a title="Mapa del municipio" href="mapa-municipio.php">Mapa del municipio </a>
+                         </div>
+                    </div>
+                    <div class="content">
+                         <a href="images/municipio2.gif">
+                              <img src="images/municipio2.gif" title="Mapa del municipio Aguas arriba del Pisuerga y la Montaña Palentina" alt="Mapa del municipio Aguas arriba del Pisuerga y la Montaña Palentina" />
+                         </a>
+                    </div>
+                    <?php
+                    include("./sponsors.php");
+                    ?>
                </div>
-               <div class="content">
-                    <a href="images/municipio2.gif">
-                         <img src="images/municipio2.gif" title="Mapa del municipio Aguas arriba del Pisuerga y la Montaña Palentina" alt="Mapa del municipio Aguas arriba del Pisuerga y la Montaña Palentina" />
-                    </a>
-               </div>
-          <?php
-          include("./sponsors.php");
-          ?>         
+               <?php
+               include("./footer.php");
+               ?>
           </div>
-          <?php
-          include("./footer.php");
-          ?>
      </div>
-</div>    
 </body>
+
 </html>

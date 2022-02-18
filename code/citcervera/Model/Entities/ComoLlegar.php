@@ -1,8 +1,5 @@
 <?php
-
 namespace citcervera\Model\Entities;
-
-include_once('Models/Entities/EntityBase.php');
 
 use citcervera\Model\Interfaces\IEntityBase;
 
@@ -27,6 +24,19 @@ class ComoLlegar extends EntityBase implements IEntityBase
 		$this->Fecha = $_Fecha;
 	}
 
+	public function __construct()
+	{
+		//parent::__construct();
+	}
+	
+	public function Init(Array $properties=array())
+	{
+		foreach($properties as $key => $value)
+		{
+		  	$this->{$key} = $value;
+		}
+	}
+
 	function GetTable()
 	{
 		return $this->_tableName;
@@ -35,5 +45,21 @@ class ComoLlegar extends EntityBase implements IEntityBase
 	function GetId()
 	{
 		return $this->_id;
+	}
+
+	function _POST()
+	{
+		$this->idComoLlegar 	= parent::TakePOST('IDCOMOLLEGAR');
+		$this->ImgDescripcion 	= parent::TakePOST('IMGDESCRIPCION', 255);
+		$this->Descripcion 		= htmlentities(parent::TakePOST('DESCRIPCION'), ENT_QUOTES);
+		$this->Fecha 			= parent::TakePOST('FECHA');
+	}
+
+	function _GET()
+	{
+		$this->idComoLlegar 	= parent::TakeGET('IDCOMOLLEGAR');
+		$this->ImgDescripcion 	= parent::TakeGET('IMGDESCRIPCION', 255);
+		$this->Descripcion 		= htmlentities(parent::TakeGET('DESCRIPCION'), ENT_QUOTES);
+		$this->Fecha 			= parent::TakeGET('FECHA');
 	}
 }

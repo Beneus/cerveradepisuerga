@@ -10,57 +10,51 @@ $MetaKeywords = "Cervera de Pisuerga, Tiempo, clima, nieve, sol, lluvia, previsi
 ?>
 <!DOCTYPE html>
 <html>
-     <head>
-<?php
-include('./head.php');
-?>        
-     </head>
-<body>
-<div class="wrapper">
+
+<head>
      <?php
-     include('./header.php');
-     include("./menu.php");
+     include('./head.php');
      ?>
-     <div class="grid container">
-          <?php
-          include('./aside1.php');
-          include('./aside2.php');
-          ?>
-               
-          <div class="main">     
-               <div class="content">
-                    <h1>Predicción meteorológica</h1>
-                    <div class="MigasdePan">
-                         <a title="Localización" href="localizacion.php">Localización </a>&gt; <a title="predicci&oacute;n metereol&oacute;gica" href="metereologia.php">Predicción meteorológica</a>
-                    </div>
-               
-               </div>
-              
-  
-               <div class="content">
+</head>
 
-                    <div style=' background-image: url( http://vortex.accuweather.com/adcbin/netweather_v2/backgrounds/green_500x440_bg.jpg ); background-repeat: no-repeat; background-color: #336633;margin-left:auto;margin-right:auto;' >
-                         <div style='height: 420px;' >
-                              <script type="text/javascript" src='http://netweather.accuweather.com/adcbin/netweather_v2/netweatherV2.asp?partner=netweather&amp;tStyle=whteYell&amp;logo=0&amp;zipcode=EUR|ES|SP007|CERVERA|&amp;lang=esp&amp;size=13&amp;theme=green&amp;metric=1&amp;target=_self'></script>
-                              </div>
-                         <div style='text-align: center; font-family: arial, helvetica, verdana, sans-serif; font-size: 12px; line-height: 20px; color: #FFFFFF;' >
-                                <a style='color: #FFFFFF' href='http://www.accuweather.com/world-index-forecast.asp?partner=netweather&amp;locCode=EUR|ES|SP007|CERVERA|&amp;metric=1' >Weather Forecast</a> 
-                              | <a style='color: #FFFFFF' href='http://www.accuweather.com/maps-satellite.asp' >Weather Maps</a> 
-                              | <a style='color: #FFFFFF' href='http://www.accuweather.com/index-radar.asp?partner=accuweather&amp;traveler=0&amp;zipcode=EUR|ES|SP007|CERVERA|' >Weather Radar</a> 
-                              | <a style='color: #FFFFFF' href='http://hurricane.accuweather.com/hurricane/index.asp' >Hurricane Center</a>
+<body>
+     <div class="wrapper">
+          <?php
+          include('./header.php');
+          include("./menu.php");
+          ?>
+          <div class="grid container">
+               <?php
+               include('./aside1.php');
+               include('./aside2.php');
+               ?>
+
+               <div class="main">
+                    <div class="content">
+                         <h1>Predicción meteorológica</h1>
+                         <div class="MigasdePan">
+                              <a title="Localización" href="localizacion.php">Localización </a>&gt; <a title="predicci&oacute;n metereol&oacute;gica" href="metereologia.php">Predicción meteorológica</a>
                          </div>
+
                     </div>
+
+
+                    <div class="content">
+                    <iframe name="iframe_aemet_id33044" width="100%" height="470" tabindex="0" id="iframe_aemet_id33044" src="https://www.aemet.es/es/eltiempo/prediccion/municipios/mostrarwidget/cervera-de-pisuerga-id34056?w=g4p11111111ovmffffffw992z470x4f86d9t95b6e9r1s8n2" frameborder="0" scrolling="no"></iframe>
+                    http://www.aemet.es/es/eltiempo/prediccion/municipios/cervera-de-pisuerga-id34056
+     
+                    </div>
+
+
+                    <?php
+                    include("./sponsors.php");
+                    ?>
                </div>
-
-
-          <?php
-          include("./sponsors.php");
-          ?>         
+               <?php
+               include("./footer.php");
+               ?>
           </div>
-          <?php
-          include("./footer.php");
-          ?>
      </div>
-</div>    
 </body>
+
 </html>

@@ -34,4 +34,20 @@ class Localizacion extends EntityBase implements IEntityBase
 	{
 		return $this->_id;
 	}
+
+	function _POST()
+	{
+		$this->idLocalizacion 	= parent::TakePOST('IDLOCALIZATION');
+		$this->ImgDescripcion 	= parent::TakePOST('IMGDESCRIPCION', 255);
+		$this->Descripcion 		= htmlentities(parent::TakePOST('DESCRIPCION'), ENT_QUOTES);
+		$this->Fecha 			= parent::TakePOST('FECHA');
+	}
+
+	function _GET()
+	{
+		$this->idLocalizacion 	= parent::TakeGET('IDLOCALIZATION');
+		$this->ImgDescripcion 	= parent::TakeGET('IMGDESCRIPCION', 255);
+		$this->Descripcion 		= htmlentities(parent::TakeGET('DESCRIPCION'), ENT_QUOTES);
+		$this->Fecha 			= parent::TakeGET('FECHA');
+	}
 }

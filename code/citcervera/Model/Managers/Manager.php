@@ -11,11 +11,13 @@ class Manager implements IManager
 
     #region Construct
 
-    public function __construct(IEntityBase $entity)
+    public function __construct(IEntityBase $entity = null)
     {
-        $this->_entity = $entity;
-        $this->_entityTable = $this->_entity->GetTable();
-        $this->_entityId = $this->_entity->GetId();
+        if($entity){
+            $this->_entity = $entity;
+            $this->_entityTable = $entity->GetTable();
+            $this->_entityId = $entity->GetId();
+        }
         $this->_db = new DB();
     }
 
@@ -98,7 +100,8 @@ class Manager implements IManager
         $id = $entity->GetId();
         $table = $entity->GetTable();
         $props = get_object_vars($entity);
-
+        // var_dump($props);
+        //var_dump($table);
         if($entity->$id)
         {
              $ret = $this->_db->update(
