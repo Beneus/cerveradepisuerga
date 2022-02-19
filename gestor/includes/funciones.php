@@ -373,4 +373,55 @@ function getFilterArrayByValue2($dc, $entityTableName, $searchedField, $searched
 	);
 }
 
+
+function Pagination($pageName, $pagina, $mostrar, $numTotalRegistros, $numPags, $buscar)
+{
+?>
+   <table role="table" id="noticias">
+      <tbody role="rowgroup">
+         <tr role="row">
+            <?php
+            if (($pagina > 1) and ($mostrar < $numTotalRegistros)) {
+               $link = $pageName . '?pagina=' . ($pagina - 1) . '&mostrar=' . $mostrar . '&buscar=' . $buscar;
+            ?>
+               <td role="cell">
+                  <a href="<?= $link ?>" class="linkBlanco">
+                     << Anterior </a>
+               </td>
+            <?php
+            }
+            if (($pagina < $numPags) and ($mostrar < $numTotalRegistros)) {
+               $link = $pageName . '?pagina=' . ($pagina + 1) . '&mostrar=' . $mostrar . '&buscar=' . $buscar;
+            ?>
+               <td role="cell">
+                  <a href="<?= $link ?>" class="linkBlanco"> Siguiente >> </a>
+               </td>
+            <?php
+            }
+            if (($numPags > 1) and ($mostrar < $numTotalRegistros)) {
+            ?>
+               <td role="cell">
+                  Ir a P&aacute;gina:
+                  <select name="pagina" class="txt_inputs_buscador" onchange="CambiarPagina(this);">
+                     <?php
+                     for ($i = 1; $i <= $numPags; $i++) {
+                     ?>
+                        <option value="<?= $i ?>" <?php if ($i == $pagina) {
+                                                      echo 'selected';
+                                                   } ?>>
+                           <?= $i ?>
+                        </option>
+                     <?php
+                     }
+                     ?>
+                  </select>
+               </td>
+            <?php
+            }
+            ?>
+         </tr>
+      </tbody>
+   </table>
+<?php
+}
 ?>
