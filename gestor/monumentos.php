@@ -13,6 +13,7 @@ use citcervera\Model\Entities\NucleosUrbanos;
 
 $editPage = 'monumentos-editar.php';
 $listPage = 'monumentos.php';
+$pageName = curPageName();
 
 $entityName = __NAMESPACE__ . '\Model\Entities\Monumentos';
 $entity = new $entityName();
@@ -25,7 +26,7 @@ $db = new DB();
 $nucleosUrbanosEntity = new NucleosUrbanos();
 $nucleosUrbanosManager = new Manager($nucleosUrbanosEntity);
 
-$pageName = curPageName();
+
 $pagina_actual = '';
 $titulo = '';
 $idSubservicio = '';

@@ -7,7 +7,7 @@ use citcervera\Model\Interfaces\IEntityBase;
 class Rutas extends EntityBase implements IEntityBase
 {
 	private $_tableName = 'Rutas';
-	private $_id = 'IdRuta';
+	private $_id = 'idRuta';
 	public $idRuta;
 	public $Ruta;
 	public $Inicio;
@@ -80,5 +80,48 @@ class Rutas extends EntityBase implements IEntityBase
 	function GetId()
 	{
 		return $this->_id;
+	}
+
+	function _POST()
+	{
+		$this->idRuta = parent::TakePOST('IDRUTA');
+		$this->Ruta = parent::TakePOST('RUTA');
+		$this->Inicio = parent::TakePOST('INICIO');
+		$this->Llegada = parent::TakePOST('LLEGADA');
+		$this->Distancia = parent::TakePOST('DISTANCIA');;
+		$this->Tiempo = parent::TakePOST('TIEMPO');
+		$this->Desnivel = parent::TakePOST('DESNIVEL');
+		$this->Piso = parent::TakePOST('PISO');
+		$this->Dificultad = parent::TakePOST('DIFICULTAD');
+		$this->Epoca = parent::TakePOST('EPOCA');
+		$this->Descripcion = htmlentities(parent::TakePOST('DESCRIPCION'),ENT_QUOTES);
+		$this->Flora = parent::TakePOST('FLORA');
+		$this->Fauna = parent::TakePOST('FAUNA');
+		$this->ImgDescripcion = parent::TakePOST('IMGDESCRIPCION',255);
+		$this->ImgFlora = parent::TakePOST('IMGFLORA',255);
+		$this->ImgFauna = parent::TakePOST('IMGFAUNA',255);
+		$this->Fecha = parent::TakePOST('FECHA');
+
+	}
+
+	function _GET()
+	{
+		$this->idRuta = parent::TakeGET('IDRUTA');
+		$this->Ruta = parent::TakeGET('RUTA');
+		$this->Inicio = parent::TakeGET('INICIO');
+		$this->Llegada = parent::TakeGET('LLEGADA');
+		$this->Distancia = parent::TakeGET('DISTANCIA');;
+		$this->Tiempo = parent::TakeGET('TIEMPO');
+		$this->Desnivel = parent::TakeGET('DESNIVEL');
+		$this->Piso = parent::TakeGET('PISO');
+		$this->Dificultad = parent::TakeGET('DIFICULTAD');
+		$this->Epoca = parent::TakeGET('EPOCA');
+		$this->Descripcion = htmlentities(parent::TakeGET('DESCRIPCION'),ENT_QUOTES);
+		$this->Flora = parent::TakeGET('FLORA');
+		$this->Fauna = parent::TakeGET('FAUNA');
+		$this->ImgDescripcion = parent::TakeGET('IMGDESCRIPCION',255);
+		$this->ImgFlora = parent::TakeGET('IMGFLORA',255);
+		$this->ImgFauna = parent::TakeGET('IMGFAUNA',255);
+		$this->Fecha = parent::TakeGET('FECHA');
 	}
 }

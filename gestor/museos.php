@@ -11,6 +11,10 @@ use citcervera\Model\Managers\DataCarrier;
 use citcervera\Model\Managers\Manager;
 use citcervera\Model\Entities\NucleosUrbanos;
 
+$editPage = 'museos-editar.php';
+$listPage = 'museos.php';
+$pageName = curPageName();
+
 $entityName = __NAMESPACE__ . '\Model\Entities\Museos';
 $entity = new $entityName();
 $entityId = $entity->getId();
@@ -167,9 +171,9 @@ function SearchResult($query, $mostrar, $pagina, $db)
                      <h2><?= explode('.', curPageName())[0] ?></h2>
                   </li>
                   <?php if (($_SESSION["TipoUsuario"] == "ADMIN") or ($_SESSION["TipoUsuario"] == "USERCIT")) { ?>
-                     <li><a href="museos-editar.php">A&ntilde;adir entrada</a></li>
+                     <li><a href="<?=$editPage?>">A&ntilde;adir entrada</a></li>
                   <?php } ?>
-                  <li><a href="museos.php">Listado</a> </li>
+                  <li><a href="<?=$listPage?>">Listado</a> </li>
                </ul>
             </div>
 
@@ -261,7 +265,7 @@ function SearchResult($query, $mostrar, $pagina, $db)
                               <td role="cell"><?= $item->Telefono; ?></td>
                               <td role="cell">
                                  <div align="center">
-                                    <input type="button" name="EDITAR" value="Editar" class="boton_button" onclick="location.href='museos-editar.php?<?=$entityId; ?>=<?= $item->$entityId; ?>&pagina=<?php echo $pagina; ?>&mostrar=<?= $sigmostrar; ?>&titulo=<?php echo $titulo; ?>'" />
+                                    <input type="button" name="EDITAR" value="Editar" class="boton_button" onclick="location.href='<?=$editPage?>?<?=$entityId; ?>=<?= $item->$entityId; ?>&pagina=<?php echo $pagina; ?>&mostrar=<?= $sigmostrar; ?>&titulo=<?php echo $titulo; ?>'" />
                                  </div>
                               </td>
                               <td role="cell">

@@ -11,6 +11,10 @@ use citcervera\Model\Entities\NucleosUrbanos;
 use citcervera\Model\Managers\DataCarrier;
 use citcervera\Model\Managers\Manager;
 
+$editPage = 'museos-editar.php';
+$listPage = 'museos.php';
+$currentPage = curPageName();
+
 $entityName = __NAMESPACE__ . '\Model\Entities\Museos';
 
 $entity = new $entityName();
@@ -186,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                      <h2><?= explode('.', curPageName())[0] ?></h2>
                   </li>
                   <li class="liselect"><a href="<?= $currentPage; ?>">A&ntilde;adir entrada</a></li>
-                  <li><a href="museos.php">Listado</a></li>
+                  <li><a href="<?=$listPage?>">Listado</a></li>
                </ul>
             </div>
 
