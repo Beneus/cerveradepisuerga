@@ -148,7 +148,7 @@ function SearchResult($mostrar, $pagina, $db)
                                 <tr>
 
                                     <td>
-                                        <span class="opcionElegida">mostrar:</span>
+                                        <span class="opcionElegida">Mostrar:</span>
                                         <select name="MOSTRAR" onChange="Paginar(this);" class="txt_inputs_buscador">
                                             <option value="10" <?php if ($mostrar == 10) echo "selected"; ?>>10</option>
                                             <option value="25" <?php if ($mostrar == 25) echo "selected"; ?>>25</option>

@@ -18,7 +18,7 @@ class Deportes extends EntityBase implements IEntityBase
 	public $Contacto;
 	public $Telefono;
 	public $Email;
-	public $Url;
+	public $URL;
 	public $Descripcion;
 	public $Precio;
 	public $ImgDescripcion;
@@ -36,7 +36,7 @@ class Deportes extends EntityBase implements IEntityBase
 		$_Contacto,
 		$_Telefono,
 		$_Email,
-		$_Url,
+		$_URL,
 		$_Descripcion,
 		$_Precio,
 		$_ImgDescripcion,
@@ -53,7 +53,7 @@ class Deportes extends EntityBase implements IEntityBase
 		$this->Contacto = $_Contacto;
 		$this->Telefono = $_Telefono;
 		$this->Email = $_Email;
-		$this->Url = $_Url;
+		$this->URL = $_URL;
 		$this->Descripcion = $_Descripcion;
 		$this->Precio = $_Precio;
 		$this->ImgDescripcion = $_ImgDescripcion;
@@ -70,4 +70,46 @@ class Deportes extends EntityBase implements IEntityBase
 	{
 		return $this->_id;
 	}
+
+	function _POST()
+	{
+		$this->idDeporte = parent::TakePOST('IDDEPORTE');
+		$this->idNucleoUrbano = parent::TakePOST('IDNUCLEOURBANO');
+		$this->ActoDeportivo = parent::TakePOST('ACTODEPORTIVO');
+		$this->FechaInicio = parent::TakePOST('FECHAINICIO');;
+		$this->FechaFinal = parent::TakePOST('FECHAFINAL');
+		$this->Hora = parent::TakePOST('HORA');
+		$this->Lugar = parent::TakePOST('LUGAR');
+		$this->Contacto = parent::TakePOST('CONTACTO');
+		$this->Telefono = parent::TakePOST('TELEFONO');
+		$this->Email = parent::TakePOST('EMAIL');
+		$this->URL = parent::TakePOST('URL');
+		$this->Descripcion = htmlentities(parent::TakePOST('DESCRIPCION'),ENT_QUOTES);
+		$this->Precio = parent::TakePOST('PRECIO');
+		$this->ImgDescripcion = parent::TakePOST('IMGDESCRIPCION',255);
+		$this->DocDeporte = parent::TakePOST('DOCDEPORTE');
+		$this->Fecha = parent::TakePOST('FECHA');
+	}
+
+	function _GET()
+	{
+		$this->idDeporte = parent::TakeGET('IDDEPORTE');
+		$this->idNucleoUrbano = parent::TakeGET('IDNUCLEOURBANO');
+		$this->ActoDeportivo = parent::TakeGET('ACTODEPORTIVO');
+		$this->FechaInicio = parent::TakeGET('FECHAINICIO');;
+		$this->FechaFinal = parent::TakeGET('FECHAFINAL');
+		$this->Hora = parent::TakeGET('HORA');
+		$this->Lugar = parent::TakeGET('LUGAR');
+		$this->Contacto = parent::TakeGET('CONTACTO');
+		$this->Telefono = parent::TakeGET('TELEFONO');
+		$this->Email = parent::TakeGET('EMAIL');
+		$this->URL = parent::TakeGET('URL');
+		$this->Descripcion = htmlentities(parent::TakeGET('DESCRIPCION'),ENT_QUOTES);
+		$this->Precio = parent::TakeGET('PRECIO');
+		$this->ImgDescripcion = parent::TakeGET('IMGDESCRIPCION',255);
+		$this->DocDeporte = parent::TakeGET('DOCDEPORTE');
+		$this->Fecha = parent::TakeGET('FECHA');
+	}
+
+
 }
