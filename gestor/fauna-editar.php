@@ -4,7 +4,6 @@ include("includes/variables.php");
 include("includes/funciones.php");
 
 
-
 // datos de la entrada del museo
 
 $idFauna = $_GET["idFauna"];

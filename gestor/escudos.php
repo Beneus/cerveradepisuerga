@@ -1,89 +1,293 @@
 <?php
+
+namespace citcervera;
+
 include("includes/Conn.php");
 include("includes/variables.php");
 include("includes/funciones.php");
 
+use citcervera\Model\Connections\DB;
+use citcervera\Model\Managers\DataCarrier;
+use citcervera\Model\Managers\Manager;
+use citcervera\Model\Entities\NucleosUrbanos;
+
+$editPage = 'escudos-editar.php';
+$listPage = 'escudos.php';
+$pageName = curPageName();
+
+$entityName = __NAMESPACE__ . '\Model\Entities\Escudos';
+$entity = new $entityName();
+$entityId = $entity->getId();
+$entityTable = $entity->getTable();
+
+$dc = new DataCarrier();
+$entityManager = new Manager($entity);
+$db = new DB();
+$nucleosUrbanosEntity = new NucleosUrbanos();
+$nucleosUrbanosManager = new Manager($nucleosUrbanosEntity);
 
 
-$link = ConnBDCervera();
-$sql = " Select * from Inicio limit 0,1 ";
-$result = mysqli_query($link,$sql);
-if (!$result)
-	{
-	$message = "Invalid query".mysqli_error($link)."\n";
-	$message .= "whole query: " .$sql;	
-	die($message);
-	exit;
+$pagina_actual = '';
+$titulo = '';
+$idSubservicio = '';
+$buscar = $_GET["buscar"] ?? '';
+$idNucleoUrbano = $_GET["idNucleoUrbano"] ?? '';
+$pagina = $_GET["pagina"] ?? '';
+if (!is_numeric($pagina)) $pagina = 1;
+$mostrar = $_GET["mostrar"] ?? '';
+if (!is_numeric($mostrar)) $mostrar = 10;
+
+$nucleosUrbanos = $nucleosUrbanosManager->GetAll();
+$dc->Set($nucleosUrbanos, 'NucleosUrbanos');
+
+$queryString = '&buscar=' . $buscar. '&idNucleoUrbano=' . $idNucleoUrbano;
+
+
+function GetQuery($buscar, $idNucleoUrbano)
+{
+	$sql = "SELECT ESC.*, IMG.* FROM Escudos as ESC "
+	." INNER join Imagenes as IMG on esc.ImgDescripcion = img.idImagen "
+	." inner join NucleosUrbanos as NU ON ESC.idNucleoUrbano = NU.idNucleoUrbano "
+	." where idEscudo > 0 ";
+	if ($idNucleoUrbano > 0){ 
+		$sql = $sql . " and ESC.idNucleoUrbano = $idNucleoUrbano ";
 	}
-$max = mysqli_num_rows($result);	
-if($max > 0){
-	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-	$Descripcion = $row["Descripcion"]; 
+	if($buscar != ""){ 
+		$sql .= " and (Nombre like '%$buscar%' or Direccion like '%$buscar%' or ESC.Descripcion like '%$buscar%') ";
+	}
+
+     return $sql;
 }
 
-mysqli_free_result($result);
-mysqli_close($link);	
+
+function SearchResult($query, $mostrar, $pagina, $db)
+{
+   $list = $db->query($query);
+   $numTotalRegistros = count($list);
+
+   if ($mostrar > 0) {
+      $query = $query . " LIMIT " . ((($pagina * $mostrar) - $mostrar)) . "," . $mostrar;
+   } else {
+      $query = $query . " LIMIT " . ((($pagina * $numTotalRegistros) - $numTotalRegistros)) . "," . ($numTotalRegistros);
+   }
+   return ['total' => $numTotalRegistros, 'result' => $db->query($query, 'fetch_object')];
+}
+
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html>
+
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
-<title>Gestor de contenidos: Escudos entrada</title>
-<link href="css/menu.css" rel="stylesheet" type="text/css" />
-<link href="css/gestor.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="scripts/tiny_mce.js" language="javascript" ></script>
-<script type="text/javascript" src="js/funciones.js" language="javascript"></script>
-<script language="javascript" type="text/javascript">
-tinyMCE.init({
-	mode : "textareas",
-	theme : "advanced",
-	theme_advanced_buttons1 : "newdocument,bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink",
-	theme_advanced_buttons1_add : "outdent,indent",
-	theme_advanced_buttons2 : "",
-	theme_advanced_buttons3 : "",
-	theme_advanced_toolbar_location : "top",
-	theme_advanced_toolbar_align : "left",
-	theme_advanced_path_location : "bottom",
-	extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"
-});
-</script>
+   <title>Gestor de contenidos: <?= $entityTable; ?> listado</title>
+   <link rel="stylesheet" href="css/beneus.css" />
+   <link rel="stylesheet" href="css/menu.css" />
+   <link rel="stylesheet" href="css/table.css" />
+   <link rel="stylesheet" href="css/form.css" type="text/css" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <script src="http://code.jquery.com/jquery-latest.pack.js" type="text/javascript"></script>
+   <script type="text/javascript" src="js/funciones.js"></script>
+   <script>
+      function SeleccionNucleoUrbano(x) {
+         location.href = "<?= $pageName; ?>?Mostrar=<?php echo $Mostrar; ?>&idNucleoUrbano=" + x.value;
 
+      }
+
+      function Buscar(x) {
+         location.href = "<?= $pageName; ?>?buscar=" + x.value;
+      }
+
+      function Paginar(x) {
+         location.href = "<?= $pageName; ?>?idNucleoUrbano=<?= $idNucleoUrbano; ?>&mostrar=" + x.value;
+      }
+
+      function CambiarPagina(x) {
+         location.href = "<?= $pageName; ?>?mostrar=<?= $mostrar; ?>&idNucleoUrbano=<?= $idNucleoUrbano; ?>&pagina=" + x.value;
+      }
+
+      function SelTodos(x) {
+         var CheckDir = document.getElementsByName('idDir');
+
+         for (i = 0; i < CheckDir.length; i++) {
+            if (x.checked) {
+               CheckDir[i].checked = true;
+            } else {
+               CheckDir[i].checked = false;
+            }
+
+         }
+
+      }
+
+      function EliminarEntrada(pag) {
+         var num_idleg = document.getElementsByName("idDir").length;
+         var cad_eliminados = "";
+         for (i = 0; i < num_idleg; i++) {
+            if (document.getElementsByName("idDir")[i].checked) {
+
+               if (cad_eliminados == "") {
+                  cad_eliminados += document.getElementsByName("idDir")[i].value;
+               } else {
+                  cad_eliminados += "-" + document.getElementsByName("idDir")[i].value;
+               }
+            }
+         }
+         var urldest = "entity-eliminar.php";
+         var cad = "page=" + pag + "&cadEliminados=" + cad_eliminados + "&Ambito=<?= $entity->GetTable() ?>";
+
+         if (cad_eliminados != "") {
+
+            window.open(urldest + "?" + cad, '', 'width=200,height=200');
+         }
+      }
+   </script>
 </head>
+
 <body>
-	<div id="espere" style="display:none" >
-  <div align="center"><img src="images/cargando.gif" alt="Enviando datos" width="32" height="32" /></div>
-</div>
-<div id="error" style="display:none" >
-  <div id="errorcab" align="right"><a href="#" onclick="document.getElementById('error').style.display='none';disDiv('contenido',false);">Cerrar&nbsp;[x]</a>&nbsp;</div>
-  <div id="errormsn" >
-  </div>
-</div>
-<div id="cab">
-  <div><img src="images/cab.gif" width="1024" height="100" border="0" usemap="#Map" />
-<map name="Map" id="Map">
-<area shape="rect" coords="857,40,1011,73" href="#" onclick="location.href='desconexion.php';" alt="Desconectar del gestor" />
-</map></div>
-</div>
-<div id="menu">
-<?php echo $strMenu; ?>
-</div>
-<nobr clear="left" ></nobr>
-<div id="submenu">
-<?php echo $strSubMenu; ?>
-</div>
-<div id="opciones">
-<ul>
-	<li><a title="A&ntilde;adir introducci&oacute;n" href="escudos-introduccion.php">Editar introducci&oacute;n</a></li>
-	<li><a title="a&ntilde;adir imagen a la introducci&oacute;n"  href="galeria-fotografica.php?Ambito=Escudos&idAmbito=0&Campo=idEscudo&NCampo=idEscudo&Referer=escudos-introduccion.php">A&ntilde;adir imagen introducci&oacute;n</a> </li>
-	<li><a title="A&ntilde;adir entrada al directorio" href="escudos-entrada.php">A&ntilde;adir entrada escudo</a></li>
-	<li><a title="Listado del directorio"  href="escudos-listado.php">Listado de escudos</a></li>
-</ul>
-</div>
-<hr class="separador" />
-<div id="contenido">
+   <div class="wrapper">
+      <header id="header" class="grid">
+         <div class="grid-cell">
+            <div class="grid">
+               <a href="/"><img id="logo" src="images/LOGO-CIT-CERVERA.gif"></a>
+            </div>
+         </div>
+      </header>
+      <label for="menu-toggle" class="label-toggle"></label>
+      <input type="checkbox" id="menu-toggle" />
+      <nav>
+         <?php
+         echo $strMenu;
+         ?>
+      </nav>
+      <div class="grid container">
+         <div class="main">
+            <div id="opciones">
+               <ul>
+                  <li>
+                     <h2><?= explode('.', curPageName())[0] ?></h2>
+                  </li>
+                  <?php if (($_SESSION["TipoUsuario"] == "ADMIN") or ($_SESSION["TipoUsuario"] == "USERCIT")) { ?>
+                     <li><a href="<?= $editPage ?>">A&ntilde;adir entrada</a></li>
+                  <?php } ?>
+                  <li><a href="<?= $listPage ?>">Listado</a> </li>
+               </ul>
+            </div>
+            <div class="content">
+               <table role="table" id="noticiasSearch">
+                  <thead role="rowgroup">
+                     <tr>
+                        <th role="columnheader">Buscar</th>
+                        <th role="columnheader">localidad</th>
+                        <th role="columnheader">mostrar</th>
+                     </tr>
+                  </thead>
+                  <tbody role="rowgroup">
+                     <tr>
+                        <td>
+                           <form id="form1" name="form1" method="post" action="">
+                              <label>Buscar
+                                 <input type="text" name="BUSCAR" id="BUSCAR" />
+                              </label>
+                              <input name="BUSCARBOTON" type="button" value="Buscar" id="BUSCARBOTON" onclick="Buscar(document.getElementById('BUSCAR'));" />
+                           </form>
+                        </td>
+                        <td role="columnheader">
+                           <?php
+                           $accion = "onchange=\"SeleccionNucleoUrbano(this);\"";
+                           $list = GetSmallArrayFromBiggerOne($dc, 'NucleosUrbanos', array('idNucleoUrbano', 'NombreNucleoUrbano'));
+                           echo GetSelect("IDNUCLEOURBANO", "idNucleoUrbano", "NombreNucleoUrbano", $list, "", "", "", $accion, $idNucleoUrbano);
+                           ?>
+                        </td>
+                        <td>
+                           <span class="opcionElegida">Mostrar:</span>
+                           <select name="MOSTRAR" onChange="Paginar(this);" class="txt_inputs_buscador">
+                              <option value="10" <?php if ($mostrar == 10) echo "selected"; ?>>10</option>
+                              <option value="25" <?php if ($mostrar == 25) echo "selected"; ?>>25</option>
+                              <option value="50" <?php if ($mostrar == 50) echo "selected"; ?>>50</option>
+                              <option value="100" <?php if ($mostrar == 100) echo "selected"; ?>>100</option>
+                              <option value="0" <?php if ($mostrar == 0) echo "selected"; ?>>Todos</option>
+                           </select>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+            <?php
+            $query = GetQuery($buscar, $idNucleoUrbano);
+            $res = SearchResult($query, $mostrar, $pagina, $db);
+            $numTotalRegistros = $res['total'];
+            $list = $res['result'];
 
-</div>
+            if ($mostrar > 0) {
+               $numPags = ceil($numTotalRegistros / $mostrar);
+            } else {
+               $numPags = 1;
+            }
 
+            if ($mostrar > 0) {
+               $sigmostrar = $mostrar;
+            } else {
+               $mostrar = $numTotalRegistros;
+               $sigmostrar = 0;
+            }
+
+            if ($numTotalRegistros > 0) {
+            ?>
+               <div class="content">
+                  <table role="table" id="noticias">
+                     <thead role="rowgroup">
+                        <tr role="row">
+                           <th role="columnheader">Nombre</th>
+                           <th role="columnheader">Imagen</th>
+                           <th role="columnheader">Editar</th>
+                           <th role="columnheader"><input type="checkbox" name="idTodosDir" value="" onclick="SelTodos(this);" alt="Seleccionar todos" title="Seleccionar todos" /></th>
+                        </tr>
+                     </thead>
+                     <tbody role="rowgroup">
+                        <?php
+                        $clasefila = "filagris";
+                        foreach ($list as $item) {
+                        ?>
+                           <tr role="row">
+                              <td role="cell"><?= $item->Nombre; ?></td>
+                              <td role="cell"><img src="<?=str_replace("images","thumb","../files/".$item->Path."/".$item->Archivo); ?>" width="<?=$AnchoThumb?>" height="<?=$AltoThumb?>" title="<?=$Titulo?>" alt="<?=$Titulo?>" /></td>
+                              <td role="cell">
+                                 <div align="center">
+                                    <input type="button" name="EDITAR" value="Editar" class="boton_button" onclick="location.href='<?=$editPage?>?<?=$entityId?>=<?= $item->$entityId; ?>&pagina=<?php echo $pagina; ?>&mostrar=<?= $sigmostrar; ?>&titulo=<?php echo $titulo; ?>'" />
+                                 </div>
+                              </td>
+                              <td role="cell">
+                                 <div align="center">
+                                    <input type="checkbox" name="idDir" value="<?php echo $item->$entityId; ?>" />
+                                 </div>
+                              </td>
+
+                           </tr>
+
+                        <?php
+
+                        }
+                        ?>
+
+                        <tr role="row">
+                           <td role="cell" colspan="3"></td>            
+                           <td role="cell"><input type="button" name="ELIMINAR" value="Eliminar" class="boton_button" onClick="EliminarEntrada(<?php echo $pagina; ?>)" /></td>
+                        </tr>
+                     </tbody>
+                  </table>
+
+                  <?php Pagination($pageName, $pagina, $mostrar, $numTotalRegistros, $numPags, $queryString); ?>
+
+               </div>
+            <?php
+
+            }
+            ?>
+         </div>
+         <?php
+         include("./footer.php");
+         ?>
+      </div>
+   </div>
 </body>
+
 </html>

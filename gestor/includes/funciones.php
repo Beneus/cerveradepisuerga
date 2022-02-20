@@ -374,7 +374,7 @@ function getFilterArrayByValue2($dc, $entityTableName, $searchedField, $searched
 }
 
 
-function Pagination($pageName, $pagina, $mostrar, $numTotalRegistros, $numPags, $buscar)
+function Pagination($pageName, $pagina, $mostrar, $numTotalRegistros, $numPags, $queryString)
 {
 ?>
    <table role="table" id="noticias">
@@ -382,7 +382,7 @@ function Pagination($pageName, $pagina, $mostrar, $numTotalRegistros, $numPags, 
          <tr role="row">
             <?php
             if (($pagina > 1) and ($mostrar < $numTotalRegistros)) {
-               $link = $pageName . '?pagina=' . ($pagina - 1) . '&mostrar=' . $mostrar . '&buscar=' . $buscar;
+               $link = $pageName . '?pagina=' . ($pagina - 1) . '&mostrar=' . $mostrar . $queryString;
             ?>
                <td role="cell">
                   <a href="<?= $link ?>" class="linkBlanco">
@@ -391,7 +391,7 @@ function Pagination($pageName, $pagina, $mostrar, $numTotalRegistros, $numPags, 
             <?php
             }
             if (($pagina < $numPags) and ($mostrar < $numTotalRegistros)) {
-               $link = $pageName . '?pagina=' . ($pagina + 1) . '&mostrar=' . $mostrar . '&buscar=' . $buscar;
+               $link = $pageName . '?pagina=' . ($pagina + 1) . '&mostrar=' . $mostrar . $queryString;
             ?>
                <td role="cell">
                   <a href="<?= $link ?>" class="linkBlanco"> Siguiente >> </a>

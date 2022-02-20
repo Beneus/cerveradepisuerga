@@ -40,8 +40,7 @@ if (!is_numeric($mostrar)) $mostrar = 10;
 $nucleosUrbanos = $nucleosUrbanosManager->GetAll();
 $dc->Set($nucleosUrbanos, 'NucleosUrbanos');
 
-
-
+$queryString = '&buscar=' . $buscar. '&idNucleoUrbano=' . $idNucleoUrbano;
 
 function GetQuery($buscar, $idNucleoUrbano)
 {
@@ -286,7 +285,7 @@ function SearchResult($query, $mostrar, $pagina, $db)
                      </tbody>
                   </table>
 
-                  <?php Pagination($pageName, $pagina, $mostrar, $numTotalRegistros, $numPags, $buscar); ?>
+                  <?php Pagination($pageName, $pagina, $mostrar, $numTotalRegistros, $numPags, $queryString); ?>
 
                </div>
             <?php

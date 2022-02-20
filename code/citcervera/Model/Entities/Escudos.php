@@ -43,4 +43,26 @@ class Escudos extends EntityBase implements IEntityBase
 	{
 		return $this->_id;
 	}
+
+	function _POST()
+	{
+		$this->idEscudo = parent::TakePOST('IDESCUDO');
+		$this->Nombre = parent::TakePOST('NOMBRE');
+		$this->Direccion = parent::TakePOST('DIRECCION');
+		$this->idNucleoUrbano = parent::TakePOST('IDNUCLEOURBANO');
+		$this->Descripcion = htmlentities(parent::TakePOST('DESCRIPCION'),ENT_QUOTES);
+		$this->ImgDescripcion = parent::TakePOST('IMGDESCRIPCION',255);
+		$this->Fecha = parent::TakePOST('FECHA');
+	}
+
+	function _GET()
+	{
+		$this->idEscudo = parent::TakeGET('IDESCUDO');
+		$this->Nombre = parent::TakeGET('NOMBRE');
+		$this->Direccion = parent::TakeGET('DIRECCION');
+		$this->idNucleoUrbano = parent::TakeGET('IDNUCLEOURBANO');
+		$this->Descripcion = htmlentities(parent::TakeGET('DESCRIPCION'),ENT_QUOTES);
+		$this->ImgDescripcion = parent::TakeGET('IMGDESCRIPCION',255);
+		$this->Fecha = parent::TakeGET('FECHA');
+	}
 }

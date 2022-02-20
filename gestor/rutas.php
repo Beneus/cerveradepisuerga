@@ -41,9 +41,9 @@ $nucleosUrbanos = $nucleosUrbanosManager->GetAll();
 $dc->Set($nucleosUrbanos, 'NucleosUrbanos');
 
 
+$queryString = '&buscar=' . $buscar;
 
-
-function GetQuery($buscar, $idNucleoUrbano)
+function GetQuery($buscar)
 {
    $sql = "SELECT idRuta, Ruta, Inicio, Llegada, Distancia, Tiempo, Piso FROM Rutas ";
 
@@ -203,7 +203,7 @@ function SearchResult($query, $mostrar, $pagina, $db)
                </table>
             </div>
             <?php
-            $query = GetQuery($buscar, $idNucleoUrbano);
+            $query = GetQuery($buscar);
             $res = SearchResult($query, $mostrar, $pagina, $db);
             $numTotalRegistros = $res['total'];
             $list = $res['result'];
@@ -270,7 +270,7 @@ function SearchResult($query, $mostrar, $pagina, $db)
                      </tbody>
                   </table>
 
-                  <?php Pagination($pageName, $pagina, $mostrar, $numTotalRegistros, $numPags, $buscar); ?>
+                  <?php Pagination($pageName, $pagina, $mostrar, $numTotalRegistros, $numPags, $queryString); ?>
 
                </div>
             <?php
