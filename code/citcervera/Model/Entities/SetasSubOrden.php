@@ -6,6 +6,8 @@ use citcervera\Model\Interfaces\IEntityBase;
 
 class SetasSubOrden extends EntityBase implements IEntityBase
 {
+	private $_tableName = 'SetasSubOrden';
+	private $_id = 'idSetasSubOrden';
 	var $idSetasSubOrden;
 	var $Clase;
 	var $SubOrden;

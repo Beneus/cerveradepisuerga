@@ -172,7 +172,7 @@ include('./head.php');
                                                   $Alto = $rowImg["Alto"];
                                                   $AnchoThumb = $rowImg["AnchoThumb"];
                                                   $AltoThumb = $rowImg["AltoThumb"];
-                                                  echo "<a href=\"flora-detalle.php?idFlora=$idFlora\" class=\"strDirectorio\"><img src=\"../".$Path."/".$Archivo."\" title=\"$Titulo\" alt=\"$Titulo\"  /></a>";
+                                                  echo "<a href=\"flora-detalle.php?idFlora=$idFlora\" class=\"strDirectorio\"><img src=\"../files/".$Path."/".$Archivo."\" title=\"$Titulo\" alt=\"$Titulo\"  /></a>";
                                              }
                                              mysqli_free_result($resultImg);
                               

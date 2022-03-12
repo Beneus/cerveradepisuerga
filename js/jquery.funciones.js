@@ -3,7 +3,7 @@
 			/* insertar enlace de imprimir cuando haya js */
 			$('.imprimir').html( '<a href="#" title="Imprimir p�gina, alt + X" accesskey="X">Imprimir&nbsp;&nbsp;<img src="images/imprimir.gif" alt="Imrimir" hspace="3" /></a>')
 			$('.imprimir a').click(function(){ window.print(); return false })
-			// Tama�o del texto
+			// Tamaño del texto
 			$("#FuenteMas").click(function(){AumentarFuente();})
 			$("#FuenteMas").mouseover(function(){
 				this.style.cursor='pointer';

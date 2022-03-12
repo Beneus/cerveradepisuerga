@@ -38,11 +38,10 @@ $mostrar = $_GET["mostrar"] ?? '';
 $pagina = $_GET["pagina"] ?? '';
 
 
-
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
    $entity->_POST();
    if ($entity->Nombre == "") {
-      $ErrorMsg = "<span class=\"errortexto\">Monumento</span><br/>";
+      $ErrorMsg = "<span class=\"errortexto\">Nombre</span><br/>";
    }
    if ($entity->idNucleoUrbano == "") {
       $ErrorMsg = "<span class=\"errortexto\">Nucleo Urbano</span><br/>";
@@ -177,7 +176,6 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
       <nav>
          <?php
          echo $strMenu;
-var_dump($entity);
          ?>
       </nav>
       <div class="grid container">
@@ -201,7 +199,8 @@ var_dump($entity);
                         <h2><?= $entityTable ?></h2>
                      </div>
                      <form id="formEntrada" method="post" name="formEntrada" action="<?= $currentPage; ?>" onsubmit="EnviarEntradaMuseo(this,'editar');return false;">
-                        <input type="hidden" name="<?=strtoupper($entityId)?>" value="<?= $entity->$entityId; ?>" />
+                        <input type="hidden" name="<?= strtoupper($entityId) ?>" value="<?= $entity->$entityId; ?>" />
+                        <input type="hidden" name="IMGDESCRIPCION" value="<?= $entity->ImgDescripcion; ?>" />
                         <div class="row clearfix">
                            <div class="col_half">
                               <label>Nombre de escudo</label>
@@ -219,7 +218,7 @@ var_dump($entity);
                            </div>
                         </div>
                         <div class="row clearfix">
-                        <div class="col_half">
+                           <div class="col_half">
                               <label>Poblaci&oacute;n</label>
                               <div class="select_field">
                                  <span><i aria-hidden="true" class="fa fa-list"></i></span>
@@ -233,10 +232,10 @@ var_dump($entity);
                            <div class="col_half">
                               <label></label>
                               <div class="input_field">
-                                 </div>
+                              </div>
                            </div>
                         </div>
-                        
+
                         <div class="row clearfix">
                            <div class="col">
                               <label>Descripción</label>

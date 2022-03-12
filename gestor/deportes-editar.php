@@ -202,6 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                      </div>
                      <form id="formEntrada" method="post" name="formEntrada" action="<?= $currentPage; ?>" onsubmit="EnviarEntradaMuseo(this,'editar');return false;">
                         <input type="hidden" name="<?= strtoupper($entityId) ?>" value="<?= $entity->$entityId; ?>" />
+                        <input type="hidden" name="IMGDESCRIPCION" value="<?= $entity->ImgDescripcion; ?>" />
                         <div class="row clearfix">
                            <div class="col_half">
                               <label>Acto deportivo</label>

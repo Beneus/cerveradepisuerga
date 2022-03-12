@@ -13,7 +13,7 @@ class Manager implements IManager
 
     public function __construct(IEntityBase $entity = null)
     {
-        if($entity){
+        if ($entity) {
             $this->_entity = $entity;
             $this->_entityTable = $entity->GetTable();
             $this->_entityId = $entity->GetId();
@@ -23,27 +23,23 @@ class Manager implements IManager
 
     #endregion
 
-    public function Query($query, $fetch_type = 'fetch_assoc', \Citcervera\Model\Interfaces\IEntityBase $entity = null) 
+    public function Query($query, $fetch_type = 'fetch_assoc', \Citcervera\Model\Interfaces\IEntityBase $entity = null)
     {
-        if($fetch_type == 'fetch_object')
-        {
+        if ($fetch_type == 'fetch_object') {
             $entities = [];
-            $ret = $this->_db->query($query,$fetch_type);
-            if($ret){
+            $ret = $this->_db->query($query, $fetch_type);
+            if ($ret) {
                 $entities = [];
-               
-                foreach($ret as $value)
-                {
+
+                foreach ($ret as $value) {
                     $castValue = $this->cast2(new $entity, $value);
                     $entities[] = $castValue;
                 }
                 return $entities;
             }
             return $entities;
-        }
-        else
-        {
-            return $this->_db->query($query,$fetch_type);
+        } else {
+            return $this->_db->query($query, $fetch_type);
         }
     }
 
@@ -55,40 +51,34 @@ class Manager implements IManager
 
     public function GetAll()
     {
-        $ret = $this->_db->selectAll('SELECT * FROM ' . $this->_entityTable );
+        $ret = $this->_db->selectAll('SELECT * FROM ' . $this->_entityTable);
         $entities = [];
-        if($ret)
-        {
-            foreach($ret as $value)
-            {
+        if ($ret) {
+            foreach ($ret as $value) {
                 $entities[] = $this->cast(new $this->_entity, $value);
             }
         }
         return $entities;
     }
 
-    public function Search2(Array $conditions, Array $format)
+    public function Search2(array $conditions, array $format)
     {
-        $ret = $this->_db->Search2($this->_entityTable, $conditions, $format );
+        $ret = $this->_db->Search2($this->_entityTable, $conditions, $format);
         $entities = [];
-        if($ret)
-        {
-            foreach($ret as $value)
-            {
+        if ($ret) {
+            foreach ($ret as $value) {
                 $entities[] = $this->cast(new $this->_entity, $value);
             }
         }
         return $entities;
     }
 
-    public function Search(string $query, Array $conditions, Array $format)
+    public function Search(string $query, array $conditions, array $format)
     {
-        $ret = $this->_db->Search($this->_entityTable, $query, $conditions, $format );
+        $ret = $this->_db->Search($this->_entityTable, $query, $conditions, $format);
         $entities = [];
-        if($ret)
-        {
-            foreach($ret as $value)
-            {
+        if ($ret) {
+            foreach ($ret as $value) {
                 $entities[] = $this->cast(new $this->_entity, $value);
             }
         }
@@ -100,41 +90,30 @@ class Manager implements IManager
         $id = $entity->GetId();
         $table = $entity->GetTable();
         $props = get_object_vars($entity);
-        // var_dump($props);
-        //var_dump($table);
-        if($entity->$id)
-        {
-             $ret = $this->_db->update(
-                $table, 
-                $props, 
+
+        if ($entity->$id) {
+            $ret = $this->_db->update(
+                $table,
+                $props,
                 array_fill(0, count($props), '%s'),
-                array($id => $entity->$id), 
+                array($id => $entity->$id),
                 array('%d')
             );
-            if ($ret)
-            {
-                return 'Update record ' . $entity->$id ;
+            if ($ret) {
+                return 'Update record ' . $entity->$id;
+            } else {
+                return 'Nothing to Update ';
             }
-            else
-            {
-                return 'Nothing to Update ' ;
-            }
-             
-        }
-        else
-        {
+        } else {
             $ret = $this->_db->insert(
-                $table, 
-                $props, 
+                $table,
+                $props,
                 array_fill(0, count($props), '%s')
             );
-            if ($ret)
-            {
+            if ($ret) {
                 return 'Inserted into ' . $table;
-            }
-            else
-            {
-                return 'Nothing to Insert ' ;
+            } else {
+                return 'Nothing to Insert ';
             }
         }
     }
@@ -146,18 +125,14 @@ class Manager implements IManager
 
     public function Delete($id)
     {
-        if($id)
-        {
-            $ret = $this->_db->delete($this->_entityTable,$id);
+        if ($id) {
+            $ret = $this->_db->delete($this->_entityTable, $id);
         }
-        if($ret)
-        {
-            return 'delete record '. $id;
-        }
-        else
-        {
+        if ($ret) {
+            return 'delete record ' . $id;
+        } else {
             return 'Nothing to delete.';
-        }  
+        }
     }
 
     private function get_class_name($classname)
@@ -166,17 +141,16 @@ class Manager implements IManager
         return $pos;
     }
 
-    private function arrayToClass($data, $class) 
+    private function arrayToClass($data, $class)
     {
         return new $class($data);
-    } 
+    }
 
     public static function cast(\Citcervera\Model\Interfaces\IEntityBase $destination, \stdClass $source)
     {
         $sourceReflection = new \ReflectionObject($source);
         $sourceProperties = $sourceReflection->getProperties();
-        foreach ($sourceProperties as $sourceProperty) 
-        {
+        foreach ($sourceProperties as $sourceProperty) {
             $name = $sourceProperty->getName();
             $destination->{$name} = $source->$name;
         }
@@ -188,23 +162,26 @@ class Manager implements IManager
         $sourceReflection = new \ReflectionObject($source);
         $destinationReflection = new \ReflectionObject($destination);
         $sourceProperties = $sourceReflection->getProperties();
-        foreach ($sourceProperties as $sourceProperty) 
-        {
+        foreach ($sourceProperties as $sourceProperty) {
             $sourceProperty->setAccessible(true);
             $name = $sourceProperty->getName();
             $value = $sourceProperty->getValue($source);
-            if($destinationReflection->hasProperty($name))
-            {
+            if ($destinationReflection->hasProperty($name)) {
                 $propDest = $destinationReflection->getProperty($name);
                 $propDest->setAccessible(true);
-                $propDest->setValue($destination,$value);
-            }
-            else
-            {
+                $propDest->setValue($destination, $value);
+            } else {
                 $destination->$name = $value;
             }
-            
         }
         return $destination;
+    }
+
+    public function get_enum_values($field)
+    {
+        $type = $this->_db->query("SHOW COLUMNS FROM {$this->_entityTable} WHERE Field = '{$field}'")[0]['Type'];
+        preg_match("/^enum\(\'(.*)\'\)$/", $type, $matches);
+        $enum = explode("','", $matches[1]);
+        return $enum;
     }
 }

@@ -199,6 +199,9 @@ echo $entity->fauna;
                      </div>
                      <form id="formEntrada" method="post" name="formEntrada" action="<?= $currentPage; ?>" onsubmit="EnviarEntradaMuseo(this,'editar');return false;">
                         <input type="hidden" name="<?= strtoupper($entityId) ?>" value="<?= $entity->$entityId; ?>" />
+                        <input type="hidden" name="IMGDESCRIPCION" value="<?= $entity->ImgDescripcion; ?>" />
+                        <input type="hidden" name="IMGFLORA" value="<?= $entity->ImgFlora; ?>" />
+                        <input type="hidden" name="IMGFAUNA" value="<?= $entity->ImgFauna; ?>" />
                         <div class="row clearfix">
                            <div class="col_half">
                               <label>Ruta</label>

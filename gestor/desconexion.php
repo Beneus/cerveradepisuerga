@@ -8,7 +8,8 @@ session_destroy();
 <head>
 <meta charset="UTF-8" />
 <meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
-<title>Desconexi�n de DosdeCadaTres</title>
+<title>Desconexión
+</title>
 <link rel="stylesheet" href="css/ppal.css" />
 </head>
 <script type="text/javascript">

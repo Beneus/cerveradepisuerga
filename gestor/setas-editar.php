@@ -1,364 +1,409 @@
 <?php
+
+namespace citcervera;
+
 include("includes/Conn.php");
 include("includes/variables.php");
 include("includes/funciones.php");
 
+use citcervera\Model\Connections\DB;
+use citcervera\Model\Managers\DataCarrier;
+use citcervera\Model\Managers\Manager;
+use citcervera\Model\Entities\SetasSubOrden;
+
+$editPage = 'setas-editar.php';
+$listPage = 'setas.php';
+$currentPage = curPageName();
+
+$entityName = __NAMESPACE__ . '\Model\Entities\Setas';
+
+$entity = new $entityName();
+$entityId = $entity->getId();
+$entityTable = $entity->getTable();
+
+$entityManager = new Manager($entity);
+$dc = new DataCarrier();
+$db = new DB();
 
 
-// datos de la entrada del museo
+$setasSubOrden = new SetasSubOrden();
+$setasSubOrdenManager = new Manager($setasSubOrden);
 
-$idSetas = $_GET["idSetas"];
+$dc->Set($setasSubOrdenManager->GetAll(), 'SetasSubOrden');
 
-$link = ConnBDCervera();
-$sql = " Select S.* from Setas as S left join SetasSubOrden as SS on S.idSetasSubOrden = SS.idSetasSubOrden where idSetas = $idSetas ";
-$result = mysqli_query($link,$sql);
-if (!$result)
-	{
-	$message = "Invalid query".mysqli_error($link)."\n";
-	$message .= "whole query: " .$sql;	
-	die($message);
-	exit;
-	}
-$max = mysqli_num_rows($result);	
-if($max > 0){
-	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-	$NombreComun = $row["NombreComun"];
-	$NombreCientifico = $row["NombreCientifico"];
-	$Autor = $row["Autor"]; 
-	$Clasificacion = $row["Clasificacion"];
-	$Clase = $row["Clase"];
-	$idSetasSubOrden = $row["idSetasSubOrden"];
-	$Sombrero = $row["Sombrero"];
-	$Pie = $row["Pie"];
-	$Cuerpo = $row["Cuerpo"];
-	$Laminas = $row["Laminas"];
-	$Himenio = $row["Himenio"];
-	$Exporada = $row["Exporada"];
-	$Carne = $row["Carne"];
-	$EpocaHabitat = $row["EpocaHabitat"];
-	$Comestibilidad = $row["Comestibilidad"];
-	$Comentarios = $row["Comentarios"];
-}else{
-	header("Location:setas-listado.php");
-	exit;
-	
+$ErrorMsg = "";
+
+$idMuseo = $_GET[$entityId] ?? '';
+$mostrar = $_GET["mostrar"] ?? '';
+$pagina = $_GET["pagina"] ?? '';
+
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+   $entity->_POST();
+
+
+   if ($entity->NombreComun == "") {
+      $ErrorMsg = "<span class=\"errortexto\">Nombre común</span><br/>";
+   }
+   if ($entity->NombreCientifico == "") {
+      $ErrorMsg = "<span class=\"errortexto\">Nombre científico Urbano</span><br/>";
+   }
+   if ($ErrorMsg == "") {
+      $entity->Fecha = date("Y-m-d H:m:s");
+      $entityManager->Save($entity);
+      $lastInsertedId = $entityManager->GetLastInsertedId();
+      if ($lastInsertedId) {
+         $entity->$entityId = $lastInsertedId;
+         $dc->Set($entityManager->Get($lastInsertedId), $entityTable);
+      }
+   } else {
+      $ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:<br/>";
+      $ErrorMsn .= "<blockquote>";
+      $ErrorMsn .= $ErrorMsg;
+      $ErrorMsn .= "</blockquote>";
+   }
 }
 
-mysqli_free_result($result);
-mysqli_close($link);	
+if ($_SERVER['REQUEST_METHOD'] == "GET") {
+   if (isset($_GET[$entityId])) {
+      $entityManager->Get($_GET[$entityId]);
+   }
+}
+
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8" />
-<meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
-<title>Gestor de contenidos: Flora editar</title>
-<link href="css/menu.css" rel="stylesheet" type="text/css" />
-<link href="css/gestor.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="scripts/tiny_mce.js"></script>
-<script type="text/javascript" src="js/funciones.js" language="javascript"></script>
-<script language="javascript" type="text/javascript">
-tinyMCE.init({
-	mode : "textareas",
-	theme : "advanced",
-	theme_advanced_buttons1 : "newdocument,bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink",
-	theme_advanced_buttons1_add : "outdent,indent",
-	theme_advanced_buttons2 : "",
-	theme_advanced_buttons3 : "",
-	theme_advanced_toolbar_location : "top",
-	theme_advanced_toolbar_align : "left",
-	theme_advanced_path_location : "bottom",
-	extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"
-});
+   <meta charset="UTF-8" />
+   <meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
+   <title>Gestor de contenidos: <?= $entityTable; ?> Editar</title>
+   <link rel="stylesheet" href="css/beneus.css" />
+   <link rel="stylesheet" href="css/menu.css" />
+   <link href="css/form.css" rel="stylesheet" type="text/css">
+   <script type="text/javascript" src="js/funciones.js"></script>
+   <script type="text/javascript" src="js/tinymce/tinymce.min.js"></script>
+   <script type="text/javascript" src="js/textarea.js"></script>
+   <script language="javascript" type="text/javascript">
+      textarea('textarea#SOMBRERO,textarea#PIE,textarea#CUERPO,textarea#LAMINAS,textarea#HIMENIO,textarea#EXPORADA,textarea#CARNE,textarea#EPOCAHABITAT,textarea#COMESTIBILIDAD,textarea#COMENTARIOS');
+   </script>
+   <script src="http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=ABQIAAAALjXpr6raYKwJ_pVadtUMehSnDxdfdmxtwDYhQFtyI9Wd5NFxURR-buW964RJIemSdlCcqLQinkmTNA" type="text/javascript"></script>
+   <script type="text/javascript">
+      var Latitud = "<?php echo $Latitud; ?>";
+      var Longitud = "<?php echo $Longitud; ?>";
+      var idTime;
 
-function InicializarClase(x){
-	if(x=="BASIDIOMICETOS"){
-		document.formEntrada.IDSETASSUBORDEN.innerHTML = ordenBasidiomicetos;
-	}
-	if(x=="ASCOMICETOS"){
-		document.formEntrada.IDSETASSUBORDEN.innerHTML = ordenAscomicetos;
-	}
-	if(x=="FRAGMOBASIDIOMICETOS"){
-		document.formEntrada.IDSETASSUBORDEN.innerHTML = ordenFragmoasidiomicetos;
-	}
-}
+      function redondea(sVal, nDec) {
+         var n = parseFloat(sVal);
+         var s = "0.00";
+         if (!isNaN(n)) {
+            n = Math.round(n * Math.pow(10, nDec)) / Math.pow(10, nDec);
+            s = String(n);
+            s += (s.indexOf(".") == -1 ? "." : "") + String(Math.pow(10, nDec)).substr(1);
+            s = s.substr(0, s.indexOf(".") + nDec + 1);
+         }
+         return s;
+      }
 
-function CambiarClase(x){
-	if(x.value=="BASIDIOMICETOS"){
-		document.formEntrada.IDSETASSUBORDEN.innerHTML = ordenBasidiomicetos;
-	}
-	if(x.value=="ASCOMICETOS"){
-		document.formEntrada.IDSETASSUBORDEN.innerHTML = ordenAscomicetos;
-	}
-	if(x.value=="FRAGMOBASIDIOMICETOS"){
-		document.formEntrada.IDSETASSUBORDEN.innerHTML = ordenFragmoasidiomicetos;
-	}
-}
+      function ponDecimales(nDec) {
+         document.frm.t1.value = redondea(document.frm.t1.value, nDec);
+         document.frm.t2.value = redondea(document.frm.t2.value, nDec);
+      }
 
+      function PosicionarMapa(direccion) {
+         idTime = setInterval("CambiarMapa('" + direccion + "')", 50);
+      }
 
-<?php 
-$link = ConnBDCervera();
-$sql = "SELECT distinct idSetasSubOrden, SubOrden FROM SetasSubOrden where Clase = 'BASIDIOMICETOS' order by SubOrden";
-$result = mysqli_query($link,$sql);
-if (!$result)
-	{
-	$message = "Invalid query".mysqli_error($link)."\n";
-	$message .= "whole query: " .$sql;	
-	die($message);
-	exit;
-	}
-$max = mysqli_num_rows($result);
-//echo "El numero de registros es: ".$max;	
-if($max > 0){
-	$listadoSelect = "<option value=\"0\">Todos</option>";
-	while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-		$ValorVisto = $row['SubOrden'];
-		if($idSetasSubOrden == $row['idSetasSubOrden']){
-			$listadoSelect .= "<option value=\"$row[idSetasSubOrden]\" selected>$ValorVisto</option>";
-		}else{
-			$listadoSelect .= "<option value=\"$row[idSetasSubOrden]\">$ValorVisto</option>";
-		}
-	}
-}else{
-	$listadoSelect = "";	
-}
-mysqli_free_result($result);
-echo "var ordenBasidiomicetos = '$listadoSelect';\n";
-
-$sql = "SELECT distinct idSetasSubOrden, SubOrden FROM SetasSubOrden where Clase = 'ASCOMICETOS' order by SubOrden";
-$result = mysqli_query($link,$sql);
-if (!$result)
-	{
-	$message = "Invalid query".mysqli_error($link)."\n";
-	$message .= "whole query: " .$sql;	
-	die($message);
-	exit;
-	}
-$max = mysqli_num_rows($result);
-//echo "El numero de registros es: ".$max;	
-if($max > 0){
-	$listadoSelect = "<option value=\"0\">Todos</option>";
-	while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-		$ValorVisto = $row['SubOrden'];
-		if($idSetasSubOrden == $row['idSetasSubOrden']){
-			$listadoSelect .= "<option value=\"$row[idSetasSubOrden]\" selected>$ValorVisto</option>";
-		}else{
-			$listadoSelect .= "<option value=\"$row[idSetasSubOrden]\">$ValorVisto</option>";
-		}
-	}
-}else{
-	$listadoSelect = "";	
-}
-mysqli_free_result($result);
-
-echo "var ordenAscomicetos = '$listadoSelect';\n";
-
-$sql = "SELECT distinct idSetasSubOrden, SubOrden FROM SetasSubOrden where Clase = 'FRAGMOBASIDIOMICETOS' order by SubOrden";
-$result = mysqli_query($link,$sql);
-if (!$result)
-	{
-	$message = "Invalid query".mysqli_error($link)."\n";
-	$message .= "whole query: " .$sql;	
-	die($message);
-	exit;
-	}
-$max = mysqli_num_rows($result);
-//echo "El numero de registros es: ".$max;	
-if($max > 0){
-	$listadoSelect = "<option value=\"0\">Todos</option>";
-	while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-		$ValorVisto = $row['SubOrden'];
-		if($idSetasSubOrden == $row['idSetasSubOrden']){
-			$listadoSelect .= "<option value=\"$row[idSetasSubOrden]\" selected>$ValorVisto</option>";
-		}else{
-			$listadoSelect .= "<option value=\"$row[idSetasSubOrden]\">$ValorVisto</option>";
-		}
-	}
-}else{
-	$listadoSelect = "";	
-}
-mysqli_free_result($result);
-mysqli_close($link);
-echo "var ordenFragmoasidiomicetos = '$listadoSelect';\n";
-	  ?>
-</script>
-
+      function CambiarMapa(direccion) {
+         var posLat = parseFloat(Latitud);
+         var posLon = parseFloat(Longitud);
+         switch (direccion) {
+            case "N":
+               Latitud = posLat + 0.0001;
+               document.formEntrada.LATITUD.value = redondea(Latitud, 6);
+               break;
+            case "S":
+               Latitud = posLat - 0.0001;
+               document.formEntrada.LATITUD.value = redondea(Latitud, 6);
+               break;
+            case "E":
+               Longitud = posLon + 0.0001;
+               document.formEntrada.LONGITUD.value = redondea(Longitud, 6);
+               break;
+            case "O":
+               Longitud = posLon - 0.0001;
+               document.formEntrada.LONGITUD.value = redondea(Longitud, 6);
+               break;
+         }
+         initialize();
+      }
+   </script>
+   <script src="js/googlemapsmuseo.js" type="text/javascript"></script>
 </head>
 
 <body>
-<div id="espere" style="display:none" >
-  <div align="center"><img src="images/cargando.gif" alt="Enviando datos" width="32" height="32" /></div>
-</div>
-<div id="error" style="display:none" >
-  <div id="errorcab" align="right"><a href="#" onclick="document.getElementById('error').style.display='none';disDiv('contenido',false);">Cerrar&nbsp;[x]</a>&nbsp;</div>
-  <div id="errormsn" >
-  </div>
-</div>
-<div id="cab">
-  <div><img src="images/cab.gif" width="1024" height="100" border="0" usemap="#Map" /></div>
-</div>
-<div id="menu">
-<?php echo $strMenu; ?>
-</div>
-<nobr clear="left" ></nobr>
-<div id="submenu">
-<?php echo $strSubMenu; ?>
-</div>
-<div id="opciones">
- <ul>
-    <li><a title="A&ntilde;adir introducci&oacute;n" href="setas-introduccion.php">Editar introducción</a></li>
-   <li><a title="a&ntilde;adir imagen a la introducci&oacute;n"  href="galeria-fotografica.php?Ambito=Setas&idAmbito=0&Campo=idSetas&NCampo=idSetas&Referer=setas-introduccion.php">A&ntilde;adir imagen introducci&oacute;n</a> </li>
-    <li><a title="A&ntilde;adir entrada al directorio" href="setas-entrada.php">A&ntilde;adir entrada gu&iacute;a micol&oacute;gica</a></li>
-    <li><a title="Listado del directorio"  href="setas-listado.php">Listado gu&iacute;a micol&oacute;gica</a></li>
-  </ul>
-</div>
-<div class="separador">&nbsp;</div>
-<div id="contenido">
-<form id="formEntrada" name="formEntrada" onsubmit="EnviarEntradaSetas(this,'nuevo');return false;" method="post">
-<div class="tablaizq">
-<ul class="tablaformizq">
-    
-    <li class="campoform">
-      <div class="tituloentradaform">Nombre Com&uacute;n</div>
-      <div class="valorentradaform">
-        <input name="NOMBRECOMUN" type="text" id="NOMBRECOMUN" value="<?php echo $NombreComun; ?>" size="35" />
-      </div>
-     </li>
-    <li class="campoform">
-        <div class="tituloentradaform">Nombre Cient&iacute;fico</div>
-        <div class="valorentradaform"><input name="NOMBRECIENTIFICO" type="text" id="NOMBRECIENTIFICO" value="<?php echo $NombreCientifico; ?>" size="35" />
+   <?php
+   if ($ErrorMsn != "") {
+   ?>
+      <div id="error">
+         <div id="errorcab" align="right"><a href="#" onclick="document.getElementById('error').style.display='none';disDiv('contenido',false);">Cerrar&nbsp;[x]</a>&nbsp;</div>
+         <div id="errormsn"><?php echo $ErrorMsn; ?>
          </div>
-        </li>
-    <li class="campoform">
-        <div class="tituloentradaform">Autor</div>
-        <div class="valorentradaform">
-          <input name="AUTOR" type="text" id="AUTOR" value="<?php echo $Autor; ?>" size="35" />
-        </div>    </li>  
-         <li class="campoform">
-        <div class="tituloentradaform">Galer&iacute;a de imagenes</div>
-        <div class="valorentradaform">
-          <a href="galeria-fotografica.php?Ambito=Setas&amp;idAmbito=<?php echo $idSetas;?>&amp;Campo=idSetas&amp;NCampo=NombreComun&amp;Referer=setas-editar.php">Galeria de imagenes</a>
-        </div>    </li>  
-         <li class="campoform">
-        <div class="tituloentradaform">Galer&iacute;a de documentos</div>
-        <div class="valorentradaform">
-          <a href="galeria-documentos.php?Ambito=Setas&amp;idAmbito=<?php echo $idSetas;?>&amp;Campo=idSetas&amp;NCampo=NombreComun&amp;Referer=setas-editar.php">Galeria de documentos</a>
-        </div>    
-         </li>   
-   
-</ul>
-</div>
-<div class="tablader">
-<ul class="tablaformder">
-   <li class="campoform">
-        <div class="tituloentradaform">Clase</div>
-        <div class="valorentradaform">
-          <select name="CLASE" onchange="CambiarClase(this);">
-        <option value="BASIDIOMICETOS" <?php if($Clase=="BASIDIOMICETOS") echo "selected";?>>BASIDIOMICETOS</option>
-        <option value="ASCOMICETOS" <?php if($Clase=="ASCOMICETOS") echo "selected";?>>ASCOMICETOS</option>
-        <option value="FRAGMOBASIDIOMICETOS" <?php if($Clase=="FRAGMOBASIDIOMICETOS") echo "selected";?>>FRAGMOBASIDIOMICETOS</option>
-      </select>
-        </div>    </li> 
-    <li class="campoform">
-        <div class="tituloentradaform">Orden</div>
-        <div class="valorentradaform">
-          <select name="IDSETASSUBORDEN"></select>
-        </div>    </li> 
-      <li class="campoform">
-        <div class="tituloentradaform">Clasificaci&oacute;n</div>
-        <div class="valorentradaform">
-          <select name="CLASIFICACION">
-        <option value="Mortal" <?php if($Clasificacion == "Mortal") echo "selected=\"selected\""; ?>>Mortal</option>
-        <option value="Venenosa" <?php if($Clasificacion == "Venenosa") echo "selected=\"selected\""; ?>>Venenosa</option>
-        <option value="Sin valor culinario" <?php if($Clasificacion == "Sin valor culinario") echo "selected=\"selected\""; ?>>Sin valor culinario</option>
-        <option value="Buena" <?php if($Clasificacion == "Buena") echo "selected=\"selected\""; ?>>Buena</option>
-        <option value="Excelente" <?php if($Clasificacion == "Excelente") echo "selected=\"selected\""; ?>>Excelente</option>
-        <option value="Sin clasificar" <?php if($Clasificacion == "Sin clasificar") echo "selected=\"selected\""; ?>>Sin clasificar</option>
-      </select>
-        </div>    </li> 
-</ul>
-</div>
-<br class="limpiar" />
-<div class="textolargo">
-<ul class="tablaformtextolargo">
-    
-    <li class="campoform">
-        <div class="tituloentradaform">Sombrero</div>
-        <div class="valorentradaform">
-          <textarea name="SOMBRERO" cols="80" rows="10" id="SOMBRERO"><?php echo $Sombrero; ?></textarea>
-        </div>
-        </li>
-        <li class="campoform">
-        <div class="tituloentradaform">Pie</div>
-        <div class="valorentradaform">
-          <textarea name="PIE" cols="80" rows="10" id="PIE"><?php echo $Pie; ?></textarea>
-        </div>
-        </li>
-        <li class="campoform">
-        <div class="tituloentradaform">Cuerpo</div>
-        <div class="valorentradaform">
-          <textarea name="CUERPO" cols="80" rows="10" id="CUERPO"><?php echo $Cuerpo; ?></textarea>
-        </div>
-        </li>
-        <li class="campoform">
-        <div class="tituloentradaform">Laminas</div>
-        <div class="valorentradaform">
-          <textarea name="LAMINAS" cols="80" rows="10" id="LAMINAS"><?php echo $Laminas; ?></textarea>
-        </div>
-        </li>
-        <li class="campoform">
-        <div class="tituloentradaform">Himenio</div>
-        <div class="valorentradaform">
-          <textarea name="HIMENIO" cols="80" rows="10" id="HIMENIO"><?php echo $Himenio; ?></textarea>
-        </div>
-        </li>
-        <li class="campoform">
-        <div class="tituloentradaform">Exporada</div>
-        <div class="valorentradaform">
-          <textarea name="EXPORADA" cols="80" rows="10" id="EXPORADA"><?php echo $Exporada; ?></textarea>
-        </div>
-        </li>
-        <li class="campoform">
-        <div class="tituloentradaform">Carne</div>
-        <div class="valorentradaform">
-          <textarea name="CARNE" cols="80" rows="10" id="CARNE"><?php echo $Carne; ?></textarea>
-        </div>
-        </li>
-        <li class="campoform">
-        <div class="tituloentradaform">Epoca y habitat</div>
-        <div class="valorentradaform">
-          <textarea name="EPOCAHABITAT" cols="80" rows="10" id="EPOCAHABITAT"><?php echo $EpocaHabitat; ?></textarea>
-        </div>
-        </li>
-        <li class="campoform">
-        <div class="tituloentradaform">Comestibilidad</div>
-        <div class="valorentradaform">
-          <textarea name="COMESTIBILIDAD" cols="80" rows="10" id="COMESTIBILIDAD"><?php echo $Comestibilidad; ?></textarea>
-        </div>
-        </li>
-        <li class="campoform">
-        <div class="tituloentradaform">Comentarios</div>
-        <div class="valorentradaform">
-          <textarea name="COMENTARIOS" cols="80" rows="10" id="COMENTARIOS"><?php echo $Comentarios; ?></textarea>
-        </div>
-        </li>
-     <li class="campoform">
-        <div class="tituloentradaform">&nbsp;</div>
-        <div class="valorentradaform">
-          <input type="submit" name="ENVIAR" id="ENVIAR" value="Guardar Datos" />
-        </div>    </li>    
-</ul>
-</div>
-<input type="hidden" name="IDSETAS" value="<?php echo $idSetas;?>"/>
-</form>
-</div>
+      </div>
+   <?php
+   }
+   ?>
+   <div class="wrapper">
+      <header id="header" class="grid">
+         <div class="grid-cell">
+            <div class="grid">
+               <a href="/"><img id="logo" src="images/LOGO-CIT-CERVERA.gif"></a>
+            </div>
+         </div>
+      </header>
+      <label for="menu-toggle" class="label-toggle"></label>
+      <input type="checkbox" id="menu-toggle" />
+      <nav>
+         <?php
+         echo $strMenu;
+         ?>
+      </nav>
+      <div class="grid container">
+
+         <div class="main">
+
+            <div id="opciones">
+               <ul>
+                  <li>
+                     <h2><?= explode('.', curPageName())[0] ?></h2>
+                  </li>
+                  <li class="liselect"><a href="<?= $currentPage; ?>">A&ntilde;adir entrada</a></li>
+                  <li><a href="<?= $listPage ?>">Listado</a></li>
+               </ul>
+            </div>
+
+            <div class="content">
+               <div class="form_wrapper">
+                  <div class="form_container">
+                     <div class="title_container">
+                        <h2><?= $entityTable ?></h2>
+                     </div>
+                     <form id="formEntrada" method="post" name="formEntrada" action="<?= $currentPage; ?>">
+                        <input type="hidden" name="<?= strtoupper($entityId) ?>" value="<?= $entity->$entityId; ?>" />
+                        <input type="hidden" name="IMGSETAS" value="<?= $entity->ImgSetas; ?>" />
+                        <div class="row clearfix">
+                           <div class="col_half">
+                              <label>Nombre común</label>
+                              <div class="input_field">
+                                 <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                                 <input name="NOMBRECOMUN" type="text" id="NOMBRECOMUN" value="<?= $entity->NombreComun; ?>" size="35" />
+                              </div>
+                           </div>
+                           <div class="col_half">
+                              <label>Nombre cientítico</label>
+                              <div class="input_field">
+                                 <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                                 <input name="NOMBRECIENTIFICO" type="text" id="NOMBRECIENTIFICO" value="<?= $entity->NombreCientifico; ?>" size="35" />
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row clearfix">
+                           <div class="col_half">
+                              <label>Clase</label>
+                              <div class="input_field">
+                                 <select name="CLASE" type="text" id="CLASE">
+                                    <option value="BASIDIOMICETOS" <?= $entity->Clase == 'BASIDIOMICETOS' ? 'selected' : '';   ?>>BASIDIOMICETOS</option>
+                                    <option value="ASCOMICETOS" <?= $entity->Clase == 'ASCOMICETOS' ? 'selected' : '';   ?>>ASCOMICETOS</option>
+                                    <option value="FRAGMOBASIDIOMICETOS" <?= $entity->Clase == 'FRAGMOBASIDIOMICETOS' ? 'selected' : '';   ?>>FRAGMOBASIDIOMICETOS</option>
+                                 </select>
+                              </div>
+                           </div>
+                           <div class="col_half">
+                              <label>Orden</label>
+                              <div class="input_field">
+                                 <?php
+                                 $list = GetSmallArrayFromBiggerOne($dc, 'SetasSubOrden', array('idSetasSubOrden', 'SubOrden'));
+                                 echo GetSelect("IDSETASSUBORDEN", "idSetasSubOrden", "SubOrden", $list, "", "", "", "", $entity->idSetasSubOrden);
+                                 ?>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row clearfix">
+                           <div class="col_half">
+                              <label>Clasificación</label>
+                              <div class="input_field">
+                                 <select name="CLASIFICACION" type="text" id="CLASIFICACION">
+                                    <option value="Mortal" <?= $entity->Clasificacion == 'Mortal' ? 'selected' : ''; ?>>Mortal</option>
+                                    <option value="Venenosa" <?= $entity->Clasificacion == 'Venenosa' ? 'selected' : ''; ?>>Venenosa</option>
+                                    <option value="Sin valor culinario" <?= $entity->Clasificacion == 'Sin valor culinario' ? 'selected' : ''; ?>>Sin valor culinario</option>
+                                    <option value="Buena" <?= $entity->Clasificacion == 'Buena' ? 'selected' : ''; ?>>Buena</option>
+                                    <option value="Excelente" <?= $entity->Clasificacion == 'Excelente' ? 'selected' : ''; ?>>Excelente</option>
+                                    <option value="Sin clasificar" <?= $entity->Clasificacion == 'Sin clasificar' ? 'selected' : ''; ?>>Sin clasificar</option>
+                                 </select>
+                              </div>
+                           </div>
+                           <div class="col_half">
+                              <label>Autor</label>
+                              <div class="input_field">
+                                 <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                                 <input name="AUTOR" type="text" id="AUTOR" value="<?= $entity->Autor; ?>" size="35" />
+                              </div>
+                           </div>
+                        </div>
 
 
-<br clear="left" />
-<script type="text/javascript">
-//document.formEntrada.CLASE.value='<?php echo $Clase; ?>';
-//CambiarClase(document.formEntrada.CLASE.value);
-InicializarClase('<?php echo $Clase; ?>');
-</script>
+                        <div class="row clearfix">
+                           <div class="col">
+                              <label>Sombreo</label>
+                              <div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
+
+                                 <textarea name="SOMBRERO" cols="80" rows="10" id="SOMBRERO"><?= $entity->Sombrero; ?></textarea>
+
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row clearfix">
+                           <div class="col">
+                              <label>Pie</label>
+                              <div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
+
+                                 <textarea name="PIE" cols="80" rows="10" id="PIE"><?= $entity->Pie; ?></textarea>
+
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row clearfix">
+                           <div class="col">
+                              <label>Cuerpo</label>
+                              <div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
+
+                                 <textarea name="CUERPO" cols="80" rows="10" id="CUERPO"><?= $entity->Cuerpo; ?></textarea>
+
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row clearfix">
+                           <div class="col">
+                              <label>Laminas</label>
+                              <div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
+
+                                 <textarea name="LAMINAS" cols="80" rows="10" id="LAMINAS"><?= $entity->Laminas; ?></textarea>
+
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row clearfix">
+                           <div class="col">
+                              <label>Himenio</label>
+                              <div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
+
+                                 <textarea name="HIMENIO" cols="80" rows="10" id="HIMENIO"><?= $entity->Himenio; ?></textarea>
+
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row clearfix">
+                           <div class="col">
+                              <label>Exporada</label>
+                              <div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
+
+                                 <textarea name="EXPORADA" cols="80" rows="10" id="EXPORADA"><?= $entity->Exporada; ?></textarea>
+
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row clearfix">
+                           <div class="col">
+                              <label>Carne</label>
+                              <div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
+
+                                 <textarea name="CARNE" cols="80" rows="10" id="CARNE"><?= $entity->Carne; ?></textarea>
+
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row clearfix">
+                           <div class="col">
+                              <label>Epoca y habitat</label>
+                              <div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
+
+                                 <textarea name="EPOCAHABITAT" cols="80" rows="10" id="EPOCAHABITAT"><?= $entity->EpocaHabitat; ?></textarea>
+
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row clearfix">
+                           <div class="col">
+                              <label>Comestibilidad</label>
+                              <div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
+
+                                 <textarea name="COMESTIBILIDAD" cols="80" rows="10" id="COMESTIBILIDAD"><?= $entity->Comestibilidad; ?></textarea>
+
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row clearfix">
+                           <div class="col">
+                              <label>Comentarios</label>
+                              <div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
+                                 <textarea name="COMENTARIOS" cols="80" rows="10" id="COMENTARIOS"><?= $entity->Comentarios; ?></textarea>
+                              </div>
+                           </div>
+                        </div>
+
+                        <?php if ($entity->$entityId) {
+                           $imagenUrl = 'location.href="galeria-fotografica.php?Ambito=' . $entityTable . '&idAmbito=' . $entity->$entityId . '&Campo=' . $entityId . '&NCampo=' . $entityTable . '&Referer=' . $currentPage . '"';
+                           $documentUrl = 'location.href="galeria-documentos.php?Ambito=' . $entityTable . '&idAmbito=' . $entity->$entityId . '&Campo=' . $entityId . '&NCampo=' . $entityTable . '&Referer=' . $currentPage . '"';
+                        ?>
+                           <div class="row clearfix">
+                              <div class="col_half">
+                                 <div class="input_field"> <span><i aria-hidden="true" class="fa fa-picture-o"></i></span>
+                                    <input type="button" name="IMAGEN" id="IMAGEN" class="button" value="Adjuntar Imagen" onclick='<?= $imagenUrl ?>' />
+                                 </div>
+                              </div>
+                              <div class="col_half">
+                                 <div class="input_field"> <span><i aria-hidden="true" class="fa fa-file"></i></span>
+                                    <input type="button" name="DOCUMENTO" id="DOCUMENTO" class="button" value="Adjuntar Documeto" onclick='<?= $documentUrl ?>' />
+                                 </div>
+                              </div>
+                           </div>
+                        <?php
+                        }
+                        ?>
+                        <div class="row clearfix">
+                           <div class="col_half">
+                              <label></label>
+                              <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                                 <input type="hidden" name="IDNOTICIA" value="<?php echo $idNoticia; ?>" />
+                                 <button type="submit" class="button" name="ENVIAR" id="ENVIAR">Salvar</button>
+                              </div>
+                           </div>
+                           <div class="col_half">
+                              <label></label>
+                              <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                                 <?php
+                                 $volver = 'location.href="' . $listPage . '?mostrar=' . $mostrar . '&pagina=' . $pagina . '"';
+                                 ?>
+                                 <input type="button" name="VOLVER2" id="VOLVER2" class="button" value="Volver al listado" onclick='<?= $volver ?>' />
+                              </div>
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      </form>
+   </div>
+
+
+
+
+
+
+
+
 </body>
+
 </html>

@@ -126,7 +126,7 @@ include('./head.php');
                               $Alto = $row["Alto"];
                               $AnchoThumb = $row["AnchoThumb"];
                               $AltoThumb = $row["AltoThumb"];
-                              echo "<a href=\"$Path/$Archivo\" title=\"$Titulo\"><img src=\"../".$Path."/".$Archivo."\" title=\"$Titulo\" alt=\"$Titulo\" /></a>";
+                              echo "<a href=\"$Path/$Archivo\" title=\"$Titulo\"><img src=\"../files/".$Path."/".$Archivo."\" title=\"$Titulo\" alt=\"$Titulo\" /></a>";
                          }
                          mysqli_free_result($result);
                          mysqli_close($link);	
@@ -173,7 +173,7 @@ include('./head.php');
                                    $Alto = $row["Alto"];
                                    $AnchoThumb = $row["AnchoThumb"];
                                    $AltoThumb = $row["AltoThumb"];
-                                   echo "<a href=\"$Path/$Archivo\"  title=\"$Titulo\"><img src=\"../".$Path."/".$Archivo."\" title=\"$Titulo\" alt=\"$Titulo\" /></a>";
+                                   echo "<a href=\"$Path/$Archivo\"  title=\"$Titulo\"><img src=\"../files/".$Path."/".$Archivo."\" title=\"$Titulo\" alt=\"$Titulo\" /></a>";
                               }
                               mysqli_free_result($result);
                          mysqli_close($link);	
@@ -217,7 +217,7 @@ include('./head.php');
                                    $Alto = $row["Alto"];
                                    $AnchoThumb = $row["AnchoThumb"];
                                    $AltoThumb = $row["AltoThumb"];
-                                   echo "<a href=\"$Path/$Archivo\" title=\"$Titulo\"><img src=\"../".$Path."/".$Archivo."\" title=\"$Titulo\" alt=\"$Titulo\" /></a>";
+                                   echo "<a href=\"$Path/$Archivo\" title=\"$Titulo\"><img src=\"../files/".$Path."/".$Archivo."\" title=\"$Titulo\" alt=\"$Titulo\" /></a>";
                               }
                               mysqli_free_result($result);
                          mysqli_close($link);	
