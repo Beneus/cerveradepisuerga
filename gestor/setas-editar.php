@@ -82,63 +82,13 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
    <link rel="stylesheet" href="css/menu.css" />
    <link href="css/form.css" rel="stylesheet" type="text/css">
    <script type="text/javascript" src="js/funciones.js"></script>
-   <script type="text/javascript" src="js/tinymce/tinymce.min.js"></script>
-   <script type="text/javascript" src="js/textarea.js"></script>
-   <script language="javascript" type="text/javascript">
-      textarea('textarea#SOMBRERO,textarea#PIE,textarea#CUERPO,textarea#LAMINAS,textarea#HIMENIO,textarea#EXPORADA,textarea#CARNE,textarea#EPOCAHABITAT,textarea#COMESTIBILIDAD,textarea#COMENTARIOS');
+   <script src="https://kit.fontawesome.com/baa3bdeae8.js" crossorigin="anonymous"></script>
+   <script src="https://cdn.tiny.cloud/1/83pnziyrx0kiq1bgkbpgrc19n68sqvirdkp71te4e9vmqb5e/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+   <script>
+      tinymce.init({
+         selector: '#SOMBRERO,#PIE,#CUERPO,#LAMINAS,#HIMENIO,#EXPORADA,#CARNE,#EPOCAHABITAT,#COMESTIBILIDAD,#COMENTARIOS'
+      });
    </script>
-   <script src="http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=ABQIAAAALjXpr6raYKwJ_pVadtUMehSnDxdfdmxtwDYhQFtyI9Wd5NFxURR-buW964RJIemSdlCcqLQinkmTNA" type="text/javascript"></script>
-   <script type="text/javascript">
-      var Latitud = "<?php echo $Latitud; ?>";
-      var Longitud = "<?php echo $Longitud; ?>";
-      var idTime;
-
-      function redondea(sVal, nDec) {
-         var n = parseFloat(sVal);
-         var s = "0.00";
-         if (!isNaN(n)) {
-            n = Math.round(n * Math.pow(10, nDec)) / Math.pow(10, nDec);
-            s = String(n);
-            s += (s.indexOf(".") == -1 ? "." : "") + String(Math.pow(10, nDec)).substr(1);
-            s = s.substr(0, s.indexOf(".") + nDec + 1);
-         }
-         return s;
-      }
-
-      function ponDecimales(nDec) {
-         document.frm.t1.value = redondea(document.frm.t1.value, nDec);
-         document.frm.t2.value = redondea(document.frm.t2.value, nDec);
-      }
-
-      function PosicionarMapa(direccion) {
-         idTime = setInterval("CambiarMapa('" + direccion + "')", 50);
-      }
-
-      function CambiarMapa(direccion) {
-         var posLat = parseFloat(Latitud);
-         var posLon = parseFloat(Longitud);
-         switch (direccion) {
-            case "N":
-               Latitud = posLat + 0.0001;
-               document.formEntrada.LATITUD.value = redondea(Latitud, 6);
-               break;
-            case "S":
-               Latitud = posLat - 0.0001;
-               document.formEntrada.LATITUD.value = redondea(Latitud, 6);
-               break;
-            case "E":
-               Longitud = posLon + 0.0001;
-               document.formEntrada.LONGITUD.value = redondea(Longitud, 6);
-               break;
-            case "O":
-               Longitud = posLon - 0.0001;
-               document.formEntrada.LONGITUD.value = redondea(Longitud, 6);
-               break;
-         }
-         initialize();
-      }
-   </script>
-   <script src="js/googlemapsmuseo.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -195,14 +145,14 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                            <div class="col_half">
                               <label>Nombre común</label>
                               <div class="input_field">
-                                 <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                                 <span><i class="fa-solid fa-signature"></i></span>
                                  <input name="NOMBRECOMUN" type="text" id="NOMBRECOMUN" value="<?= $entity->NombreComun; ?>" size="35" />
                               </div>
                            </div>
                            <div class="col_half">
                               <label>Nombre cientítico</label>
                               <div class="input_field">
-                                 <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                                 <span><i class="fa-solid fa-signature"></i></span>
                                  <input name="NOMBRECIENTIFICO" type="text" id="NOMBRECIENTIFICO" value="<?= $entity->NombreCientifico; ?>" size="35" />
                               </div>
                            </div>
@@ -210,7 +160,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         <div class="row clearfix">
                            <div class="col_half">
                               <label>Clase</label>
-                              <div class="input_field">
+                              <div class="select_field">
+                                 <span><i class="fa-solid fa-folder-tree"></i></span>
                                  <select name="CLASE" type="text" id="CLASE">
                                     <option value="BASIDIOMICETOS" <?= $entity->Clase == 'BASIDIOMICETOS' ? 'selected' : '';   ?>>BASIDIOMICETOS</option>
                                     <option value="ASCOMICETOS" <?= $entity->Clase == 'ASCOMICETOS' ? 'selected' : '';   ?>>ASCOMICETOS</option>
@@ -220,7 +171,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                            </div>
                            <div class="col_half">
                               <label>Orden</label>
-                              <div class="input_field">
+                              <div class="select_field">
+                                 <span><i class="fa-solid fa-arrow-down-short-wide"></i></span>
                                  <?php
                                  $list = GetSmallArrayFromBiggerOne($dc, 'SetasSubOrden', array('idSetasSubOrden', 'SubOrden'));
                                  echo GetSelect("IDSETASSUBORDEN", "idSetasSubOrden", "SubOrden", $list, "", "", "", "", $entity->idSetasSubOrden);
@@ -231,7 +183,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         <div class="row clearfix">
                            <div class="col_half">
                               <label>Clasificación</label>
-                              <div class="input_field">
+                              <div class="select_field">
+                                 <span><i class="fa-solid fa-folder-tree"></i></span>
                                  <select name="CLASIFICACION" type="text" id="CLASIFICACION">
                                     <option value="Mortal" <?= $entity->Clasificacion == 'Mortal' ? 'selected' : ''; ?>>Mortal</option>
                                     <option value="Venenosa" <?= $entity->Clasificacion == 'Venenosa' ? 'selected' : ''; ?>>Venenosa</option>
@@ -373,14 +326,15 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         <div class="row clearfix">
                            <div class="col_half">
                               <label></label>
-                              <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
-                                 <input type="hidden" name="IDNOTICIA" value="<?php echo $idNoticia; ?>" />
+                              <div class="input_field">
+                                 <span><i class="fa-solid fa-floppy-disk"></i></span>
                                  <button type="submit" class="button" name="ENVIAR" id="ENVIAR">Salvar</button>
                               </div>
                            </div>
                            <div class="col_half">
                               <label></label>
-                              <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                              <div class="input_field">
+                                 <span><i class="fa-solid fa-list"></i></span>
                                  <?php
                                  $volver = 'location.href="' . $listPage . '?mostrar=' . $mostrar . '&pagina=' . $pagina . '"';
                                  ?>

@@ -54,27 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     <script src="http://code.jquery.com/jquery-latest.pack.js" type="text/javascript"></script>
     <script type="text/javascript" src="js/funciones.js"></script>
     <!--[if lt IE 9]> <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
-    <script src="https://use.fontawesome.com/4ecc3dbb0b.js"></script>
-
-
-    <script type="text/javascript" src="scripts/tiny_mce.js" language="javascript"></script>
-    <script language="javascript" type="text/javascript">
-        tinyMCE.init({
-            height: "250",
-            mode: "textareas",
-            theme: "advanced",
-            content_css: 'css/form.css',
-            theme_advanced_buttons1: "newdocument,bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink",
-            theme_advanced_buttons1_add: "outdent,indent",
-            theme_advanced_buttons2: "",
-            theme_advanced_buttons3: "",
-            theme_advanced_toolbar_location: "top",
-            theme_advanced_toolbar_align: "left",
-            theme_advanced_path_location: "bottom",
-            extended_valid_elements: "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"
-        });
-    </script>
-
+        <script src="https://kit.fontawesome.com/baa3bdeae8.js" crossorigin="anonymous"></script>
+   <script src="https://cdn.tiny.cloud/1/83pnziyrx0kiq1bgkbpgrc19n68sqvirdkp71te4e9vmqb5e/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+   <script>
+      tinymce.init({
+         selector: '#DESCRIPCION'
+      });
+   </script>
     <script>
         $(document).ready(function() {
 
@@ -164,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                             <div class="title_container">
                                 <h2>Localización</h2>
                             </div>
-                            <form enctype="multipart/form-data" name="formEntrada" id="formEntrada" method="POST">                                
+                            <form enctype="multipart/form-data" name="formEntrada" id="formEntrada" method="POST">
                                 <div class="row clearfix">
                                     <div class="col">
                                         <label>Contenido</label>

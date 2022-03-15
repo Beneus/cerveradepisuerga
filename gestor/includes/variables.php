@@ -1,5 +1,7 @@
 <?php
 
+
+
 use citcervera\Model\Entities\Menu;
 use citcervera\Model\Entities\SubMenu;
 use citcervera\Model\Managers\Manager;
@@ -39,13 +41,23 @@ if ($list)
 $origen = "http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
 $query = $_SERVER["QUERY_STRING"]; 
 
-
 if(! $_SESSION["Conexion"])
 {
+	session_unset();
+	session_destroy();
 	header("Location:login.php?$origen?$query");
 	exit;	
+}else if(time() < $_SESSION['Expire']){
+	$_SESSION['Expire'] = time()  + (600);
 }
-else if(($_SESSION["TipoUsuario"]!= "ADMIN") AND ($_SESSION["TipoUsuario"]!= "USERCIT"))
+else{
+	session_unset();
+	session_destroy();
+	header("Location:login.php?$origen?$query");
+	exit;
+}
+
+if(($_SESSION["TipoUsuario"]!= "ADMIN") AND ($_SESSION["TipoUsuario"]!= "USERCIT"))
 {
 	
 	$sql = " select M.pagina, M.Menu from `UsuariosAcceso` as UA inner join `Menu` as M on UA.idMenu = M.idMenu "
@@ -108,6 +120,8 @@ else
 	}
 	else
 	{
+		session_unset();
+		session_destroy();
 		header("Location:login.php?$origen?$query");
 		exit;	
 	}	
@@ -126,6 +140,9 @@ else
 		}		
 	}
 }
+
+
+
 
 function GetSubMenu($idMenu)
 {
@@ -154,9 +171,5 @@ function curPageName()
 	return substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+1);
 }
 
-
-
-
-
-
+//echo '<h1>'.  ($_SESSION['Expire'] - time()) .'</h1>';
 ?>

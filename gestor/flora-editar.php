@@ -79,76 +79,14 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
    <link rel="stylesheet" href="css/beneus.css" />
    <link rel="stylesheet" href="css/menu.css" />
    <link href="css/form.css" rel="stylesheet" type="text/css">
-   <script type="text/javascript" src="scripts/tiny_mce.js" language="javascript"></script>
    <script type="text/javascript" src="js/funciones.js" language="javascript"></script>
-
-   <script language="javascript" type="text/javascript">
-      tinyMCE.init({
-         height: "250",
-         mode: "textareas",
-         theme: "advanced",
-         theme_advanced_buttons1: "newdocument,bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink",
-         theme_advanced_buttons1_add: "outdent,indent",
-         theme_advanced_buttons2: "",
-         theme_advanced_buttons3: "",
-         theme_advanced_toolbar_location: "top",
-         theme_advanced_toolbar_align: "left",
-         theme_advanced_path_location: "bottom",
-         extended_valid_elements: "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"
+   <script src="https://kit.fontawesome.com/baa3bdeae8.js" crossorigin="anonymous"></script>
+   <script src="https://cdn.tiny.cloud/1/83pnziyrx0kiq1bgkbpgrc19n68sqvirdkp71te4e9vmqb5e/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+   <script>
+      tinymce.init({
+         selector: '#DESCRIPCION,#HABITAT,#USOS'
       });
    </script>
-   <script src="http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=ABQIAAAALjXpr6raYKwJ_pVadtUMehSnDxdfdmxtwDYhQFtyI9Wd5NFxURR-buW964RJIemSdlCcqLQinkmTNA" type="text/javascript"></script>
-   <script type="text/javascript">
-      var Latitud = "<?php echo $Latitud; ?>";
-      var Longitud = "<?php echo $Longitud; ?>";
-      var idTime;
-
-      function redondea(sVal, nDec) {
-         var n = parseFloat(sVal);
-         var s = "0.00";
-         if (!isNaN(n)) {
-            n = Math.round(n * Math.pow(10, nDec)) / Math.pow(10, nDec);
-            s = String(n);
-            s += (s.indexOf(".") == -1 ? "." : "") + String(Math.pow(10, nDec)).substr(1);
-            s = s.substr(0, s.indexOf(".") + nDec + 1);
-         }
-         return s;
-      }
-
-      function ponDecimales(nDec) {
-         document.frm.t1.value = redondea(document.frm.t1.value, nDec);
-         document.frm.t2.value = redondea(document.frm.t2.value, nDec);
-      }
-
-      function PosicionarMapa(direccion) {
-         idTime = setInterval("CambiarMapa('" + direccion + "')", 50);
-      }
-
-      function CambiarMapa(direccion) {
-         var posLat = parseFloat(Latitud);
-         var posLon = parseFloat(Longitud);
-         switch (direccion) {
-            case "N":
-               Latitud = posLat + 0.0001;
-               document.formEntrada.LATITUD.value = redondea(Latitud, 6);
-               break;
-            case "S":
-               Latitud = posLat - 0.0001;
-               document.formEntrada.LATITUD.value = redondea(Latitud, 6);
-               break;
-            case "E":
-               Longitud = posLon + 0.0001;
-               document.formEntrada.LONGITUD.value = redondea(Longitud, 6);
-               break;
-            case "O":
-               Longitud = posLon - 0.0001;
-               document.formEntrada.LONGITUD.value = redondea(Longitud, 6);
-               break;
-         }
-         initialize();
-      }
-   </script>
-   <script src="js/googlemapsmuseo.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -207,14 +145,14 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                            <div class="col_half">
                               <label>Nombre común</label>
                               <div class="input_field">
-                                 <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                                 <span><i class="fa-solid fa-tree"></i></span>
                                  <input name="NOMBRECOMUN" type="text" id="NOMBRECOMUN" value="<?= $entity->NombreComun; ?>" size="35" />
                               </div>
                            </div>
                            <div class="col_half">
                               <label>Nombre cientítico</label>
                               <div class="input_field">
-                                 <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                              <span><i class="fa-solid fa-tree"></i></span>
                                  <input name="NOMBRECIENTIFICO" type="text" id="NOMBRECIENTIFICO" value="<?= $entity->NombreCientifico; ?>" size="35" />
                               </div>
                            </div>
@@ -223,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                            <div class="col_half">
                               <label>Familia</label>
                               <div class="input_field">
-                                 <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                                 <span><i class="fa-solid fa-folder-tree"></i></span>
                                  <input name="FAMILIA" type="text" id="FAMILIA" value="<?= $entity->Familia; ?>" size="35" />
                               </div>
                            </div>
@@ -233,34 +171,30 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                               </div>
                            </div>
                         </div>
-
                         <div class="row clearfix">
                            <div class="col">
                               <label>Descripción</label>
-                              <div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
-
+                              <div class="textarea_field">
+                                 <span><i class="fa-solid fa-message"></i></span>
                                  <textarea name="DESCRIPCION" cols="80" rows="10" id="DESCRIPCION"><?= $entity->Descripcion; ?></textarea>
-
                               </div>
                            </div>
                         </div>
                         <div class="row clearfix">
                            <div class="col">
                               <label>Habitat</label>
-                              <div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
-
+                              <div class="textarea_field">
+                                 <span><i class="fa-solid fa-earth-europe"></i></span>
                                  <textarea name="HABITAT" cols="80" rows="10" id="HABITAT"><?= $entity->Habitat; ?></textarea>
-
                               </div>
                            </div>
                         </div>
                         <div class="row clearfix">
                            <div class="col">
                               <label>Usos</label>
-                              <div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
-
+                              <div class="textarea_field">
+                                 <span><i class="fa-solid fa-mug-hot"></i></span>
                                  <textarea name="USOS" cols="80" rows="10" id="USOS"><?= $entity->Usos; ?></textarea>
-
                               </div>
                            </div>
                         </div>
@@ -287,14 +221,15 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         <div class="row clearfix">
                            <div class="col_half">
                               <label></label>
-                              <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
-                                 <input type="hidden" name="IDNOTICIA" value="<?php echo $idNoticia; ?>" />
+                              <div class="input_field">
+                                 <span><i class="fa-solid fa-floppy-disk"></i></span>
                                  <button type="submit" class="button" name="ENVIAR" id="ENVIAR">Salvar</button>
                               </div>
                            </div>
                            <div class="col_half">
                               <label></label>
-                              <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                              <div class="input_field">
+                                 <span><i class="fa-solid fa-list"></i></span>
                                  <?php
                                  $volver = 'location.href="' . $listPage . '?mostrar=' . $mostrar . '&pagina=' . $pagina . '"';
                                  ?>

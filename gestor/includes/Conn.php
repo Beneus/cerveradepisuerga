@@ -1,4 +1,7 @@
 <?php
+
+session_start();
+
 define(__NAMESPACE__ ,'citcervera');
 
 function __citcervera_libraries($class_name)
@@ -16,12 +19,13 @@ function __citcervera_libraries($class_name)
 spl_autoload_register("__citcervera_libraries");
 
 
-session_start();
+//session_start();
 // ini_set('display_errors', 1);
 // error_reporting(E_ALL);
 
 
-// conexi�n a base de datos
+
+// conexión a base de datos
 function Conectarse($servidor,$basedatos,$usuario,$password)
 {
 	try{
@@ -127,4 +131,6 @@ function diferencia_horaria()
 		return 9;
 	}
 }
+
+
 ?>

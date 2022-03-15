@@ -8,7 +8,8 @@ $query = $_SERVER["QUERY_STRING"];
 $msgError = '';
 
 if ($_SERVER['REQUEST_METHOD']== "POST"){
-$query = $_POST["query"];
+$query = $_POST["query"]?$_POST["query"]:'index.php';
+
 	if (($usuario != '') && ($clave != '')){
 	$sql = " SELECT idUsuario, usuario, TipoUsuario FROM Usuarios where usuario = '$usuario' and clave = '".hashPassword($clave)."' ";
 //echo $sql;
@@ -24,6 +25,8 @@ $query = $_POST["query"];
 						$_SESSION['idUsuario'] = $row["idUsuario"]; 
 						$_SESSION['Usuario'] = $row["usuario"]; 
 						$_SESSION['TipoUsuario'] = $row["TipoUsuario"];
+						$_SESSION['Start'] = time();
+						$_SESSION['Expire'] = $_SESSION['Start']  + (600);
 						header("Location:$query");
 						exit;
 					/*}else{
@@ -44,13 +47,16 @@ $query = $_POST["query"];
 					$_SESSION['idUsuario'] = 0; 
 					$_SESSION['Usuario'] = ''; 
 					$_SESSION['TipoUsuario'] = '';
-
+					session_unset();
+					session_destroy();
 					$msgError = "<span class=\"TituloBlanco\">El nombre de </span><span class=\"TituloRojo\">usuario</span><span class=\"TituloBlanco\"> y/o la </span><span class=\"TituloRojo\">contrase�a</span><span class=\"TituloBlanco\"> no son correctas.</span>";		
 				}
 			mysqli_free_result($result);
 			mysqli_close($link);
 	}else{
-	$msgError = "<span class=\"TituloBlanco\">Debes introducir un nombre de </span><span class=\"TituloRojo\">usuario</span> y una </span><span class=\"TituloRojo\">contrase�a</span>";
+		session_unset();
+		session_destroy();
+		$msgError = "<span class=\"TituloBlanco\">Debes introducir un nombre de </span><span class=\"TituloRojo\">usuario</span> y una </span><span class=\"TituloRojo\">contrase�a</span>";
 	}
 }	
 ?>

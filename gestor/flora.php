@@ -57,7 +57,7 @@ function GetQuery($buscar)
    }
 
    $sql = $sql . " order by NombreComun ";
-echo $sql;
+
    return $sql;
 }
 
