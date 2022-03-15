@@ -248,3 +248,35 @@ a.volver {
 .image_wrapper .dragChild{
   flex: 0 0 20%;
 }
+
+#error{
+  position: absolute; 
+  left: 0; 
+  right: 0; 
+  margin-left: auto; 
+  margin-right: auto;
+  background: white;
+  border-radius: 5px;
+  border-color: #448040;
+  border-width: 2px;
+  border-style: solid;
+  max-width: 50%;
+}
+
+#errorcab{
+  background: #92ff8b;
+  padding: 5px;
+  color:black;
+  font-weight:bold;
+}
+
+#errormsn{
+  padding: 5px;
+  color:black;
+ 
+}
+#errormsn  li{
+  padding-left: 1em;
+  margin-left: 1em;
+  list-style: none;
+  }

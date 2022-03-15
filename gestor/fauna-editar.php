@@ -1,156 +1,223 @@
 <?php
+
+namespace citcervera;
+
 include("includes/Conn.php");
 include("includes/variables.php");
 include("includes/funciones.php");
 
+use citcervera\Model\Managers\DataCarrier;
+use citcervera\Model\Managers\Manager;
 
-// datos de la entrada del museo
+$editPage = 'fauna-editar.php';
+$listPage = 'fauna.php';
+$currentPage = curPageName();
 
-$idFauna = $_GET["idFauna"];
-$link = ConnBDCervera();
-$sql = " Select * from Fauna where idFauna = $idFauna ";
-$result = mysqli_query($link,$sql);
-if (!$result)
-	{
-	$message = "Invalid query".mysqli_error($link)."\n";
-	$message .= "whole query: " .$sql;	
-	die($message);
-	exit;
-	}
-$max = mysqli_num_rows($result);	
-if($max > 0){
-	$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-	$NombreComun = $row["NombreComun"] ?? '';
-	$NombreCientifico = $row["NombreCientifico"] ?? '';
-	$Familia = $row["Familia"] ?? ''; 
-	$Descripcion = $row["Descripcion"] ?? '';
-	$Habitat = $row["Habitat"] ?? '';
-	$Usos = $row["Usos"] ?? '';
+$entityName = __NAMESPACE__ . '\Model\Entities\Fauna';
 
-}else{
-	header("Location:fauna-listado.php");
-	exit;
-	
+$entity = new $entityName();
+$entityId = $entity->getId();
+$entityTable = $entity->getTable();
+
+$entityManager = new Manager($entity);
+$dc = new DataCarrier();
+
+$ErrorMsg = "";
+
+$idMuseo = $_GET[$entityId] ?? '';
+$mostrar = $_GET["mostrar"] ?? '';
+$pagina = $_GET["pagina"] ?? '';
+
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+  $entity->_POST();
+  if ($entity->NombreComun == "") {
+    $ErrorMsg = "<li class=\"errortexto\">Nombre común</li>";
+  }
+  if ($entity->NombreCientifico == "") {
+    $ErrorMsg .= "<li class=\"errortexto\">Nombre científico</li>";
+  }
+  if ($ErrorMsg == "") {
+    $entity->Fecha = date("Y-m-d H:m:s");
+    $entityManager->Save($entity);
+    $lastInsertedId = $entityManager->GetLastInsertedId();
+    if ($lastInsertedId) {
+      $entity->$entityId = $lastInsertedId;
+      $dc->Set($entityManager->Get($lastInsertedId), $entityTable);
+    }
+  } else {
+    $ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:"
+      . "<ul>"
+      . $ErrorMsg
+      . "</ul>";
+  }
 }
 
-mysqli_free_result($result);
-mysqli_close($link);	
+if ($_SERVER['REQUEST_METHOD'] == "GET") {
+  if (isset($_GET[$entityId])) {
+    $entityManager->Get($_GET[$entityId]);
+  }
+}
+
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8" />
-<meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
-<title>Gestor de contenidos: Fauna editar</title>
-<link href="css/menu.css" rel="stylesheet" type="text/css" />
-<link href="css/gestor.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="scripts/tiny_mce.js"></script>
-<script type="text/javascript" src="js/funciones.js" language="javascript"></script>
-<script language="javascript" type="text/javascript">
-tinyMCE.init({
-	mode : "textareas",
-	theme : "advanced",
-	theme_advanced_buttons1 : "newdocument,bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink",
-	theme_advanced_buttons1_add : "outdent,indent",
-	theme_advanced_buttons2 : "",
-	theme_advanced_buttons3 : "",
-	theme_advanced_toolbar_location : "top",
-	theme_advanced_toolbar_align : "left",
-	theme_advanced_path_location : "bottom",
-	extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"
-});
-</script>
+  <meta charset="UTF-8" />
+  <meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
+  <title>Gestor de contenidos: <?= $entityTable; ?> Editar</title>
+  <link rel="stylesheet" href="css/beneus.css" />
+  <link rel="stylesheet" href="css/menu.css" />
+  <link href="css/form.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="js/funciones.js" language="javascript"></script>
+  <script src="https://kit.fontawesome.com/baa3bdeae8.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.tiny.cloud/1/83pnziyrx0kiq1bgkbpgrc19n68sqvirdkp71te4e9vmqb5e/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+  <script>
+    tinymce.init({
+      selector: '#DESCRIPCION,#HABITAT,#USOS'
+    });
+  </script>
 </head>
 
 <body>
-<div id="espere" style="display:none" >
-  <div align="center"><img src="images/cargando.gif" alt="Enviando datos" width="32" height="32" /></div>
-</div>
-<div id="error" style="display:none" >
-  <div id="errorcab" align="right"><a href="#" onclick="document.getElementById('error').style.display='none';disDiv('contenido',false);">Cerrar&nbsp;[x]</a>&nbsp;</div>
-  <div id="errormsn" >
+  <?php
+  include('includes/error.php');
+  ?>
+  <div class="wrapper">
+    <header id="header" class="grid">
+      <div class="grid-cell">
+        <div class="grid">
+          <a href="/"><img id="logo" src="images/LOGO-CIT-CERVERA.gif"></a>
+        </div>
+      </div>
+    </header>
+    <label for="menu-toggle" class="label-toggle"></label>
+    <input type="checkbox" id="menu-toggle" />
+    <nav>
+      <?php
+      echo $strMenu;
+      ?>
+    </nav>
+    <div class="grid container">
+
+      <div class="main">
+
+        <div id="opciones">
+          <ul>
+            <li>
+              <h2><?= explode('.', curPageName())[0] ?></h2>
+            </li>
+            <li class="liselect"><a href="<?= $currentPage; ?>">A&ntilde;adir entrada</a></li>
+            <li><a href="<?= $listPage ?>">Listado</a></li>
+          </ul>
+        </div>
+
+        <div class="content">
+          <div class="form_wrapper">
+            <div class="form_container">
+              <div class="title_container">
+                <h2><?= $entityTable ?></h2>
+              </div>
+              <form id="formEntrada" method="post" name="formEntrada" action="<?= $currentPage; ?>">
+                <input type="hidden" name="<?= strtoupper($entityId) ?>" value="<?= $entity->$entityId; ?>" />
+                <input type="hidden" name="IMGDESCRIPCION" value="<?= $entity->ImgDescripcion; ?>" />
+                <input type="hidden" name="IMGHABITAT" value="<?= $entity->ImgHabitat; ?>" />
+                <input type="hidden" name="IMGUSOS" value="<?= $entity->ImgUsos; ?>" />
+                <div class="row clearfix">
+                  <div class="col_half">
+                    <label>Nombre común</label>
+                    <div class="input_field">
+                      <span><i class="fa-solid fa-otter"></i></span>
+                      <input name="NOMBRECOMUN" type="text" id="NOMBRECOMUN" value="<?= $entity->NombreComun; ?>" size="35" />
+                    </div>
+                  </div>
+                  <div class="col_half">
+                    <label>Nombre cientítico</label>
+                    <div class="input_field">
+                      <span><i class="fa-solid fa-paw"></i></span>
+                      <input name="NOMBRECIENTIFICO" type="text" id="NOMBRECIENTIFICO" value="<?= $entity->NombreCientifico; ?>" size="35" />
+                    </div>
+                  </div>
+                </div>
+                <div class="row clearfix">
+                  <div class="col_half">
+                    <label>Familia</label>
+                    <div class="input_field">
+                      <span><i class="fa-solid fa-folder-tree"></i></span>
+                      <input name="FAMILIA" type="text" id="FAMILIA" value="<?= $entity->Familia; ?>" size="35" />
+                    </div>
+                  </div>
+                  <div class="col_half">
+                    <label></label>
+                    <div class="input_field">
+                    </div>
+                  </div>
+                </div>
+                <div class="row clearfix">
+                  <div class="col">
+                    <label>Descripción</label>
+                    <div class="textarea_field">
+                      <span><i class="fa-solid fa-message"></i></span>
+                      <textarea name="DESCRIPCION" cols="80" rows="10" id="DESCRIPCION"><?= $entity->Descripcion; ?></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row clearfix">
+                  <div class="col">
+                    <label>Habitat</label>
+                    <div class="textarea_field">
+                      <span><i class="fa-solid fa-earth-europe"></i></span>
+                      <textarea name="HABITAT" cols="80" rows="10" id="HABITAT"><?= $entity->Habitat; ?></textarea>
+                    </div>
+                  </div>
+                </div>
+                <?php if ($entity->$entityId) {
+                  $imagenUrl = 'location.href="galeria-fotografica.php?Ambito=' . $entityTable . '&idAmbito=' . $entity->$entityId . '&Campo=' . $entityId . '&NCampo=' . $entityTable . '&Referer=' . $currentPage . '"';
+                  $documentUrl = 'location.href="galeria-documentos.php?Ambito=' . $entityTable . '&idAmbito=' . $entity->$entityId . '&Campo=' . $entityId . '&NCampo=' . $entityTable . '&Referer=' . $currentPage . '"';
+                ?>
+                  <div class="row clearfix">
+                    <div class="col_half">
+                      <div class="input_field"> <span><i aria-hidden="true" class="fa fa-picture-o"></i></span>
+                        <input type="button" name="IMAGEN" id="IMAGEN" class="button" value="Adjuntar Imagen" onclick='<?= $imagenUrl ?>' />
+                      </div>
+                    </div>
+                    <div class="col_half">
+                      <div class="input_field"> <span><i aria-hidden="true" class="fa fa-file"></i></span>
+                        <input type="button" name="DOCUMENTO" id="DOCUMENTO" class="button" value="Adjuntar Documeto" onclick='<?= $documentUrl ?>' />
+                      </div>
+                    </div>
+                  </div>
+                <?php
+                }
+                ?>
+                <div class="row clearfix">
+                  <div class="col_half">
+                    <label></label>
+                    <div class="input_field">
+                      <span><i class="fa-solid fa-floppy-disk"></i></span>
+                      <button type="submit" class="button" name="ENVIAR" id="ENVIAR">Salvar</button>
+                    </div>
+                  </div>
+                  <div class="col_half">
+                    <label></label>
+                    <div class="input_field">
+                      <span><i class="fa-solid fa-list"></i></span>
+                      <?php
+                      $volver = 'location.href="' . $listPage . '?mostrar=' . $mostrar . '&pagina=' . $pagina . '"';
+                      ?>
+                      <input type="button" name="VOLVER2" id="VOLVER2" class="button" value="Volver al listado" onclick='<?= $volver ?>' />
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </form>
   </div>
-</div>
-<div id="cab">
-  <div><img src="images/cab.gif" width="1024" height="100" border="0" usemap="#Map" /></div>
-</div>
-<div id="menu">
-<?php echo $strMenu; ?>
-</div>
-<nobr clear="left" ></nobr>
-<div id="submenu">
-<?php echo $strSubMenu; ?>
-</div>
-<div id="opciones">
-  <ul>
-    <li><a title="A&ntilde;adir entrada al directorio" href="fauna-entrada.php">A&ntilde;adir entrada</a></li>
-    <li><a title="Listado del directorio"  href="fauna-listado.php">Listado</a> 
-      <map name="Map" id="Map">
-        <area shape="rect" coords="857,40,1011,73" href="#" onclick="location.href='desconexion.php';" alt="Desconectar del gestor" />
-      </map>
-    </li>
-  </ul>
-</div>
-<div class="separador">&nbsp;</div>
-<div id="contenido">
-<form id="formEntrada" name="formEntrada" onsubmit="EnviarEntradaFauna(this,'editar');return false;" method="post">
-<input type="hidden" name="IDFAUNA" value="<?php echo $idFauna;?>"/>
-<div class="tablaizq">
-<ul class="tablaformizq">
-    
-    <li class="campoform">
-      <div class="tituloentradaform">Nombre Com&uacute;n</div>
-      <div class="valorentradaform">
-        <input name="NOMBRECOMUN" type="text" id="NOMBRECOMUN" value="<?php echo $NombreComun; ?>" size="35" />
-      </div>
-     </li>
-    <li class="campoform">
-        <div class="tituloentradaform">Nombre Cient&iacute;fico</div>
-        <div class="valorentradaform"><input name="NOMBRECIENTIFICO" type="text" id="NOMBRECIENTIFICO" value="<?php echo $NombreCientifico; ?>" size="35" />
-         </div>
-        </li>
-    <li class="campoform">
-        <div class="tituloentradaform">Familia</div>
-        <div class="valorentradaform">
-          <input name="FAMILIA" type="text" id="FAMILIA" value="<?php echo $Familia; ?>" size="35" />
-        </div>    </li> <li class="campoform">
-        <div class="tituloentradaform">Galer&iacute;a de imagenes</div>
-        <div class="valorentradaform">
-          <a href="galeria-fotografica.php?Ambito=Fauna&amp;idAmbito=<?php echo $idFauna;?>&amp;Campo=idFauna&amp;NCampo=NombreComun&amp;Referer=fauna-editar.php">Galeria de imagenes</a>
-        </div>    </li>   
-        <li class="campoform">
-        <div class="tituloentradaform">Galer&iacute;a de documentos</div>
-        <div class="valorentradaform">
-          <a href="galeria-documentos.php?Ambito=Fauna&amp;idAmbito=<?php echo $idFauna;?>&amp;Campo=idFauna&amp;NCampo=NombreComun&amp;Referer=fauna-editar.php">Galeria de documentos</a>
-        </div>    
-        </li>  
-</ul>
-</div>
-<div class="tablader">
-</div>
-<br class="limpiar" />
-<div class="textolargo">
-<ul class="tablaformtextolargo">
-    <li class="campoform">
-      <div class="tituloentradaform">Descripci&oacute;n</div>
-      <div class="valorentradaform">
-        <textarea name="DESCRIPCION" cols="80" rows="10" id="DESCRIPCION"><?php echo $Descripcion; ?></textarea>
-      </div>
-     </li>
-    <li class="campoform">
-        <div class="tituloentradaform">Habitat</div>
-        <div class="valorentradaform"><textarea name="HABITAT" cols="80" rows="10" id="HABITAT"><?php echo $Habitat; ?></textarea>
-         </div>
-        </li>
-     <li class="campoform">
-        <div class="tituloentradaform">&nbsp;</div>
-        <div class="valorentradaform">
-          <input type="submit" name="ENVIAR" id="ENVIAR" value="Guardar Datos" />
-        </div>    </li>    
-</ul>
-</div>
-</form>
-</div>
-<br clear="left" />
 </body>
+
 </html>

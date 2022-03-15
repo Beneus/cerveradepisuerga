@@ -30,10 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $dc->Set($LocalizacionManager->Get($lastInsertedId), 'Localizacion');
         }
     } else {
-        $ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:<br/>";
-        $ErrorMsn .= "<blockquote>";
-        $ErrorMsn .= $ErrorMsg;
-        $ErrorMsn .= "</blockquote>";
+        $ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:"
+        . "<ul>"
+        . $ErrorMsg
+        . "</ul>";
     }
 }
 
@@ -115,6 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 </head>
 
 <body>
+
     <div class="wrapper">
         <header id="header" class="grid">
             <div class="grid-cell">

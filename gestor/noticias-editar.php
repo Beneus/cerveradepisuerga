@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 	$Noticias->_POST();
 	if ($Noticias->Titulo == "") {
-		$ErrorMsg = "<span class=\"errortexto\">Titulo.</span><br/>";
+		$ErrorMsg = "<li class=\"errortexto\">Titulo.</li>";
 	}
 	if ($ErrorMsg == "") {
 		$Noticias->Fecha = date("Y-m-d H:m:s");
@@ -48,10 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 			$dc->Set($noticiasManager->Get($lastInsertedId), 'Noticias');
 		}
 	} else {
-		$ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:<br/>";
-		$ErrorMsn .= "<blockquote>";
-		$ErrorMsn .= $ErrorMsg;
-		$ErrorMsn .= "</blockquote>";
+		$ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:"
+			. "<ul>"
+			. $ErrorMsg
+			. "</ul>";
 	}
 }
 
@@ -93,23 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 </head>
 
 <body>
-
-	<div id="espere" style="display:none">
-		<div align="center"><img src="images/cargando.gif" alt="Enviando datos" width="32" height="32" /></div>
-	</div>
 	<?php
-	if ($ErrorMsn != "") {
-	?>
-		<script type="text/javascript">
-			disDiv("contenido", true);
-		</script>
-		<div id="error">
-			<div id="errorcab" align="right"><a href="#" onclick="document.getElementById('error').style.display='none';disDiv('contenido',false);">Cerrar&nbsp;[x]</a>&nbsp;</div>
-			<div id="errormsn"><?php echo $ErrorMsn; ?>
-			</div>
-		</div>
-	<?php
-	}
+	include('includes/error.php');
 	?>
 	<div class="wrapper">
 		<header id="header" class="grid">

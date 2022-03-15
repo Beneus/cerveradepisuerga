@@ -49,4 +49,30 @@ class Fauna extends EntityBase implements IEntityBase
 	{
 		return $this->_id;
 	}
+
+	function _POST()
+	{
+		$this->idFauna = parent::TakePOST('IDFAUNA');
+		$this->NombreComun = parent::TakePOST('NOMBRECOMUN');
+		$this->NombreCientifico = parent::TakePOST('NOMBRECIENTIFICO');
+		$this->Familia = parent::TakePOST('FAMILIA');
+		$this->Descripcion = htmlentities(parent::TakePOST('DESCRIPCION'),ENT_QUOTES);
+		$this->Habitat = htmlentities(parent::TakePOST('HABITAT'),ENT_QUOTES);
+		$this->ImgDescripcion = parent::TakePOST('IMGDESCRIPCION',255);
+		$this->ImgHabitat = parent::TakePOST('IMGHABITAT',255);
+		$this->Fecha = parent::TakePOST('FECHA');
+	}
+
+	function _GET()
+	{
+		$this->idFauna = parent::TakeGET('IDFAUNA');
+		$this->NombreComun = parent::TakeGET('NOMBRECOMUN');
+		$this->NombreCientifico = parent::TakeGET('NOMBRECIENTIFICO');
+		$this->Familia = parent::TakeGET('FAMILIA');
+		$this->Descripcion = htmlentities(parent::TakeGET('DESCRIPCION'),ENT_QUOTES);
+		$this->Habitat = htmlentities(parent::TakeGET('HABITAT'),ENT_QUOTES);
+		$this->ImgDescripcion = parent::TakeGET('IMGDESCRIPCION',255);
+		$this->ImgHabitat = parent::TakeGET('IMGHABITAT',255);
+		$this->Fecha = parent::TakeGET('FECHA');
+	}
 }

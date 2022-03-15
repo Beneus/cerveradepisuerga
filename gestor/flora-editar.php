@@ -41,10 +41,10 @@ $pagina = $_GET["pagina"] ?? '';
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
    $entity->_POST();
    if ($entity->NombreComun == "") {
-      $ErrorMsg = "<span class=\"errortexto\">Nombre común</span><br/>";
+      $ErrorMsg = "<li class=\"errortexto\">Nombre común</li>";
    }
    if ($entity->NombreCientifico == "") {
-      $ErrorMsg = "<span class=\"errortexto\">Nombre científico Urbano</span><br/>";
+      $ErrorMsg .= "<li class=\"errortexto\">Nombre científico Urbano</li>";
    }
    if ($ErrorMsg == "") {
       $entity->Fecha = date("Y-m-d H:m:s");
@@ -55,10 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
          $dc->Set($entityManager->Get($lastInsertedId), $entityTable);
       }
    } else {
-      $ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:<br/>";
-      $ErrorMsn .= "<blockquote>";
-      $ErrorMsn .= $ErrorMsg;
-      $ErrorMsn .= "</blockquote>";
+      $ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:"
+         . "<ul>"
+         . $ErrorMsg
+         . "</ul>";
    }
 }
 
@@ -91,15 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
 <body>
    <?php
-   if ($ErrorMsn != "") {
-   ?>
-      <div id="error">
-         <div id="errorcab" align="right"><a href="#" onclick="document.getElementById('error').style.display='none';disDiv('contenido',false);">Cerrar&nbsp;[x]</a>&nbsp;</div>
-         <div id="errormsn"><?php echo $ErrorMsn; ?>
-         </div>
-      </div>
-   <?php
-   }
+   include('includes/error.php');
    ?>
    <div class="wrapper">
       <header id="header" class="grid">
@@ -152,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                            <div class="col_half">
                               <label>Nombre cientítico</label>
                               <div class="input_field">
-                              <span><i class="fa-solid fa-tree"></i></span>
+                                 <span><i class="fa-solid fa-tree"></i></span>
                                  <input name="NOMBRECIENTIFICO" type="text" id="NOMBRECIENTIFICO" value="<?= $entity->NombreCientifico; ?>" size="35" />
                               </div>
                            </div>

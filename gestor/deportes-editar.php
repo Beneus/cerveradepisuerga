@@ -1,4 +1,5 @@
 <?php
+
 namespace citcervera;
 
 include("includes/Conn.php");
@@ -42,10 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
    $entity->_POST();
 
    if ($entity->ActoDeportivo == "") {
-      $ErrorMsg = "<span class=\"errortexto\">Museo</span><br/>";
+      $ErrorMsg = "<li class=\"errortexto\">Museo</li>";
    }
    if ($entity->idNucleoUrbano == "") {
-      $ErrorMsg = "<span class=\"errortexto\">Nucleo Urbano</span><br/>";
+      $ErrorMsg .= "<li class=\"errortexto\">Nucleo Urbano</li>";
    }
    if ($ErrorMsg == "") {
       $entity->Fecha = date("Y-m-d H:m:s");
@@ -56,10 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
          $dc->Set($entityManager->Get($lastInsertedId), $entityTable);
       }
    } else {
-      $ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:<br/>";
-      $ErrorMsn .= "<blockquote>";
-      $ErrorMsn .= $ErrorMsg;
-      $ErrorMsn .= "</blockquote>";
+      $ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:"
+         . "<ul>"
+         . $ErrorMsg
+         . "</ul>";
    }
 }
 
@@ -88,20 +89,12 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
          selector: '#DESCRIPCION'
       });
    </script>
-  
+
 </head>
 
 <body>
    <?php
-   if ($ErrorMsn != "") {
-   ?>
-      <div id="error">
-         <div id="errorcab" align="right"><a href="#" onclick="document.getElementById('error').style.display='none';disDiv('contenido',false);">Cerrar&nbsp;[x]</a>&nbsp;</div>
-         <div id="errormsn"><?php echo $ErrorMsn; ?>
-         </div>
-      </div>
-   <?php
-   }
+   include('includes/error.php');
    ?>
    <div class="wrapper">
       <header id="header" class="grid">
@@ -153,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                            <div class="col_half">
                               <label>Email</label>
                               <div class="input_field">
-                              <span><i class="fa-solid fa-at"></i></span>
+                                 <span><i class="fa-solid fa-at"></i></span>
                                  <input name="EMAIL" type="text" id="EMAIL" value="<?= $entity->Email; ?>" size="35" />
                               </div>
                            </div>
@@ -162,14 +155,14 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                            <div class="col_half">
                               <label>Lugar</label>
                               <div class="input_field">
-                              <span><i class="fa-solid fa-location-pin"></i></span><span><i aria-hidden="true" class="fa fa-user"></i></span>
+                                 <span><i class="fa-solid fa-location-pin"></i></span><span><i aria-hidden="true" class="fa fa-user"></i></span>
                                  <input name="LUGAR" type="text" id="LUGAR" value="<?= $entity->Lugar; ?>" size="35" />
                               </div>
                            </div>
                            <div class="col_half">
                               <label>Link</label>
                               <div class="input_field">
-                              <span><i class="fa-solid fa-link"></i></span>
+                                 <span><i class="fa-solid fa-link"></i></span>
                                  <input name="URL" type="text" id="URL" value="<?= $entity->URL; ?>" size="35" />
                               </div>
                            </div>
@@ -178,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                            <div class="col_half">
                               <label>Poblaci&oacute;n</label>
                               <div class="select_field">
-                              <span><i class="fa-solid fa-city"></i></span>
+                                 <span><i class="fa-solid fa-city"></i></span>
                                  <?php
 
                                  $list = GetSmallArrayFromBiggerOne($dc, 'NucleosUrbanos', array('idNucleoUrbano', 'NombreNucleoUrbano'));
@@ -189,7 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                            <div class="col_half">
                               <label>Contacto</label>
                               <div class="input_field">
-                              <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                                 <span><i aria-hidden="true" class="fa fa-user"></i></span>
                                  <input name="CONTACTO" type="text" id="CONTACTO" placeholder="dd/mm/aaaa" value="<?= $entity->Contacto; ?>" />
                               </div>
                            </div>
@@ -198,30 +191,30 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                            <div class="col_half">
                               <label>Hora</label>
                               <div class="select_field">
-                              <span><i class="fa-solid fa-clock"></i></span>
+                                 <span><i class="fa-solid fa-clock"></i></span>
                                  <input name="HORA" type="time" id="HORA" placeholder="HH:MM" value="<?= $entity->Hora; ?>" size="35" />
                               </div>
                            </div>
                            <div class="col_half">
                               <label>Precio</label>
                               <div class="input_field">
-                              <span><i class="fa-solid fa-euro-sign"></i></span>
+                                 <span><i class="fa-solid fa-euro-sign"></i></span>
                                  <input name="PRECIO" type="text" id="PRECIO" value="<?= $entity->Precio; ?>" />
                               </div>
                            </div>
                         </div>
                         <div class="row clearfix">
-                        <div class="col_half">
+                           <div class="col_half">
                               <label>Fecha de inicio</label>
                               <div class="select_field">
-                              <span><i class="fa-solid fa-calendar-days"></i></span>
+                                 <span><i class="fa-solid fa-calendar-days"></i></span>
                                  <input name="FECHAINICIO" type="date" id="FECHAINICIO" placeholder="dd/mm/aaaa" value="<?= $entity->FechaInicio; ?>" />
                               </div>
                            </div>
                            <div class="col_half">
                               <label>Teléfono</label>
                               <div class="input_field">
-                              <span><i class="fa-solid fa-phone"></i></span>
+                                 <span><i class="fa-solid fa-phone"></i></span>
                                  <input name="TELEFONO" type="text" id="TELEFONO" value="<?= $entity->Telefono; ?>" size="35" />
                               </div>
                            </div>
@@ -229,8 +222,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         <div class="row clearfix">
                            <div class="col">
                               <label>Descripción</label>
-                              <div class="textarea_field"> 
-                              <span><i class="fa-solid fa-message"></i></span>
+                              <div class="textarea_field">
+                                 <span><i class="fa-solid fa-message"></i></span>
                                  <textarea name="DESCRIPCION" cols="80" rows="10" id="DESCRIPCION"><?= $entity->Descripcion; ?></textarea>
                               </div>
                            </div>
@@ -258,16 +251,16 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                            <div class="col_half">
                               <label></label>
                               <div class="input_field">
-                              <span><i class="fa-solid fa-floppy-disk"></i></span>
+                                 <span><i class="fa-solid fa-floppy-disk"></i></span>
                                  <button type="submit" class="button" name="ENVIAR" id="ENVIAR">Salvar</button>
                               </div>
                            </div>
                            <div class="col_half">
                               <label></label>
                               <div class="input_field">
-                              <span><i class="fa-solid fa-list"></i></span>
+                                 <span><i class="fa-solid fa-list"></i></span>
                                  <?php
-                                 $volver = 'location.href="'.$listPage.'?mostrar=' . $mostrar . '&pagina=' . $pagina . '"';
+                                 $volver = 'location.href="' . $listPage . '?mostrar=' . $mostrar . '&pagina=' . $pagina . '"';
                                  ?>
                                  <input type="button" name="VOLVER2" id="VOLVER2" class="button" value="Volver al listado" onclick='<?= $volver ?>' />
                               </div>
@@ -282,4 +275,5 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
       </form>
    </div>
 </body>
+
 </html>

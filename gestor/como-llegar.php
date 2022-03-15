@@ -27,10 +27,10 @@ echo $lastInsertedId;
             $dc->Set($ComoLlegarManager->Get($lastInsertedId), 'ComoLlegar');
         }
     } else {
-        $ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:<br/>";
-        $ErrorMsn .= "<blockquote>";
-        $ErrorMsn .= $ErrorMsg;
-        $ErrorMsn .= "</blockquote>";
+        $ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:"
+        . "<ul>"
+        . $ErrorMsg
+        . "</ul>";
     }
 }
 
@@ -71,6 +71,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 </head>
 
 <body>
+<?php
+include('includes/error.php');
+?>  
     <div class="wrapper">
         <header id="header" class="grid">
             <div class="grid-cell">

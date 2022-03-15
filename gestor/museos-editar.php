@@ -42,10 +42,10 @@ $pagina = $_GET["pagina"] ?? '';
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
    $entity->_POST();
    if ($entity->Museo == "") {
-      $ErrorMsg = "<span class=\"errortexto\">Museo</span><br/>";
+      $ErrorMsg = "<li class=\"errortexto\">Museo</li>";
    }
    if ($entity->idNucleoUrbano == "") {
-      $ErrorMsg = "<span class=\"errortexto\">Nucleo Urbano</span><br/>";
+      $ErrorMsg .= "<li class=\"errortexto\">Nucleo Urbano</li>";
    }
    if ($ErrorMsg == "") {
       $entity->Fecha = date("Y-m-d H:m:s");
@@ -56,10 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
          $dc->Set($entityManager->Get($lastInsertedId), $entityTable);
       }
    } else {
-      $ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:<br/>";
-      $ErrorMsn .= "<blockquote>";
-      $ErrorMsn .= $ErrorMsg;
-      $ErrorMsn .= "</blockquote>";
+      $ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:"
+         . "<ul>"
+         . $ErrorMsg
+         . "</ul>";
    }
 }
 
@@ -93,17 +93,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 </head>
 
 <body>
-   <?php
-   if ($ErrorMsn != "") {
-   ?>
-      <div id="error">
-         <div id="errorcab" align="right"><a href="#" onclick="document.getElementById('error').style.display='none';disDiv('contenido',false);">Cerrar&nbsp;[x]</a>&nbsp;</div>
-         <div id="errormsn"><?php echo $ErrorMsn; ?>
-         </div>
-      </div>
-   <?php
-   }
-   ?>
+<?php
+  include('includes/error.php');
+  ?>
    <div class="wrapper">
       <header id="header" class="grid">
          <div class="grid-cell">
