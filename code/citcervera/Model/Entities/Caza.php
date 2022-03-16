@@ -34,4 +34,20 @@ class Caza extends EntityBase implements IEntityBase
 	{
 		return $this->_id;
 	}
+
+	function _POST()
+	{
+		$this->idCaza 		= parent::TakePOST('IDCAZA');
+		$this->ImgDescripcion 	= parent::TakePOST('IMGDESCRIPCION', 255);
+		$this->Descripcion 	= htmlentities(parent::TakePOST('DESCRIPCION'), ENT_QUOTES);
+		$this->Fecha 			= parent::TakePOST('FECHA');
+	}
+
+	function _GET()
+	{
+		$this->idCaza 		= parent::TakeGET('IDCAZA');
+		$this->ImgDescripcion 	= parent::TakeGET('IMGDESCRIPCION', 255);
+		$this->Descripcion 		= htmlentities(parent::TakeGET('DESCRIPCION'), ENT_QUOTES);
+		$this->Fecha 			= parent::TakeGET('FECHA');
+	}
 }
