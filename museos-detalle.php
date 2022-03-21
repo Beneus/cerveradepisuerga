@@ -2,7 +2,6 @@
 include("includes/funciones.php");
 include("includes/Conn.php");
 
-$idMuseo = $_GET["idMuseo"] ?? '';
 $msnError = '';
 
 use citcervera\Model\Entities\Museos;

@@ -1,340 +1,299 @@
 <?php
+
+namespace citcervera;
+
 include("includes/Conn.php");
 include("includes/variables.php");
 include("includes/funciones.php");
 
-$TipoTramo = $_GET["TipoTramo"] ?? '';
-$Buscar = $_GET["Buscar"] ?? '';
-$Pagina = $_GET["Pagina"] ?? '';
-if (!is_numeric($Pagina))$Pagina = 1;
-$Mostrar = $_GET["Mostrar"] ?? '';
-if (!is_numeric($Mostrar))$Mostrar = 10;
+use citcervera\Model\Connections\DB;
+use citcervera\Model\Managers\DataCarrier;
+use citcervera\Model\Managers\Manager;
+
+$editPage = 'pesca-editar.php';
+$listPage = 'pesca-listado.php';
+$pageName = curPageName();
+
+$entityName = __NAMESPACE__ . '\Model\Entities\Pesca';
+$entity = new $entityName();
+$entityId = $entity->getId();
+$entityTable = $entity->getTable();
+
+$dc = new DataCarrier();
+$entityManager = new Manager($entity);
+$db = new DB();
+
+$pageName = curPageName();
+$pagina_actual = '';
+$titulo = '';
+$idSubservicio = '';
+$buscar = $_GET["buscar"] ?? '';
+$tipoTramo = $_GET["tipoTramo"] ?? '';
+$pagina = $_GET["pagina"] ?? '';
+if (!is_numeric($pagina)) $pagina = 1;
+$mostrar = $_GET["mostrar"] ?? '';
+if (!is_numeric($mostrar)) $mostrar = 10;
+
+$queryString = '&buscar=' . $buscar . '&tipoTramo=' . $tipoTramo;
+
+function GetQuery($buscar, $tipoTramo)
+{
+	$sql = "SELECT * FROM Pesca  where idPesca > 0 ";
+	if ($tipoTramo != "") {
+		$sql .= " and TipoTramo = '$tipoTramo' ";
+	}
+
+	if ($buscar != '') {
+	}
+	return $sql;
+}
+
+
+function SearchResult($query, $mostrar, $pagina, $db)
+{
+	$list = $db->query($query);
+	$numTotalRegistros = count($list);
+
+	if ($mostrar > 0) {
+		$query = $query . " LIMIT " . ((($pagina * $mostrar) - $mostrar)) . "," . $mostrar;
+	} else {
+		$query = $query . " LIMIT " . ((($pagina * $numTotalRegistros) - $numTotalRegistros)) . "," . ($numTotalRegistros);
+	}
+	return ['total' => $numTotalRegistros, 'result' => $db->query($query, 'fetch_object')];
+}
+
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8" />
-<meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
-<title>Gestor de contenidos: Flora listado</title>
-<link href="css/menu.css" rel="stylesheet" type="text/css" />
-<link href="css/gestor.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/funciones.js" language="javascript"></script>
-<script type="text/javascript">
+	<title>Gestor de contenidos: <?= $entityTable; ?> listado</title>
+	<link rel="stylesheet" href="css/beneus.css" />
+	<link rel="stylesheet" href="css/menu.css" />
+	<link rel="stylesheet" href="css/table.css" />
+	<link rel="stylesheet" href="css/form.css" type="text/css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="http://code.jquery.com/jquery-latest.pack.js" type="text/javascript"></script>
+	<script type="text/javascript" src="js/funciones.js"></script>
+	<script>
+		function SeleccionNucleoUrbano(x) {
+			location.href = "<?= $pageName; ?>?Mostrar=<?php echo $Mostrar; ?>&idNucleoUrbano=" + x.value;
 
-function EliminarEntrada(pag){
-
-var num_idleg = document.getElementsByName("idDir").length;
-var cad_eliminados = "";
-for (i=0; i<num_idleg; i++){
-	if (document.getElementsByName("idDir")[i].checked)
-	{
-
-		if (cad_eliminados == "")
-		{
-			cad_eliminados += document.getElementsByName("idDir")[i].value;
 		}
-		else
-		{
-			cad_eliminados += "-" + document.getElementsByName("idDir")[i].value;
+
+		function CambiarClasificacion(x) {
+			location.href = "<?= $pageName; ?>?mostrar=<?php echo $mostrar; ?>&tipoTramo=" + x.value;
 		}
-	}
-}
-var urldest = "pesca-eliminar.php";
-var cad = "Pagina=" + pag +"&cadEliminados=" + cad_eliminados;
-if (cad_eliminados != ""){
 
-window.open(urldest+"?"+cad,'','width=200,height=200');
-}
-}
+		function Buscar(x) {
+			location.href = "<?= $pageName; ?>?buscar=" + x.value;
+		}
 
-function SelTodos(x){
-var CheckDir = document.getElementsByName('idDir');
+		function Paginar(x) {
+			location.href = "<?= $pageName; ?>?idNucleoUrbano=<?= $idNucleoUrbano; ?>&mostrar=" + x.value;
+		}
 
-for (i=0;i<CheckDir.length;i++){
-if (x.checked){
-CheckDir[i].checked = true;
-}else{
-CheckDir[i].checked = false;
-}
+		function CambiarPagina(x) {
+			location.href = "<?= $pageName; ?>?mostrar=<?= $mostrar; ?>&idNucleoUrbano=<?= $idNucleoUrbano; ?>&pagina=" + x.value;
+		}
 
-}
+		function SelTodos(x) {
+			var CheckDir = document.getElementsByName('idDir');
 
-}
-function SeleccionaServicio(x){
-location.href = "pesca-listado.php?idsubsevicio="+x.value;
+			for (i = 0; i < CheckDir.length; i++) {
+				if (x.checked) {
+					CheckDir[i].checked = true;
+				} else {
+					CheckDir[i].checked = false;
+				}
 
-}
+			}
 
-function CambiarClasificacion(x){
-location.href = "pesca-listado.php?Mostrar=<?php echo $Mostrar;?>&TipoTramo="+x.value;
+		}
 
-}
-function Paginar(x){
-location.href = "pesca-listado.php?&Mostrar="+x.value;
+		function EliminarEntrada(pag) {
+			var num_idleg = document.getElementsByName("idDir").length;
+			var cad_eliminados = "";
+			for (i = 0; i < num_idleg; i++) {
+				if (document.getElementsByName("idDir")[i].checked) {
 
-}
-function CambiarPagina(x){
-location.href = "pesca-listado.php?Mostrar=<?php echo $Mostrar;?>&Pagina="+x.value;
+					if (cad_eliminados == "") {
+						cad_eliminados += document.getElementsByName("idDir")[i].value;
+					} else {
+						cad_eliminados += "-" + document.getElementsByName("idDir")[i].value;
+					}
+				}
+			}
+			var urldest = "entity-eliminar.php";
+			var cad = "page=" + pag + "&cadEliminados=" + cad_eliminados + "&Ambito=<?= $entity->GetTable() ?>";
 
-}
-function Buscar(x){
-location.href = "pesca-listado.php?Buscar=" + x.value;
-}
-</script>
+			if (cad_eliminados != "") {
+
+				window.open(urldest + "?" + cad, '', 'width=200,height=200');
+			}
+		}
+	</script>
 </head>
 
 <body>
-<div id="espere" style="display:none" >
-<div align="center"><img src="images/cargando.gif" alt="Enviando datos" width="32" height="32" /></div>
-</div>
-<div id="error" style="display:none" >
-<div id="errorcab" align="right"><a href="#" onclick="document.getElementById('error').style.display='none';disDiv('contenido',false);">Cerrar&nbsp;[x]</a>&nbsp;</div>
-<div id="errormsn" >
-</div>
-</div>
-<div id="cab">
-<div><img src="images/cab.gif" width="1024" height="100" border="0" usemap="#Map" />
-  <map name="Map" id="Map">
-    <area shape="rect" coords="857,40,1011,73" href="#" onclick="location.href='desconexion.php';" alt="Desconectar del gestor" />
-  </map>
-</div>
-</div>
-<div id="menu">
-<?php echo $strMenu; ?>
-</div>
-<nobr clear="left" ></nobr>
-<div id="submenu">
-<?php echo $strSubMenu; ?>
-</div>
-<div id="opciones">
-<ul>
-	<li><a title="A&ntilde;adir introducci&oacute;n" href="pesca-introduccion.php">Editar introducción</a></li>
-	<li><a title="a&ntilde;adir imagen a la introducci&oacute;n"  href="galeria-fotografica.php?Ambito=Pesca&idAmbito=0&Campo=idPesca&NCampo=idPesca&Referer=pesca-introduccion.php">A&ntilde;adir imagen introducci&oacute;n</a> </li>
-    <li><a title="a&ntilde;adir imagen a la introducci&oacute;n"  href="galeria-documentos.php?Ambito=Pesca&idAmbito=0&Campo=idPesca&NCampo=idPesca&Referer=pesca-introduccion.php">A&ntilde;adir documento introducci&oacute;n</a> </li>
-	<li><a title="A&ntilde;adir entrada al directorio" href="pesca-entrada.php">A&ntilde;adir entrada gu&iacute;a micol&oacute;gica</a></li>
-	<li class="liselect"><a title="Listado del directorio"  href="pesca-listado.php">Listado tramo de pesca</a></li>
-</ul>
-</div>
-<div class="separador">&nbsp;</div>
-<div id="contenido">
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td class="lateralizq">&nbsp;</td>
-<td><form id="form1" name="form1" method="post" action="">
-<label>Buscar
-<input name="BUSCAR" type="text" id="BUSCAR" value="<?php echo $Buscar; ?>" />
-</label><input name="BUSCARBOTON" type="button" value="Buscar" id="BUSCARBOTON" onclick="Buscar(document.getElementById('BUSCAR'));" />
-</form>    </td>
-<td>
-<select name="TIPOTRAMO" id="TIPOTRAMO" onchange="CambiarClasificacion(this);">
-						<option value="">Todos los tramos</option>    
-            <option value="Coto" <?php if ($TipoTramo =="Coto") echo "selected"; ?>>Coto</option>    
-            <option value="Tramo Libre" <?php if ($TipoTramo =="Tramo Libre") echo "selected"; ?>>Tramo Libre</option>
-            <option value="Escenario deportivo" <?php if ($TipoTramo =="Escenario deportivo") echo "selected"; ?>>Escenario deportivo</option>
-          </select>
-</td>
-<td>
-<span class="opcionElegida">Mostrar:</span>
-<select name="MOSTRAR" onChange="Paginar(this);" class="txt_inputs_buscador">
-<option value="10" <?php if ($Mostrar == 10) echo "selected"; ?>>10</option>
-<option value="25" <?php if ($Mostrar == 25) echo "selected"; ?>>25</option>
-<option value="50" <?php if ($Mostrar == 50) echo "selected"; ?>>50</option>
-<option value="100" <?php if ($Mostrar == 100) echo "selected"; ?>>100</option>
-<option value="0" <?php if ($Mostrar == 0) echo "selected"; ?>>Todos</option>
-</select>
-</td>
-<td class="lateralizq">&nbsp;</td>
-</tr>
-</table>
-
-<?php
+	<div class="wrapper">
+		<header id="header" class="grid">
+			<div class="grid-cell">
+				<div class="grid">
+					<a href="/"><img id="logo" src="images/LOGO-CIT-CERVERA.gif"></a>
+				</div>
+			</div>
+		</header>
+		<label for="menu-toggle" class="label-toggle"></label>
+		<input type="checkbox" id="menu-toggle" />
+		<nav>
+			<?php
+			echo $strMenu;
+			?>
+		</nav>
+		<div class="grid container">
+			<div class="main">
+				<div id="opciones">
+					<ul>
+						<li>
+							<h2><?= explode('.', curPageName())[0] ?></h2>
+						</li>
+						<?php if (($_SESSION["TipoUsuario"] == "ADMIN") or ($_SESSION["TipoUsuario"] == "USERCIT")) { ?>
+							<li><a href="<?= $editPage ?>">A&ntilde;adir entrada</a></li>
+						<?php } ?>
+						<li><a href="<?= $listPage ?>">Listado</a> </li>
+					</ul>
+				</div>
 
 
-//$link = ConnBDCervera();
-$link = ConnBDCervera();
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+				<div class="content">
+					<table role="table" id="noticiasSearch">
+						<thead role="rowgroup">
+							<tr>
+								<th role="columnheader">Buscar</th>
+								<th role="columnheader">Tramo</th>
+								<th role="columnheader">Mostrar</th>
+							</tr>
+						</thead>
+						<tbody role="rowgroup">
+							<tr>
+								<td>
+									<form id="form1" name="form1" method="post" action="">
+										<label>Buscar
+											<input type="text" name="BUSCAR" id="BUSCAR" />
+										</label>
+										<input name="BUSCARBOTON" type="button" value="Buscar" id="BUSCARBOTON" onclick="Buscar(document.getElementById('BUSCAR'));" />
+									</form>
+								</td>
+								<td role="columnheader">
+									<select name="TIPOTRAMO" id="TIPOTRAMO" onchange="CambiarClasificacion(this);">
+										<option value="">Todos los tramos</option>
+										<option value="Coto" <?php if ($tipoTramo == "Coto") echo "selected"; ?>>Coto</option>
+										<option value="Tramo Libre" <?php if ($tipoTramo == "Tramo Libre") echo "selected"; ?>>Tramo Libre</option>
+										<option value="Escenario deportivo" <?php if ($tipoTramo == "Escenario deportivo") echo "selected"; ?>>Escenario deportivo</option>
+									</select>
+								</td>
+								<td>
+									<span class="opcionElegida">Mostrar:</span>
+									<select name="MOSTRAR" onChange="Paginar(this);" class="txt_inputs_buscador">
+										<option value="10" <?php if ($mostrar == 10) echo "selected"; ?>>10</option>
+										<option value="25" <?php if ($mostrar == 25) echo "selected"; ?>>25</option>
+										<option value="50" <?php if ($mostrar == 50) echo "selected"; ?>>50</option>
+										<option value="100" <?php if ($mostrar == 100) echo "selected"; ?>>100</option>
+										<option value="0" <?php if ($mostrar == 0) echo "selected"; ?>>Todos</option>
+									</select>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<?php
+				$query = GetQuery($buscar, $tipoTramo);
+				$res = SearchResult($query, $mostrar, $pagina, $db);
+				$numTotalRegistros = $res['total'];
+				$list = $res['result'];
 
-$sql = "SELECT idPesca, Rio, Nombre, TipoTramo, TipoPesca, PeriodoHabil, DiasHabiles FROM Pesca  where idPesca > 0 ";
-if ($TipoTramo != ""){
-	$sql .= " and TipoTramo = '$TipoTramo' ";
-	if($Buscar != ""){
-		$sql .= " and  Setas.NombreComun like '%$Buscar%' "
-		. " or Setas.NombreCientifico like '%$Buscar%' "
-		. " or Setas.Autor like '%$Buscar%' "
-		. " or Setas.Clasificacion like '%$Buscar%' "
-		. " or Setas.Sombrero like '%$Buscar%' "
-		. " or Setas.Pie like '%$Buscar%' "
-		. " or Setas.Laminas like '%$Buscar%' "
-		. " or Setas.Himenio like '%$Buscar%' "
-		. " or Setas.Exporada like '%$Buscar%' "
-		. " or Setas.Carne like '%$Buscar%' "
-		. " or Setas.EpocaHabitat like '%$Buscar%' "
-		. " or Setas.Comestibilidad like '%$Buscar%' "; 
-		}
-}else{
-	if($Buscar != ""){
-		$sql .= " where  Setas.NombreComun like '%$Buscar%' "
-		. " or Setas.NombreCientifico like '%$Buscar%' "
-		. " or Setas.Autor like '%$Buscar%' "
-		. " or Setas.Clasificacion like '%$Buscar%' "
-		. " or Setas.Sombrero like '%$Buscar%' "
-		. " or Setas.Pie like '%$Buscar%' "
-		. " or Setas.Laminas like '%$Buscar%' "
-		. " or Setas.Himenio like '%$Buscar%' "
-		. " or Setas.Exporada like '%$Buscar%' "
-		. " or Setas.Carne like '%$Buscar%' "
-		. " or Setas.EpocaHabitat like '%$Buscar%' "
-		. " or Setas.Comestibilidad like '%$Buscar%' "; 
-		}
-	
-}
+				if ($mostrar > 0) {
+					$numPags = ceil($numTotalRegistros / $mostrar);
+				} else {
+					$numPags = 1;
+				}
+
+				if ($mostrar > 0) {
+					$sigmostrar = $mostrar;
+				} else {
+					$mostrar = $numTotalRegistros;
+					$sigmostrar = 0;
+				}
+
+				if ($numTotalRegistros > 0) {
+				?>
+					<div class="content">
+						<table role="table" id="noticias">
+							<thead role="rowgroup">
+								<tr role="row">
+									<th role="columnheader">Rio</th>
+									<th role="columnheader">Tramo</th>
+									<th role="columnheader">Tipo Tramo</th>
+									<th role="columnheader">Tipo Pesca</th>
+									<th role="columnheader">Periodo habil</th>
+									<th role="columnheader">Días habiles</th>
+									<th role="columnheader">Editar</th>
+									<th role="columnheader"><input type="checkbox" name="idTodosDir" value="" onclick="SelTodos(this);" alt="Seleccionar todos" title="Seleccionar todos" /></th>
+								</tr>
+							</thead>
 
 
-$result = mysqli_query($link,$sql);
-if (!$result)
-{
-$message = "Invalid query".mysqli_error($link)."\n";
-$message .= "whole query: " .$sql;	
-die($message);
-exit;
-}
+							<tbody role="rowgroup">
+								<?php
+								$clasefila = "filagris";
+								foreach ($list as $item) {
+								?>
+									<tr role="row">
+										<td role="cell"><?= $item->Rio; ?></td>
+										<td role="cell"><?= $item->Nombre; ?></td>
+										<td role="cell"><?= $item->TipoTramo; ?></td>
+										<td role="cell"><?= $item->TipoPesca; ?></td>
+										<td role="cell"><?= $item->PeriodoHabil; ?></td>
+										<td role="cell"><?= $item->DiasHabiles; ?></td>
+										<td role="cell">
+											<div align="center">
+												<input type="button" name="EDITAR" value="Editar" class="boton_button" onclick="location.href='<?= $editPage ?>?<?= $entityId; ?>=<?= $item->$entityId; ?>&pagina=<?php echo $pagina; ?>&mostrar=<?= $sigmostrar; ?>&titulo=<?php echo $titulo; ?>'" />
+											</div>
+										</td>
+										<td role="cell">
+											<div align="center">
+												<input type="checkbox" name="idDir" value="<?php echo $item->$entityId; ?>" />
+											</div>
+										</td>
 
-$NumTotalRegistros = mysqli_num_rows($result);
-//calculo el total de p�&copy; nas
-$max = mysqli_num_rows($result);
-if($Mostrar > 0) {$numPags=ceil($NumTotalRegistros/$Mostrar);}else{$numPags=1;}
+									</tr>
 
-$sql = $sql . " order by Rio ";
+								<?php
 
-if ($Mostrar > 0){
-$sql = $sql . " LIMIT ". ((($Pagina * $Mostrar) - $Mostrar) ) .",". (($Pagina * $Mostrar) - 1 );
-}else{
-$Mostrar = $NumTotalRegistros;
-$sql = $sql . " LIMIT ". ((($Pagina * $Mostrar) - $Mostrar) ) .",". ($NumTotalRegistros);	
-}
+								}
+								?>
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+								<tr role="row">
+									<td role="cell" colspan="7"></td>
+									<td role="cell"><input type="button" name="ELIMINAR" value="Eliminar" class="boton_button" onClick="EliminarEntrada(<?php echo $pagina; ?>)" /></td>
+								</tr>
+							</tbody>
+						</table>
 
-$result = mysqli_query($link,$sql);
-if (!$result)
-{
-$message = "Invalid query".mysqli_error($link)."\n";
-$message .= "whole query: " .$sql;	
-die($message);
-exit;
-}
-$max = mysqli_num_rows($result);	
-if($max > 0){
-?>
-<table width="924" border="0" cellpadding="0" cellspacing="0">
-<tr class="titulolistado">
-<td class="lateralizq">&nbsp;</td>
-<td>R&iacute;o</td>
-<td>Nombre del tramo</td>
-<td>Tipo de tramo</td>
-<td>Tipo de pesca</td>
-<td>Periodo habil</td>
-<td>D&iacute;as habiles</td>
-<td><div align="center">
-<input type="checkbox" name="idTodosDir" value="" onclick="SelTodos(this);" alt="Seleccionar todos" title="Seleccionar todos"/>
-</div></td>
-<td><div align="center"></div></td>
-<td class="lateralizq">&nbsp;</td>
-</tr>
-<?php
-$clasefila = "filagris";
-while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+						<?php Pagination($pageName, $pagina, $mostrar, $numTotalRegistros, $numPags, $queryString); ?>
 
-if ($clasefila == "filagris" ){
-$clasefila = "filablanca";
-}else{
-$clasefila = "filagris";
-}
-?>
-<tr class="<?php echo $clasefila; ?>">
-<td>&nbsp;</td>
-<td><?php echo $row["Rio"];?></td>
-<td><?php echo $row["Nombre"];?></td>
-<td><?php echo $row["TipoTramo"];?></td>
-<td><?php echo $row["TipoPesca"];?></td>
-<td><?php echo $row["PeriodoHabil"];?></td>
-<td><?php echo $row["DiasHabiles"];?></td>
-<td><div align="center">
-<input type="checkbox" name="idDir" value="<?php echo $row["idPesca"];?>"/>
-</div></td>
-<td><div align="center">
-  <input type="button" name="EDITAR" value="Editar" class="boton_button" onclick="location.href='pesca-editar.php?idPesca=<?php echo $row["idPesca"];?>&page=<?php echo $Pagina;?>'"/>
-</div></td>
-<td class="lateralizq">&nbsp;</td>
-</tr>
+					</div>
+				<?php
 
-<?php
-
-}
-?>
-
-<tr class="titulolistado">
-<td class="lateralizq">&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td><div align="center"><input type="button" name="ELIMINAR" value="Eliminar" class="boton_button" onClick="EliminarEntrada(<?php echo $Pagina;?>)"/></div></td>
-<td><div align="center"></div></td>
-<td class="lateralizq">&nbsp;</td>
-</tr>
-<tr class="titulolistado">
-<td class="lateralizq">&nbsp;</td>
-<td>&nbsp;</td>
-<td><?php 
-if(($Pagina > 1) and ($Mostrar < $NumTotalRegistros)){
-echo "<a href=\"pesca-listado.php?Pagina=".($Pagina - 1)."&Mostrar=$Mostrar&buscar=$Buscar\" class=\"linkBlanco\"> << Anterior </a>";
-}
-if(($Pagina < $numPags ) and ($Mostrar < $NumTotalRegistros)){
-echo "<a href=\"pesca-listado.php?Pagina=".($Pagina + 1)."&Mostrar=$Mostrar&buscar=$Buscar\" class=\"linkBlanco\"> Siguiente >> </a>";
-}
-?></td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>
-<?php
-if(($numPags > 1) and ($Mostrar < $NumTotalRegistros)){
-echo "Ir a P&aacute;gina: ";
-echo "<select name=\"Pagina\" class=\"txt_inputs_buscador\" onchange=\"CambiarPagina(this);\">";
-for ($i = 1;$i <= $numPags; $i++){
-if ($i == $Pagina){
-echo "<option value=\"$i\" selected>$i</option>";
-}else{
-echo "<option value=\"$i\">$i</option>";
-}
-}
-echo "</select>";
-}
-?></td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td class="lateralizq">&nbsp;</td>
-</tr>
-</table>
-
-<?php
-}else{
-// No hay entradas en el directorio
-?>
-<div class="errortexto">No hay entradas en Rutas.</div>
-<?php
-}
-mysqli_free_result($result);
-mysqli_close($link);	
-?>
-</div>
-<br clear="left" />
+				}
+				?>
+			</div>
+			<?php
+			include("./footer.php");
+			?>
+		</div>
+	</div>
 </body>
+
 </html>

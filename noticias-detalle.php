@@ -2,11 +2,8 @@
 include("includes/funciones.php");
 include("includes/Conn.php");
 
-use citcervera\Model\Entities\Museos;
 use citcervera\Model\Managers\DataCarrier;
 use citcervera\Model\Managers\Manager;
-use citcervera\Model\Entities\Imagenes;
-use citcervera\Model\Entities\NucleosUrbanos;
 
 $dc = new DataCarrier();
 $Manager = new Manager();

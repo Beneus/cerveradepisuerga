@@ -24,7 +24,6 @@ $dc = new DataCarrier();
 
 $ErrorMsg = "";
 
-$idMuseo = $_GET[$entityId] ?? '';
 $mostrar = $_GET["mostrar"] ?? '';
 $pagina = $_GET["pagina"] ?? '';
 

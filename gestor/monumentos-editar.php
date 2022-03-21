@@ -33,7 +33,6 @@ $dc->Set($nucleosUrbanosManager->GetAll(), 'NucleosUrbanos');
 
 $ErrorMsg = "";
 
-$idMuseo = $_GET[$entityId] ?? '';
 $mostrar = $_GET["mostrar"] ?? '';
 $pagina = $_GET["pagina"] ?? '';
 

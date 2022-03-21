@@ -33,7 +33,6 @@ $dc->Set($nucleosUrbanosManager->GetAll(), 'NucleosUrbanos');
 $currentPage = curPageName();
 $ErrorMsg = "";
 
-$idMuseo = $_GET[$entityId] ?? '';
 $mostrar = $_GET["mostrar"] ?? '';
 $pagina = $_GET["pagina"] ?? '';
 
@@ -43,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
    $entity->_POST();
 
    if ($entity->ActoDeportivo == "") {
-      $ErrorMsg = "<li class=\"errortexto\">Museo</li>";
+      $ErrorMsg = "<li class=\"errortexto\">Acto Deportivo</li>";
    }
    if ($entity->idNucleoUrbano == "") {
       $ErrorMsg .= "<li class=\"errortexto\">Nucleo Urbano</li>";
