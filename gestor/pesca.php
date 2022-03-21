@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 							<h2><?= explode('.', curPageName())[0] ?></h2>
 						</li>
 						<li class="liselect"><a title="A&ntilde;adir introducci&oacute;n" href="pesca.php">Editar introducción</a></li>
-						<li><a title="A&ntilde;adir tramo de pesca" href="pesca-entrada.php">A&ntilde;adir entrada tramo de pesca</a></li>
+						<li><a title="A&ntilde;adir tramo de pesca" href="pesca-editar.php">A&ntilde;adir entrada tramo de pesca</a></li>
 						<li><a title="Listado del directorio" href="pesca-listado.php">Listado tramo de pesca</a></li>
 					</ul>
 				</div>

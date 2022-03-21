@@ -7,7 +7,7 @@ use citcervera\Model\Interfaces\IEntityBase;
 class Religion extends EntityBase implements IEntityBase
 {
 	private $_tableName = 'Religion';
-	private $_id = 'IdReligion';
+	private $_id = 'idReligion';
 	public $idReligion;
 	public $ImgDescripcion;
 	public $Descripcion;
@@ -34,4 +34,23 @@ class Religion extends EntityBase implements IEntityBase
 	{
 		return $this->_id;
 	}
+
+	function _POST()
+	{
+		$this->idReligion 	= parent::TakePOST('IDRELIGION');
+		$this->ImgDescripcion 	= parent::TakePOST('IMGDESCRIPCION', 255);
+		$this->Descripcion 		= htmlentities(parent::TakePOST('DESCRIPCION'), ENT_QUOTES);
+		$this->Fecha 			= parent::TakePOST('FECHA');
+	}
+
+	function _GET()
+	{
+		$this->idReligion 	= parent::TakeGET('IDRELIGION');
+		$this->ImgDescripcion 	= parent::TakeGET('IMGDESCRIPCION', 255);
+		$this->Descripcion 		= htmlentities(parent::TakeGET('DESCRIPCION'), ENT_QUOTES);
+		$this->Fecha 			= parent::TakeGET('FECHA');
+	}
+
+
+
 }

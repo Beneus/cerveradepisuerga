@@ -127,8 +127,12 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
             <li>
               <h2><?= explode('.', curPageName())[0] ?></h2>
             </li>
-            <li class="liselect"><a href="<?= $currentPage; ?>">A&ntilde;adir entrada</a></li>
-            <li><a href="<?= $listPage ?>">Listado</a></li>
+            <?php if (($_SESSION["TipoUsuario"] == "ADMIN") or ($_SESSION["TipoUsuario"] == "USERCIT")) { ?>
+							<li class="liselect"><a title="A&ntilde;adir introducci&oacute;n" href="pesca.php">Editar introducción</a></li>
+							<li><a title="A&ntilde;adir tramo de pesca" href="pesca-editar.php">A&ntilde;adir entrada tramo de pesca</a></li>
+							
+						<?php } ?>
+						<li><a title="Listado del directorio" href="pesca-listado.php">Listado tramo de pesca</a></li>
           </ul>
         </div>
 
