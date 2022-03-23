@@ -1,51 +1,47 @@
 <?php
+
+namespace citcervera;
+
 include("includes/Conn.php");
 include("includes/variables.php");
 include("includes/funciones.php");
 
 use citcervera\Model\Connections\DB;
-use citcervera\Model\Entities\Noticias;
 use citcervera\Model\Managers\DataCarrier;
 use citcervera\Model\Managers\Manager;
 
+$editPage = 'noticias-editar.php';
+$listPage = 'noticias.php';
+$currentPage = curPageName();
+
+$entityName = __NAMESPACE__ . '\Model\Entities\Noticias';
+
+$entity = new $entityName();
+$entityId = $entity->getId();
+$entityTable = $entity->getTable();
+
+$entityManager = new Manager($entity);
 $dc = new DataCarrier();
-$Noticias = new Noticias();
-$noticiasManager = new Manager($Noticias);
 $db = new DB();
 
-$ErrorMsg = "";
-$idNoticia = $_GET["idNoticia"] ?? '';
-$mostrar = $_GET["mostrar"] ?? '';
-$pagina = $_GET["pagina"] ?? '';
 
-$Titulo = '';
-$Entradilla = '';
-$FechaNoticia = '';
-$Fuente = '';
-$ImgNoticia = '';
-$DocNoticia = '';
-$Cuerpo = '';
-$ImgArchivo = '';
-$ImgPath = '';
-$AnchoThumb = '';
-$AltoThumb = '';
-$DocArchivo = '';
-$DocPath = '';
+$currentPage = curPageName();
+$ErrorMsg = "";
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-	$Noticias->_POST();
-	if ($Noticias->Titulo == "") {
+	$entity->_POST();
+	if ($entity->Titulo == "") {
 		$ErrorMsg = "<li class=\"errortexto\">Titulo.</li>";
 	}
 	if ($ErrorMsg == "") {
-		$Noticias->Fecha = date("Y-m-d H:m:s");
-		$noticiasManager->Save($Noticias);
-		$lastInsertedId = $noticiasManager->GetLastInsertedId();
+		$entity->Fecha = date("Y-m-d H:m:s");
+		$entityManager->Save($entity);
+		$lastInsertedId = $entityManager->GetLastInsertedId();
 
 		if ($lastInsertedId) {
-			$Noticias->idNoticia = $lastInsertedId;
-			$dc->Set($noticiasManager->Get($lastInsertedId), 'Noticias');
+			$entity->idNoticia = $lastInsertedId;
+			$dc->Set($entityManager->Get($lastInsertedId), 'Noticias');
 		}
 	} else {
 		$ErrorMsn = "Los siguientes campos est&aacute;n vacios o no contienen valores permitidos:"
@@ -57,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
 	if (isset($_GET['idNoticia'])) {
-		$noticiasManager->Get($_GET['idNoticia']);
+		$entityManager->Get($_GET['idNoticia']);
 	}
 }
 
@@ -72,22 +68,13 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 	<link rel="stylesheet" href="css/beneus.css" />
 	<link rel="stylesheet" href="css/menu.css" />
 	<link href="css/form.css" rel="stylesheet" type="text/css">
-	<script type="text/javascript" src="scripts/tiny_mce.js" language="javascript"></script>
-	<script type="text/javascript" src="js/funciones.js" language="javascript"></script>
 
-	<script language="javascript" type="text/javascript">
-		tinyMCE.init({
-			height: "250",
-			mode: "textareas",
-			theme: "advanced",
-			theme_advanced_buttons1: "newdocument,bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink",
-			theme_advanced_buttons1_add: "outdent,indent",
-			theme_advanced_buttons2: "",
-			theme_advanced_buttons3: "",
-			theme_advanced_toolbar_location: "top",
-			theme_advanced_toolbar_align: "left",
-			theme_advanced_path_location: "bottom",
-			extended_valid_elements: "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]"
+	<script type="text/javascript" src="js/funciones.js" language="javascript"></script>
+	<script src="https://kit.fontawesome.com/baa3bdeae8.js" crossorigin="anonymous"></script>
+	<script src="https://cdn.tiny.cloud/1/83pnziyrx0kiq1bgkbpgrc19n68sqvirdkp71te4e9vmqb5e/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+	<script>
+		tinymce.init({
+			selector: '#CUERPO,#ENTRADILLA'
 		});
 	</script>
 </head>
@@ -133,52 +120,58 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 								<h2>Noticias</h2>
 							</div>
 							<form id="formEntrada" method="post" name="formEntrada" action="noticias-editar.php" onsubmit="EnviarEntradaNoticias(this,'editar');return false;">
-								<input type="hidden" name="IDNOTICIA" value="<?= $Noticias->idNoticia; ?>" />
+								<input type="hidden" name="IDNOTICIA" value="<?= $entity->$entityId; ?>" />
 								<div class="row clearfix">
 									<div class="col_half">
 										<label>Título</label>
 										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
-											<input name="TITULO" type="text" id="TITULO" value="<?= $Noticias->Titulo; ?>" size="106" maxlength="100" />
+											<input name="TITULO" type="text" id="TITULO" value="<?= $entity->Titulo; ?>" size="106" maxlength="100" />
 										</div>
 									</div>
 									<div class="col_half">
-										<label>Entradilla</label>
-										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
-											<textarea name="ENTRADILLA" cols="80" rows="5" class="mceNoEditor" id="ENTRADILLA"><?php echo $Noticias->Entradilla; ?></textarea>
-										</div>
+
 									</div>
 								</div>
 								<div class="row clearfix">
 									<div class="col_half">
 										<label>Fecha noticias</label>
 										<div class="input_field">
-											<input name="FECHANOTICIA" type="date" id="FECHANOTICIA" placeholder="dd/mm/aaaa" value="<?= $Noticias->FechaNoticia ? $Noticias->FechaNoticia : date("Y-m-d"); ?>" />
+											<input name="FECHANOTICIA" type="date" id="FECHANOTICIA" placeholder="dd/mm/aaaa" value="<?= $entity->FechaNoticia ? $entity->FechaNoticia : date("Y-m-d"); ?>" />
 										</div>
 									</div>
 									<div class="col_half">
 										<label>Fuente</label>
 										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
-											<input name="FUENTE" type="text" id="FUENTE" value="<?= $Noticias->Fuente; ?>" size="50" />
+											<input name="FUENTE" type="text" id="FUENTE" value="<?= $entity->Fuente; ?>" size="50" />
 										</div>
 									</div>
 								</div>
+								<div class="row clearfix">
+									<div class="col">
+										<label>Entradilla</label>
+										<div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
 
+											<textarea name="ENTRADILLA" cols="80" rows="5" class="mceNoEditor" id="ENTRADILLA"><?php echo $entity->Entradilla; ?></textarea>
+
+										</div>
+									</div>
+								</div>
 								<div class="row clearfix">
 									<div class="col">
 										<label>Cuerpo de la noticia</label>
 										<div class="textarea_field"> <span><i aria-hidden="true" class="fa fa-comment"></i></span>
 
 											<textarea name="CUERPO" cols="80" rows="80" id="CUERPO">
-												<?= $Noticias->Cuerpo; ?></textarea>
+												<?= $entity->Cuerpo; ?></textarea>
 											</textarea>
 
 										</div>
 									</div>
 								</div>
 
-								<?php if ($Noticias->idNoticia) {
-									$imagenUrl = 'location.href="galeria-fotografica.php?Ambito=Noticias&idAmbito=' . $Noticias->idNoticia . '&Campo=idNoticia&NCampo=Noticias&Referer=noticias-editar.php"';
-									$documentUrl = 'location.href="galeria-documentos.php?Ambito=Noticias&idAmbito=' . $Noticias->idNoticia . '&Campo=idNoticia&NCampo=Noticias&Referer=noticias-editar.php"';
+								<?php if ($entity->idNoticia) {
+									$imagenUrl = 'location.href="galeria-fotografica.php?Ambito=Noticias&idAmbito=' . $entity->idNoticia . '&Campo=idNoticia&NCampo=Noticias&Referer=noticias-editar.php"';
+									$documentUrl = 'location.href="galeria-documentos.php?Ambito=Noticias&idAmbito=' . $entity->idNoticia . '&Campo=idNoticia&NCampo=Noticias&Referer=noticias-editar.php"';
 
 								?>
 									<div class="row clearfix">
@@ -200,7 +193,6 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 									<div class="col_half">
 										<label></label>
 										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
-											<input type="hidden" name="IDNOTICIA" value="<?php echo $idNoticia; ?>" />
 											<button type="submit" class="button" name="ENVIAR" id="ENVIAR">Salvar</button>
 										</div>
 									</div>
@@ -208,7 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 										<label></label>
 										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
 											<?php
-											$volver = 'location.href="noticias.php?mostrar=' . $mostrar . '&pagina=' . $pagina . '"';
+											$volver = 'location.href="' . $listPage . '?mostrar=' . $mostrar . '&pagina=' . $pagina . '"';
 											?>
 											<input type="button" name="VOLVER2" id="VOLVER2" class="button" value="Volver al listado" onclick='<?= $volver ?>' />
 										</div>

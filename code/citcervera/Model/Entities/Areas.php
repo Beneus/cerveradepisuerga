@@ -7,7 +7,7 @@ use citcervera\Model\Interfaces\IEntityBase;
 class Areas extends EntityBase implements IEntityBase
 {
 	private $_tableName = 'Areas';
-	private $_id = 'idAreas';
+	private $_id = 'idArea';
 	public $idArea;
 	public $NombreArea;
 
@@ -29,5 +29,15 @@ class Areas extends EntityBase implements IEntityBase
 		return $this->_id;
 	}
 
-	
+	function _POST()
+	{
+		$this->idArea 		= parent::TakePOST('IDAREA');
+		$this->NombreArea 	= parent::TakePOST('NOMBREAREA', 50);	
+	}
+
+	function _GET()
+	{
+		$this->idArea 		= parent::TakeGET('IDAREA');
+		$this->NombreArea 	= parent::TakeGET('NOMBREAREA', 50);
+	}
 }
