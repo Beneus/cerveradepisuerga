@@ -32,7 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 	$entity->_POST();
 	if ($entity->Titulo == "") {
-		$ErrorMsg = "<li class=\"errortexto\">Titulo.</li>";
+		$ErrorMsg .= "<li class=\"errortexto\">Titulo.</li>";
+	}
+   if ($entity->FechaNoticia == "") {
+		$ErrorMsg .= "<li class=\"errortexto\">Fecha noticia.</li>";
 	}
 	if ($ErrorMsg == "") {
 		$entity->Fecha = date("Y-m-d H:m:s");
@@ -122,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 							<form id="formEntrada" method="post" name="formEntrada" action="noticias-editar.php" onsubmit="EnviarEntradaNoticias(this,'editar');return false;">
 								<input type="hidden" name="IDNOTICIA" value="<?= $entity->$entityId; ?>" />
 								<div class="row clearfix">
-									<div class="col_half">
+									<div class="col">
 										<label>Título</label>
 										<div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
 											<input name="TITULO" type="text" id="TITULO" value="<?= $entity->Titulo; ?>" size="106" maxlength="100" />

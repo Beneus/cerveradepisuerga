@@ -1,16 +1,27 @@
 <?php
+
+namespace citcervera;
+
 include("includes/Conn.php");
 include("includes/variables.php");
 include("includes/funciones.php");
 
 use citcervera\Model\Connections\DB;
-use citcervera\Model\Entities\Noticias;
 use citcervera\Model\Managers\DataCarrier;
 use citcervera\Model\Managers\Manager;
 
+
+$editPage = 'noticias-editar.php';
+$listPage = 'noticias.php';
+$pageName = curPageName();
+
+$entityName = __NAMESPACE__ . '\Model\Entities\Noticias';
+$entity = new $entityName();
+$entityId = $entity->getId();
+$entityTable = $entity->getTable();
+
 $dc = new DataCarrier();
-$noticiasEntity = new Noticias();
-$noticiasManager = new Manager($noticiasEntity);
+$entityManager = new Manager($entity);
 $db = new DB();
 
 $idNucleoUrbano = '';
@@ -23,7 +34,7 @@ $mostrar = $_GET["mostrar"] ?? '';
 if (!is_numeric($mostrar)) $mostrar = 10;
 
 
-function SearchResult($buscar, $mostrar, $pagina, $db)
+function GetQuery($buscar)
 {
     $sql = "SELECT * FROM Noticias ";
     if ($buscar != "") {
@@ -36,17 +47,20 @@ function SearchResult($buscar, $mostrar, $pagina, $db)
 
     $sql = $sql . " order by FechaNoticia desc ";
 
-    $list = $db->query($sql);
-    $NumTotalRegistros = count($list);
+    return $sql;
+}
+
+function SearchResult($query, $mostrar, $pagina, $db)
+{
+    $list = $db->query($query);
+    $numTotalRegistros = count($list);
 
     if ($mostrar > 0) {
-        $sql = $sql . " LIMIT " . ((($pagina * $mostrar) - $mostrar)) . "," . $mostrar;
+        $query = $query . " LIMIT " . ((($pagina * $mostrar) - $mostrar)) . "," . $mostrar;
     } else {
-        $sql = $sql . " LIMIT " . ((($pagina * $NumTotalRegistros) - $NumTotalRegistros)) . "," . ($NumTotalRegistros);
+        $query = $query . " LIMIT " . ((($pagina * $numTotalRegistros) - $numTotalRegistros)) . "," . ($numTotalRegistros);
     }
-
-
-    return ['total' => $NumTotalRegistros, 'result' => $db->query($sql, 'fetch_object')];
+    return ['total' => $numTotalRegistros, 'result' => $db->query($query, 'fetch_object')];
 }
 ?>
 <!DOCTYPE html>
@@ -64,26 +78,26 @@ function SearchResult($buscar, $mostrar, $pagina, $db)
     <script type="text/javascript" src="js/funciones.js"></script>
     <script type="text/javascript">
         function EliminarEntrada(pag) {
+               var num_idleg = document.getElementsByName("idDir").length;
+               var cad_eliminados = "";
+               for (i = 0; i < num_idleg; i++) {
+                    if (document.getElementsByName("idDir")[i].checked) {
 
-            var num_idleg = document.getElementsByName("idDir").length;
-            var cad_eliminados = "";
-            for (i = 0; i < num_idleg; i++) {
-                if (document.getElementsByName("idDir")[i].checked) {
-
-                    if (cad_eliminados == "") {
-                        cad_eliminados += document.getElementsByName("idDir")[i].value;
-                    } else {
-                        cad_eliminados += "-" + document.getElementsByName("idDir")[i].value;
+                         if (cad_eliminados == "") {
+                              cad_eliminados += document.getElementsByName("idDir")[i].value;
+                         } else {
+                              cad_eliminados += "-" + document.getElementsByName("idDir")[i].value;
+                         }
                     }
-                }
-            }
-            var urldest = "noticias-eliminar.php";
-            var cad = "page=" + pag + "&cadEliminados=" + cad_eliminados;
-            if (cad_eliminados != "") {
+               }
+               var urldest = "entity-eliminar.php";
+               var cad = "page=" + pag + "&cadEliminados=" + cad_eliminados + "&Ambito=<?= $entity->GetTable() ?>";
 
-                window.open(urldest + "?" + cad, '', 'width=200,height=200');
-            }
-        }
+               if (cad_eliminados != "") {
+
+                    window.open(urldest + "?" + cad, '', 'width=200,height=200');
+               }
+          }
 
         function SelTodos(x) {
             var CheckDir = document.getElementsByName('idDir');
@@ -100,16 +114,16 @@ function SearchResult($buscar, $mostrar, $pagina, $db)
         }
 
         function Buscar(x) {
-            location.href = "noticias.php?buscar=" + x.value;
+            location.href = "<?= $pageName; ?>?buscar=" + x.value;
         }
 
         function Paginar(x) {
-            location.href = "noticias.php?mostrar=" + x.value;
+            location.href = "<?= $pageName; ?>?mostrar=" + x.value;
 
         }
 
         function CambiarPagina(x) {
-            location.href = "noticias.php?mostrar=<?php echo $mostrar; ?>&pagina=" + x.value;
+            location.href = "<?= $pageName; ?>?mostrar=<?php echo $mostrar; ?>&pagina=" + x.value;
 
         }
     </script>
@@ -141,10 +155,11 @@ function SearchResult($buscar, $mostrar, $pagina, $db)
                         <li>
                             <h2><?= explode('.', curPageName())[0] ?></h2>
                         </li>
-                        <li><a href="noticias-editar.php">A&ntilde;adir noticia</a></li>
-                        <li><a thref="noticias.php">Listado</a></li>
+                        <li class="liselect"><a href="<?= $currentPage; ?>">A&ntilde;adir entrada</a></li>
+                        <li><a href="<?= $listPage ?>">Listado</a></li>
                     </ul>
                 </div>
+
 
                 <div id="content">
                     <table role="table" id="noticiasSearch">
@@ -181,8 +196,8 @@ function SearchResult($buscar, $mostrar, $pagina, $db)
 
                 <?php
 
-
-                $res = SearchResult($buscar, $mostrar, $pagina, $db);
+                $query = GetQuery($buscar);
+                $res = SearchResult($query, $mostrar, $pagina, $db);
                 $NumTotalRegistros = $res['total'];
                 $list = $res['result'];
 
@@ -229,9 +244,10 @@ function SearchResult($buscar, $mostrar, $pagina, $db)
                                         <td role="cell"><?php echo $noticia->Titulo; ?></td>
                                         <td role="cell"><?php echo $noticia->Fuente; ?></td>
                                         <td role="cell">
-                                        <div align="center">
-                                        <input type="button" name="EDITAR" value="Editar" class="boton_button" onclick="location.href='noticias-editar.php?idNoticia=<?php echo $noticia->idNoticia;?>&pagina=<?php echo $pagina;?>&mostrar=<?= $sigmostrar;?>&titulo=<?php echo $titulo;?>'"/>
-                                        </div></td>
+                                            <div align="center">
+                                                <input type="button" name="EDITAR" value="Editar" class="boton_button" onclick="location.href='<?= $editPage ?>?<?= $entityId ?>=<?= $item->$entityId; ?>&pagina=<?php echo $pagina; ?>&mostrar=<?= $sigmostrar; ?>&titulo=<?php echo $titulo; ?>'" />
+                                            </div>
+                                        </td>
                                         <td role="cell">
                                             <div align="center">
                                                 <input type="checkbox" name="idDir" value="<?php echo $noticia->idNoticia; ?>" />
@@ -262,48 +278,7 @@ function SearchResult($buscar, $mostrar, $pagina, $db)
                             </tbody>
                         </table>
 
-                        <table role="table" id="noticias">
-                            <tbody role="rowgroup">
-                                <tr role="row">
-                                    <td role="cell">
-
-                                        <?php
-
-                                        if (($pagina > 1) and ($mostrar < $NumTotalRegistros)) {
-
-                                            echo "<a href=\"noticias.php?pagina=" . ($pagina - 1) . "&mostrar=$mostrar&buscar=$buscar\" class=\"linkBlanco\"> << Anterior </a>";
-                                        }
-
-                                        ?>
-                                    </td>
-                                    <td role="cell">
-                                        <?php
-                                        if (($pagina < $numPags) and ($mostrar < $NumTotalRegistros)) {
-
-                                            echo "<a href=\"noticias.php?pagina=" . ($pagina + 1) . "&mostrar=$mostrar&buscar=$buscar\" class=\"linkBlanco\"> Siguiente >> </a>";
-                                        }
-                                        ?> </td>
-
-                                    <td role="cell">
-                                        <?php
-                                        if (($numPags > 1) and ($mostrar < $NumTotalRegistros)) {
-                                            echo "Ir a P&aacute;gina: ";
-                                            echo "<select name=\"pagina\" class=\"txt_inputs_buscador\" onchange=\"CambiarPagina(this);\">";
-                                            for ($i = 1; $i <= $numPags; $i++) {
-                                                if ($i == $pagina) {
-                                                    echo "<option value=\"$i\" selected>$i</option>";
-                                                } else {
-                                                    echo "<option value=\"$i\">$i</option>";
-                                                }
-                                            }
-                                            echo "</select>";
-                                        }
-
-                                        ?>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <?php Pagination($pageName, $pagina, $mostrar, $NumTotalRegistros, $numPags, $queryString); ?>
                     </div>
                 <?php
                 }

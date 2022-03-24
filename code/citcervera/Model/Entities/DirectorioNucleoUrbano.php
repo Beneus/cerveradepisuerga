@@ -34,4 +34,20 @@ class DirectorioNucleoUrbano extends EntityBase implements IEntityBase
 	{
 		return $this->_id;
 	}
+
+	function _POST()
+	{
+		$this->idDirectorioNucleoUrbano = parent::TakePOST('IDDIRECTORIONUCLEOURBANO');
+		$this->idDirectorio = parent::TakePOST('IDDIRECTORIO');
+		$this->idNucleoUrbano = parent::TakePOST('IDNUCLEOURBANO');
+		$this->Fecha = parent::TakePOST('FECHA');
+	}
+
+	function _GET()
+	{
+		$this->idDirectorioNucleoUrbano = parent::TakeGET('IDDIRECTORIONUCLEOURBANO');
+		$this->idDirectorio = parent::TakeGET('IDDIRECTORIO');
+		$this->idNucleoUrbano = parent::TakeGET('IDNUCLEOURBANO');
+		$this->Fecha = parent::TakeGET('FECHA');
+	}
 }

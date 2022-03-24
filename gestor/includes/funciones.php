@@ -308,28 +308,30 @@ function GetSmallArrayFromBiggerOne($dc,$entityName, $arrayKeys)
 {
 	$ret = [];
 	
-	foreach($dc->GetEntities($entityName) as $entity){
-		$ret2 = [];
-		foreach($arrayKeys as $key){
-			if($key == 'Year(FechaEvento)')
-			{
-				$ret2[$key] = substr($entity->FechaEvento,0,4);
+	if($dc->GetEntities($entityName)){
+		foreach($dc->GetEntities($entityName) as $entity){
+			$ret2 = [];
+			foreach($arrayKeys as $key){
+				if($key == 'Year(FechaEvento)')
+				{
+					$ret2[$key] = substr($entity->FechaEvento,0,4);
+				}
+				elseif($key == 'Month(FechaEvento)')
+				{
+					$ret2[$key] = substr($entity->FechaEvento,5,2);
+				}
+				elseif($key == 'Day(FechaEvento)')
+				{
+					$ret2[$key] = substr($entity->FechaEvento,7,2);
+				}
+				else
+				{
+				
+					$ret2[$key] = $entity->{$key};
+				}	
 			}
-			elseif($key == 'Month(FechaEvento)')
-			{
-				$ret2[$key] = substr($entity->FechaEvento,5,2);
-			}
-			elseif($key == 'Day(FechaEvento)')
-			{
-				$ret2[$key] = substr($entity->FechaEvento,7,2);
-			}
-			else
-			{
-			
-				$ret2[$key] = $entity->{$key};
-			}	
+			$ret[] = $ret2;
 		}
-		$ret[] = $ret2;
 	}
 	return $ret;
 }

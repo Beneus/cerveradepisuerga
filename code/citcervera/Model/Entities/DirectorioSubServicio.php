@@ -34,4 +34,20 @@ class DirectorioSubServicio extends EntityBase implements IEntityBase
 	{
 		return $this->_id;
 	}
+
+	function _POST()
+	{
+		$this->idDirectorioSubServicio = parent::TakePOST('IDDIRECTORIOSUBSERVICIO');
+		$this->idDirectorio = parent::TakePOST('IDDIRECTORIO');
+		$this->idSubServicio = parent::TakePOST('IDSUBSERVICIO');
+		$this->Fecha = parent::TakePOST('FECHA');
+	}
+
+	function _GET()
+	{
+		$this->idDirectorioSubServicio = parent::TakeGET('IDDIRECTORIOSUBSERVICIO');
+		$this->idDirectorio = parent::TakeGET('IDDIRECTORIO');
+		$this->idSubServicio = parent::TakeGET('IDSUBSERVICIO');
+		$this->Fecha = parent::TakeGET('FECHA');
+	}
 }

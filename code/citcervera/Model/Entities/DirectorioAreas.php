@@ -34,4 +34,20 @@ class DirectorioAreas extends EntityBase implements IEntityBase
 	{
 		return $this->_id;
 	}
+
+	function _POST()
+	{
+		$this->idDirectorioAreas = parent::TakePOST('IDDIRECTORIOAREAS');
+		$this->idDirectorio = parent::TakePOST('IDDIRECTORIO');
+		$this->idArea = parent::TakePOST('IDAREA');
+		$this->Fecha = parent::TakePOST('FECHA');
+	}
+
+	function _GET()
+	{
+		$this->idDirectorioAreas = parent::TakeGET('IDDIRECTORIOAREAS');
+		$this->idDirectorio = parent::TakeGET('IDDIRECTORIO');
+		$this->idArea = parent::TakeGET('IDAREA');
+		$this->Fecha = parent::TakeGET('FECHA');
+	}
 }

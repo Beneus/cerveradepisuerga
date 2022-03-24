@@ -100,6 +100,7 @@ function GetSmallArrayFromBiggerOne($dc,$entityName, $arrayKeys)
 	
 	foreach($dc->GetEntities($entityName) as $entity){
 		$ret2 = [];
+
 		foreach($arrayKeys as $key){
 			if($key == 'FechaEvento')
 			{
