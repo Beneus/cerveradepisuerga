@@ -32,9 +32,9 @@ if ( !class_exists( 'DB' ) ) {
 			$this->user = 'mycerverad';
 			$this->password = '06g6m52y';
 			$this->database = 'citcerveradb';
-            $this->host = 'cerveradepisuerga.eu';
+            		$this->host = 'cerveradepisuerga.eu';
 			$this->charset = 'utf8';
-        }
+        	}
 
 		public function query(string $query, $fetch_type = 'fetch_assoc') 
 		{
