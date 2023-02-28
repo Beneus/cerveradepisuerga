@@ -21,6 +21,7 @@ Religion/
 Rutas/
 Setas/
 rrrr/
+vendor/
 
 .htaccess
 *.code-workspace
