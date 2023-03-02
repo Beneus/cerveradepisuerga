@@ -25,3 +25,5 @@ vendor/
 
 .htaccess
 *.code-workspace
+*.cache
+.phpunit.result.cache
